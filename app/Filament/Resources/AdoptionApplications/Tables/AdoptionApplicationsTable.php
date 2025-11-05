@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\AdoptionApplications\Tables;
 
+use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -83,6 +85,11 @@ class AdoptionApplicationsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('history')
+                    ->label('History')
+                    ->icon('heroicon-o-clock')
+                    ->color('gray')
+                    ->url(fn ($record) => AdoptionApplicationResource::getUrl('history', ['record' => $record])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

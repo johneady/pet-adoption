@@ -5,6 +5,7 @@ namespace App\Filament\Resources\AdoptionApplications;
 use App\Filament\Resources\AdoptionApplications\Pages\CreateAdoptionApplication;
 use App\Filament\Resources\AdoptionApplications\Pages\EditAdoptionApplication;
 use App\Filament\Resources\AdoptionApplications\Pages\ListAdoptionApplications;
+use App\Filament\Resources\AdoptionApplications\Pages\ViewApplicationHistory;
 use App\Filament\Resources\AdoptionApplications\Schemas\AdoptionApplicationForm;
 use App\Filament\Resources\AdoptionApplications\Tables\AdoptionApplicationsTable;
 use App\Models\AdoptionApplication;
@@ -43,6 +44,7 @@ class AdoptionApplicationResource extends Resource
             'index' => ListAdoptionApplications::route('/'),
             'create' => CreateAdoptionApplication::route('/create'),
             'edit' => EditAdoptionApplication::route('/{record}/edit'),
+            'history' => ViewApplicationHistory::route('/{record}/history'),
         ];
     }
 }
