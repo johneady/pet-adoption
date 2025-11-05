@@ -36,7 +36,7 @@
                                     <span class="text-sm font-semibold text-gray-950 dark:text-white">Notes</span>
                                 </th>
                                 <th class="fi-ta-header-cell px-3 py-3.5 sm:first-of-type:ps-6 sm:last-of-type:pe-6">
-                                    <span class="text-sm font-semibold text-gray-950 dark:text-white">Changed By</span>
+                                    <span class="text-sm font-semibold text-gray-950 dark:text-white">Changed by</span>
                                 </th>
                                 <th class="fi-ta-header-cell px-3 py-3.5 sm:first-of-type:ps-6 sm:last-of-type:pe-6">
                                     <span class="text-sm font-semibold text-gray-950 dark:text-white">Date</span>
