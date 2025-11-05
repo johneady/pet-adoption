@@ -17,7 +17,7 @@ class PetsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('primaryPhoto.0.file_path')
+                ImageColumn::make('primaryPhoto.file_path')
                     ->label('Photo')
                     ->circular()
                     ->defaultImageUrl(url('/images/placeholder-pet.png')),
