@@ -19,7 +19,7 @@ class PetResource extends Resource
 {
     protected static ?string $model = Pet::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHeart;
 
     public static function form(Schema $schema): Schema
     {
