@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AdoptionApplicationSeeder::class,
             ApplicationStatusHistorySeeder::class,
             InterviewSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }
