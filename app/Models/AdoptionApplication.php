@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Interview|null $interview
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdoptionApplicationNote> $notes
+ * @property-read int|null $notes_count
  * @property-read \App\Models\Pet $pet
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ApplicationStatusHistory> $statusHistory
  * @property-read int|null $status_history_count
@@ -88,5 +90,10 @@ class AdoptionApplication extends Model
     public function interview(): HasOne
     {
         return $this->hasOne(Interview::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(AdoptionApplicationNote::class);
     }
 }
