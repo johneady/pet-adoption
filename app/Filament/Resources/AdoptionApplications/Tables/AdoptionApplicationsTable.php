@@ -18,9 +18,6 @@ class AdoptionApplicationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 TextColumn::make('user.name')
                     ->label('Applicant')
                     ->searchable()
@@ -52,7 +49,7 @@ class AdoptionApplicationsTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('interview.scheduled_at')
                     ->label('Interview Date')
-                    ->dateTime()
+                    ->dateTime('M j, Y @ H:i a')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -95,7 +92,7 @@ class AdoptionApplicationsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    //DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

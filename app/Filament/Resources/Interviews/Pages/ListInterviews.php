@@ -10,6 +10,11 @@ class ListInterviews extends ListRecords
 {
     protected static string $resource = InterviewResource::class;
 
+    public function getHeading(): string
+    {
+        return 'Overdue and Upcoming Interviews';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
