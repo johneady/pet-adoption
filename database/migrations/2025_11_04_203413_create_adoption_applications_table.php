@@ -30,7 +30,6 @@ return new class extends Migration
             $table->text('household_members')->nullable();
             $table->string('employment_status')->nullable();
             $table->text('reason_for_adoption');
-            $table->text('admin_notes')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'status']);

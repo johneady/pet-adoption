@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $household_members
  * @property string|null $employment_status
  * @property string $reason_for_adoption
- * @property string|null $admin_notes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Interview|null $interview
@@ -28,11 +27,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ApplicationStatusHistory> $statusHistory
  * @property-read int|null $status_history_count
  * @property-read \App\Models\User $user
+ *
  * @method static \Database\Factories\AdoptionApplicationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereAdminNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereEmploymentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereExperience($value)
@@ -46,6 +45,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdoptionApplication whereVeterinaryReference($value)
+ *
  * @mixin \Eloquent
  */
 class AdoptionApplication extends Model
@@ -64,7 +64,10 @@ class AdoptionApplication extends Model
         'household_members',
         'employment_status',
         'reason_for_adoption',
-        'admin_notes',
+    ];
+
+    protected $attributes = [
+        'status' => 'submitted',
     ];
 
     public function user(): BelongsTo

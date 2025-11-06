@@ -41,7 +41,8 @@ class AdoptionApplicationForm
                                 'archived' => 'Archived',
                             ])
                             ->required()
-                            ->default('submitted'),
+                            ->default('submitted')
+                            ->hidden(fn ($record) => $record === null),
                         Placeholder::make('created_at')
                             ->label('Submitted on')
                             ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
@@ -101,15 +102,6 @@ class AdoptionApplicationForm
                             ->columnSpanFull()
                             ->disabled(fn ($record) => $record !== null),
                     ]),
-
-                Section::make('Admin Section')
-                    ->schema([
-                        Textarea::make('admin_notes')
-                            ->label('Admin Notes')
-                            ->rows(10)
-                            ->columnSpanFull(),
-                    ])
-                    ->collapsible(),
 
                 Section::make('Interview Details')
                     ->relationship('interview')

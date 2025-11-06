@@ -29,7 +29,6 @@ class AdoptionApplicationFactory extends Factory
             'household_members' => fake()->optional()->sentence(),
             'employment_status' => fake()->randomElement(['Employed Full-time', 'Employed Part-time', 'Self-employed', 'Retired', 'Other']),
             'reason_for_adoption' => fake()->paragraph(),
-            'admin_notes' => fake()->optional()->sentence(),
         ];
     }
 }
