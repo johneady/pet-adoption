@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\AdoptionApplications\Pages;
 
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
-use Filament\Actions\DeleteAction;
+use App\Filament\Resources\Interviews\InterviewResource;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Icons\Heroicon;
 
 class EditAdoptionApplication extends EditRecord
 {
@@ -13,7 +15,12 @@ class EditAdoptionApplication extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Action::make('schedule_interview')
+                ->label('Schedule Interview')
+                ->icon(Heroicon::OutlinedCalendar)
+                ->color('primary')
+                ->visible(fn () => $this->record->interview === null)
+                ->url(fn () => InterviewResource::getUrl('create', ['adoption_application_id' => $this->record->id])),
         ];
     }
 

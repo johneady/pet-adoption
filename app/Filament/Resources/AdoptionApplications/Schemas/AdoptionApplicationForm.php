@@ -7,6 +7,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -31,18 +32,18 @@ class AdoptionApplicationForm
                             ->searchable()
                             ->preload()
                             ->disabled(fn ($record) => $record !== null),
-                        Select::make('status')
-                            ->options([
-                                'submitted' => 'Submitted',
-                                'interview_scheduled' => 'Interview Scheduled',
-                                'under_review' => 'Under Review',
-                                'approved' => 'Approved',
-                                'rejected' => 'Rejected',
-                                'archived' => 'Archived',
-                            ])
-                            ->required()
-                            ->default('submitted')
-                            ->hidden(fn ($record) => $record === null),
+                        TextEntry::make('status')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'submitted' => 'gray',
+                                'interview_scheduled' => 'warning',
+                                'under_review' => 'info',
+                                'approved' => 'success',
+                                'rejected' => 'danger',
+                                'archived' => 'gray',
+                                default => 'gray',
+                            })
+                            ->visible(fn ($record) => $record !== null),
                         Placeholder::make('created_at')
                             ->label('Submitted on')
                             ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
@@ -79,27 +80,24 @@ class AdoptionApplicationForm
                     ]),
 
                 Section::make('Experience & Household')
+                    ->columnSpanFull()
                     ->schema([
                         Textarea::make('experience')
                             ->label('Experience with pets')
                             ->rows(3)
-                            ->columnSpanFull()
                             ->disabled(fn ($record) => $record !== null),
                         Textarea::make('other_pets')
                             ->label('Other pets in household')
                             ->rows(2)
-                            ->columnSpanFull()
                             ->disabled(fn ($record) => $record !== null),
                         Textarea::make('household_members')
                             ->label('Household members')
                             ->rows(2)
-                            ->columnSpanFull()
                             ->disabled(fn ($record) => $record !== null),
                         Textarea::make('reason_for_adoption')
                             ->label('Why do you want to adopt?')
                             ->required()
                             ->rows(4)
-                            ->columnSpanFull()
                             ->disabled(fn ($record) => $record !== null),
                     ]),
 
