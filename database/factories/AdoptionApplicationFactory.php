@@ -21,7 +21,7 @@ class AdoptionApplicationFactory extends Factory
         return [
             'user_id' => User::factory(),
             'pet_id' => Pet::factory(),
-            'status' => fake()->randomElement(['submitted', 'under_review', 'interview_scheduled', 'approved', 'rejected', 'completed']),
+            'status' => fake()->randomElement(['submitted', 'under_review', 'interview_scheduled', 'approved', 'rejected', 'archived']),
             'living_situation' => fake()->randomElement(['House with yard', 'Apartment', 'Condo', 'Farm', 'Other']),
             'experience' => fake()->optional()->paragraph(),
             'other_pets' => fake()->optional()->sentence(),

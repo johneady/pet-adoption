@@ -19,7 +19,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Filament::setCurrentPanel('admin');
-    $this->admin = User::factory()->create();
+    $this->admin = User::factory()->admin()->create();
 });
 
 test('pets stats widget displays correct counts', function () {

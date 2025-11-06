@@ -21,7 +21,7 @@ return new class extends Migration
                 'interview_scheduled',
                 'approved',
                 'rejected',
-                'completed',
+                'archived',
             ])->default('submitted');
             $table->string('living_situation');
             $table->text('experience')->nullable();

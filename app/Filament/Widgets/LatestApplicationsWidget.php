@@ -38,12 +38,12 @@ class LatestApplicationsWidget extends TableWidget
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'submitted' => 'warning',
+                        'pending' => 'gray',
+                        'interview_scheduled' => 'warning',
                         'under_review' => 'info',
-                        'interview_scheduled' => 'primary',
                         'approved' => 'success',
                         'rejected' => 'danger',
-                        'completed' => 'success',
+                        'archived' => 'gray',
                         default => 'gray',
                     }),
 

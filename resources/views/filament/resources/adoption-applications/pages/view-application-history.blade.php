@@ -52,10 +52,11 @@
                                             @if ($history->from_status)
                                                 @php
                                                     $color = match($history->from_status) {
-                                                        'approved', 'completed' => 'success',
+                                                        'approved' => 'success',
                                                         'rejected' => 'danger',
                                                         'interview_scheduled' => 'warning',
                                                         'under_review' => 'info',
+                                                        'pending', 'archived' => 'gray',
                                                         default => 'gray',
                                                     };
                                                 @endphp
@@ -72,10 +73,11 @@
                                         <div class="fi-ta-col-wrp px-3 py-4">
                                             @php
                                                 $color = match($history->to_status) {
-                                                    'approved', 'completed' => 'success',
+                                                    'approved' => 'success',
                                                     'rejected' => 'danger',
                                                     'interview_scheduled' => 'warning',
                                                     'under_review' => 'info',
+                                                    'pending', 'archived' => 'gray',
                                                     default => 'gray',
                                                 };
                                             @endphp

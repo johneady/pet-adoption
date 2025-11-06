@@ -37,11 +37,11 @@ class AdoptionApplicationsTable
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'submitted' => 'gray',
-                        'under_review' => 'info',
                         'interview_scheduled' => 'warning',
+                        'under_review' => 'info',
                         'approved' => 'success',
                         'rejected' => 'danger',
-                        'completed' => 'success',
+                        'archived' => 'gray',
                         default => 'gray',
                     })
                     ->sortable(),
@@ -65,12 +65,14 @@ class AdoptionApplicationsTable
                 SelectFilter::make('status')
                     ->options([
                         'submitted' => 'Submitted',
-                        'under_review' => 'Under Review',
                         'interview_scheduled' => 'Interview Scheduled',
+                        'under_review' => 'Under Review',
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
-                        'completed' => 'Completed',
-                    ]),
+                        'archived' => 'Archived',
+                    ])
+                    ->multiple()
+                    ->default(['submitted', 'interview_scheduled', 'under_review', 'approved', 'rejected']),
                 SelectFilter::make('pet_id')
                     ->label('Pet')
                     ->relationship('pet', 'name')

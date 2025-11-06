@@ -48,14 +48,14 @@ test('application has statusHistory relationship', function () {
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
         'from_status' => null,
-        'to_status' => 'submitted',
+        'to_status' => 'pending',
         'notes' => 'Application submitted',
         'changed_by' => $user->id,
     ]);
 
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
-        'from_status' => 'submitted',
+        'from_status' => 'pending',
         'to_status' => 'under_review',
         'notes' => 'Application is being reviewed',
         'changed_by' => $admin->id,
@@ -72,7 +72,7 @@ test('application has statusHistory relationship', function () {
     $history = $application->statusHistory()->with('changedBy')->orderBy('created_at', 'asc')->get();
 
     expect($history)->toHaveCount(3)
-        ->and($history->first()->to_status)->toBe('submitted')
+        ->and($history->first()->to_status)->toBe('pending')
         ->and($history->first()->notes)->toBe('Application submitted')
         ->and($history->first()->changedBy->id)->toBe($user->id)
         ->and($history->last()->to_status)->toBe('approved')
@@ -92,14 +92,14 @@ test('status history can track who made each change', function () {
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
         'from_status' => null,
-        'to_status' => 'submitted',
+        'to_status' => 'pending',
         'notes' => 'Application submitted',
         'changed_by' => $user->id,
     ]);
 
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
-        'from_status' => 'submitted',
+        'from_status' => 'pending',
         'to_status' => 'under_review',
         'notes' => 'Application is being reviewed',
         'changed_by' => $admin->id,
@@ -123,14 +123,14 @@ test('history page displays status history correctly', function () {
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
         'from_status' => null,
-        'to_status' => 'submitted',
+        'to_status' => 'pending',
         'notes' => 'Application submitted',
         'changed_by' => $user->id,
     ]);
 
     ApplicationStatusHistory::factory()->create([
         'adoption_application_id' => $application->id,
-        'from_status' => 'submitted',
+        'from_status' => 'pending',
         'to_status' => 'approved',
         'notes' => 'Approved by admin',
         'changed_by' => $admin->id,
@@ -139,7 +139,7 @@ test('history page displays status history correctly', function () {
     Livewire::test(ViewApplicationHistory::class, ['record' => $application->id])
         ->assertOk()
         ->assertSee('Status History for Application #'.$application->id)
-        ->assertSee('Submitted')
+        ->assertSee('Pending')
         ->assertSee('Approved')
         ->assertSee('Application submitted')
         ->assertSee('Approved by admin')

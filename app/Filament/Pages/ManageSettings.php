@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 /**
  * @property-read Schema $form
@@ -26,6 +27,8 @@ class ManageSettings extends Page
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $navigationLabel = 'Settings';
+
+    protected static UnitEnum|string|null $navigationGroup = 'Configuration';
 
     protected static ?int $navigationSort = 100;
 

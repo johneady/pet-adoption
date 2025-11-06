@@ -16,8 +16,8 @@ class AdoptionApplicationSeeder extends Seeder
     {
         $users = User::factory()->count(20)->create();
 
-        $submittedPets = Pet::where('status', 'available')->take(5)->get();
-        foreach ($submittedPets as $pet) {
+        $pendingPets = Pet::where('status', 'available')->take(5)->get();
+        foreach ($pendingPets as $pet) {
             AdoptionApplication::factory()->create([
                 'user_id' => fake()->randomElement($users->pluck('id')->toArray()),
                 'pet_id' => $pet->id,
@@ -61,12 +61,12 @@ class AdoptionApplicationSeeder extends Seeder
             ]);
         }
 
-        $completedPets = Pet::where('status', 'adopted')->take(5)->get();
-        foreach ($completedPets as $pet) {
+        $archivedPets = Pet::where('status', 'adopted')->take(5)->get();
+        foreach ($archivedPets as $pet) {
             AdoptionApplication::factory()->create([
                 'user_id' => fake()->randomElement($users->pluck('id')->toArray()),
                 'pet_id' => $pet->id,
-                'status' => 'completed',
+                'status' => 'archived',
             ]);
         }
     }

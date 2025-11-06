@@ -33,15 +33,15 @@ class AdoptionApplicationForm
                             ->disabled(fn ($record) => $record !== null),
                         Select::make('status')
                             ->options([
-                                'submitted' => 'Submitted',
-                                'under_review' => 'Under Review',
+                                'pending' => 'Pending',
                                 'interview_scheduled' => 'Interview Scheduled',
+                                'under_review' => 'Under Review',
                                 'approved' => 'Approved',
                                 'rejected' => 'Rejected',
-                                'completed' => 'Completed',
+                                'archived' => 'Archived',
                             ])
                             ->required()
-                            ->default('submitted'),
+                            ->default('pending'),
                         Placeholder::make('created_at')
                             ->label('Submitted on')
                             ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
@@ -106,7 +106,7 @@ class AdoptionApplicationForm
                     ->schema([
                         Textarea::make('admin_notes')
                             ->label('Admin Notes')
-                            ->rows(3)
+                            ->rows(10)
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
@@ -126,9 +126,9 @@ class AdoptionApplicationForm
                             ->label('Completed At')
                             ->seconds(false),
                     ])
-                    ->visible(fn ($record) => $record !== null && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'completed']))
+                    ->visible(fn ($record) => $record !== null && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'archived']))
                     ->saveRelationshipsUsing(function ($component, $state, $record) {
-                        if ($record && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'completed'])) {
+                        if ($record && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'archived'])) {
                             $component->saveRelationships();
                         }
                     })

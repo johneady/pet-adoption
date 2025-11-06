@@ -14,17 +14,21 @@ class InterviewsTable
     {
         return $table
             ->modifyQueryUsing(fn ($query) => $query->whereNull('completed_at'))
+            ->defaultSort('scheduled_at', 'asc')
             ->columns([
-                TextColumn::make('adoptionApplication.id')
-                    ->searchable(),
+                TextColumn::make('adoptionApplication.user.name')
+                    ->label('Applicant')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('adoptionApplication.pet.name')
+                    ->label('Pet')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('scheduled_at')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('location')
                     ->searchable(),
-                TextColumn::make('completed_at')
-                    ->dateTime()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -30,6 +31,10 @@ class UserForm
                             ->maxLength(255)
                             ->autocomplete('new-password')
                             ->revealable(),
+                        Toggle::make('is_admin')
+                            ->label('Administrator')
+                            ->helperText('Administrators have access to the admin panel.')
+                            ->default(false),
                     ])
                     ->columns(2),
             ]);

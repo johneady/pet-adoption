@@ -16,7 +16,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Filament::setCurrentPanel('admin');
-    $this->admin = User::factory()->create();
+    $this->admin = User::factory()->admin()->create();
 });
 
 test('user resource table shows all users', function () {

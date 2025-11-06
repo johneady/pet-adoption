@@ -5,6 +5,8 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -21,6 +23,15 @@ class UsersTable
                     ->searchable()
                     ->sortable()
                     ->copyable(),
+                IconColumn::make('is_admin')
+                    ->label('Administrator')
+                    ->boolean()
+                    ->trueIcon(Heroicon::OutlinedCheckBadge)
+                    ->falseIcon(Heroicon::OutlinedXMark)
+                    ->trueColor('success')
+                    ->falseColor('gray')
+                    ->sortable()
+                    ->alignment('center'),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable()

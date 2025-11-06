@@ -17,10 +17,10 @@ class ApplicationStatusHistorySeeder extends Seeder
         $adminUsers = User::take(3)->get();
 
         $statusFlow = [
-            'submitted' => ['under_review'],
+            'pending' => ['under_review'],
             'under_review' => ['interview_scheduled', 'rejected'],
             'interview_scheduled' => ['approved', 'rejected'],
-            'approved' => ['completed'],
+            'approved' => ['archived'],
         ];
 
         $applications = AdoptionApplication::all();
@@ -29,11 +29,11 @@ class ApplicationStatusHistorySeeder extends Seeder
             $currentStatus = $application->status;
             $previousStatus = null;
 
-            if ($currentStatus === 'submitted') {
+            if ($currentStatus === 'pending') {
                 ApplicationStatusHistory::create([
                     'adoption_application_id' => $application->id,
                     'from_status' => null,
-                    'to_status' => 'submitted',
+                    'to_status' => 'pending',
                     'notes' => 'Application submitted',
                     'changed_by' => $application->user_id,
                 ]);
@@ -41,22 +41,22 @@ class ApplicationStatusHistorySeeder extends Seeder
                 continue;
             }
 
-            $statuses = ['submitted'];
+            $statuses = ['pending'];
 
-            if (in_array($currentStatus, ['under_review', 'interview_scheduled', 'approved', 'rejected', 'completed'])) {
+            if (in_array($currentStatus, ['under_review', 'interview_scheduled', 'approved', 'rejected', 'archived'])) {
                 $statuses[] = 'under_review';
             }
 
-            if (in_array($currentStatus, ['interview_scheduled', 'approved', 'rejected', 'completed'])) {
+            if (in_array($currentStatus, ['interview_scheduled', 'approved', 'rejected', 'archived'])) {
                 $statuses[] = 'interview_scheduled';
             }
 
-            if (in_array($currentStatus, ['approved', 'completed'])) {
+            if (in_array($currentStatus, ['approved', 'archived'])) {
                 $statuses[] = 'approved';
             }
 
-            if ($currentStatus === 'completed') {
-                $statuses[] = 'completed';
+            if ($currentStatus === 'archived') {
+                $statuses[] = 'archived';
             } elseif ($currentStatus === 'rejected' && ! in_array('rejected', $statuses)) {
                 $statuses[] = 'rejected';
             }
@@ -67,7 +67,7 @@ class ApplicationStatusHistorySeeder extends Seeder
                     'from_status' => $previousStatus,
                     'to_status' => $status,
                     'notes' => $this->getStatusChangeNote($previousStatus, $status),
-                    'changed_by' => $status === 'submitted' ? $application->user_id : fake()->randomElement($adminUsers->pluck('id')->toArray()),
+                    'changed_by' => $status === 'pending' ? $application->user_id : fake()->randomElement($adminUsers->pluck('id')->toArray()),
                 ]);
                 $previousStatus = $status;
             }
@@ -77,7 +77,7 @@ class ApplicationStatusHistorySeeder extends Seeder
     private function getStatusChangeNote(?string $from, string $to): string
     {
         return match ($to) {
-            'submitted' => 'Application submitted by applicant',
+            'pending' => 'Application submitted by applicant',
             'under_review' => 'Application moved to review by admin',
             'interview_scheduled' => 'Interview has been scheduled with the applicant',
             'approved' => 'Application approved for adoption',
@@ -86,7 +86,7 @@ class ApplicationStatusHistorySeeder extends Seeder
                 'Application rejected - incomplete information',
                 'Application rejected - failed interview',
             ]),
-            'completed' => 'Adoption completed successfully',
+            'archived' => 'Adoption completed successfully',
             default => 'Status updated',
         };
     }
