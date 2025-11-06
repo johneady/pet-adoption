@@ -27,6 +27,12 @@ class EditAdoptionApplication extends EditRecord
                 ->color('primary')
                 ->visible(fn () => $this->record->interview === null)
                 ->url(fn () => InterviewResource::getUrl('create', ['adoption_application_id' => $this->record->id])),
+            Action::make('view_status_history')
+                ->label('View Status History')
+                ->icon(Heroicon::OutlinedClock)
+                ->color('gray')
+                ->outlined()
+                ->url(fn () => AdoptionApplicationResource::getUrl('history', ['record' => $this->record])),
         ];
     }
 

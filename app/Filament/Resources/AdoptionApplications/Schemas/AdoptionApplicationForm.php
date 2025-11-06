@@ -17,88 +17,94 @@ class AdoptionApplicationForm
     {
         return $schema
             ->components([
-                Section::make('Application Details')
-                    ->columns(2)
-                    ->schema([
-                        Select::make('user_id')
-                            ->relationship('user', 'name')
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->disabled(fn ($record) => $record !== null),
-                        Select::make('pet_id')
-                            ->relationship('pet', 'name')
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->disabled(fn ($record) => $record !== null),
-                        TextEntry::make('status')
-                            ->badge()
-                            ->color(fn (string $state): string => match ($state) {
-                                'submitted' => 'gray',
-                                'interview_scheduled' => 'warning',
-                                'under_review' => 'info',
-                                'approved' => 'success',
-                                'rejected' => 'danger',
-                                'archived' => 'gray',
-                                default => 'gray',
-                            })
-                            ->visible(fn ($record) => $record !== null),
-                        Placeholder::make('created_at')
-                            ->label('Submitted on')
-                            ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
-                            ->visible(fn ($record) => $record !== null),
-                    ]),
-
-                Section::make('Applicant Information')
-                    ->columns(2)
-                    ->schema([
-                        Select::make('living_situation')
-                            ->options([
-                                'House with yard' => 'House with yard',
-                                'Apartment' => 'Apartment',
-                                'Condo' => 'Condo',
-                                'Farm' => 'Farm',
-                                'Other' => 'Other',
-                            ])
-                            ->required()
-                            ->disabled(fn ($record) => $record !== null),
-                        Select::make('employment_status')
-                            ->options([
-                                'Employed Full-time' => 'Employed Full-time',
-                                'Employed Part-time' => 'Employed Part-time',
-                                'Self-employed' => 'Self-employed',
-                                'Retired' => 'Retired',
-                                'Student' => 'Student',
-                                'Unemployed' => 'Unemployed',
-                                'Other' => 'Other',
-                            ])
-                            ->disabled(fn ($record) => $record !== null),
-                        TextInput::make('veterinary_reference')
-                            ->tel()
-                            ->disabled(fn ($record) => $record !== null),
-                    ]),
-
-                Section::make('Experience & Household')
+                Section::make('Application Form')
+                    ->description('View the adoption application details')
+                    ->collapsible()
                     ->columnSpanFull()
                     ->schema([
-                        Textarea::make('experience')
-                            ->label('Experience with pets')
-                            ->rows(3)
-                            ->disabled(fn ($record) => $record !== null),
-                        Textarea::make('other_pets')
-                            ->label('Other pets in household')
-                            ->rows(2)
-                            ->disabled(fn ($record) => $record !== null),
-                        Textarea::make('household_members')
-                            ->label('Household members')
-                            ->rows(2)
-                            ->disabled(fn ($record) => $record !== null),
-                        Textarea::make('reason_for_adoption')
-                            ->label('Why do you want to adopt?')
-                            ->required()
-                            ->rows(4)
-                            ->disabled(fn ($record) => $record !== null),
+                        Section::make('Application Details')
+                            ->columns(2)
+                            ->schema([
+                                Select::make('user_id')
+                                    ->relationship('user', 'name')
+                                    ->required()
+                                    ->searchable()
+                                    ->preload()
+                                    ->disabled(fn ($record) => $record !== null),
+                                Select::make('pet_id')
+                                    ->relationship('pet', 'name')
+                                    ->required()
+                                    ->searchable()
+                                    ->preload()
+                                    ->disabled(fn ($record) => $record !== null),
+                                TextEntry::make('status')
+                                    ->badge()
+                                    ->color(fn (string $state): string => match ($state) {
+                                        'submitted' => 'gray',
+                                        'interview_scheduled' => 'warning',
+                                        'under_review' => 'info',
+                                        'approved' => 'success',
+                                        'rejected' => 'danger',
+                                        'archived' => 'gray',
+                                        default => 'gray',
+                                    })
+                                    ->visible(fn ($record) => $record !== null),
+                                Placeholder::make('created_at')
+                                    ->label('Submitted on')
+                                    ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
+                                    ->visible(fn ($record) => $record !== null),
+                            ]),
+
+                        Section::make('Applicant Information')
+                            ->columns(2)
+                            ->schema([
+                                Select::make('living_situation')
+                                    ->options([
+                                        'House with yard' => 'House with yard',
+                                        'Apartment' => 'Apartment',
+                                        'Condo' => 'Condo',
+                                        'Farm' => 'Farm',
+                                        'Other' => 'Other',
+                                    ])
+                                    ->required()
+                                    ->disabled(fn ($record) => $record !== null),
+                                Select::make('employment_status')
+                                    ->options([
+                                        'Employed Full-time' => 'Employed Full-time',
+                                        'Employed Part-time' => 'Employed Part-time',
+                                        'Self-employed' => 'Self-employed',
+                                        'Retired' => 'Retired',
+                                        'Student' => 'Student',
+                                        'Unemployed' => 'Unemployed',
+                                        'Other' => 'Other',
+                                    ])
+                                    ->disabled(fn ($record) => $record !== null),
+                                TextInput::make('veterinary_reference')
+                                    ->tel()
+                                    ->disabled(fn ($record) => $record !== null),
+                            ]),
+
+                        Section::make('Experience & Household')
+                            ->columnSpanFull()
+                            ->schema([
+                                Textarea::make('experience')
+                                    ->label('Experience with pets')
+                                    ->rows(3)
+                                    ->disabled(fn ($record) => $record !== null),
+                                Textarea::make('other_pets')
+                                    ->label('Other pets in household')
+                                    ->rows(2)
+                                    ->disabled(fn ($record) => $record !== null),
+                                Textarea::make('household_members')
+                                    ->label('Household members')
+                                    ->rows(2)
+                                    ->disabled(fn ($record) => $record !== null),
+                                Textarea::make('reason_for_adoption')
+                                    ->label('Why do you want to adopt?')
+                                    ->required()
+                                    ->rows(4)
+                                    ->disabled(fn ($record) => $record !== null),
+                            ]),
                     ]),
 
                 Section::make('Interview Details')

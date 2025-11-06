@@ -1,51 +1,48 @@
 <x-filament-widgets::widget>
-    <x-filament::section>
+    <x-filament::section collapsible>
         <x-slot name="heading">
             Notes
         </x-slot>
 
-        <div class="fi-section-content-ctn grid gap-y-6">
+        <div class="fi-wi-stats-overview-stat-card grid gap-y-6">
             {{-- Add Note Button --}}
             <div>
                 {{ ($this->addNoteAction) }}
             </div>
 
             {{-- Notes List --}}
-            <div class="grid gap-y-3">
+            <div class="fi-wi-stats-overview-stat-card grid gap-y-3">
                 @forelse($this->getNotes() as $note)
-                    <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-                        <div class="fi-section-content-ctn grid gap-4 p-4 sm:grid-cols-12">
+                    <x-filament::section>
+                        <div class="flex gap-4">
                             {{-- User Info Column --}}
-                            <div class="flex items-start gap-3 sm:col-span-3">
+                            <div class="flex w-1/4 shrink-0 items-start gap-3">
                                 <x-filament::avatar
                                     size="md"
+                                    :src="$note->createdBy ? 'https://ui-avatars.com/api/?name=' . urlencode($note->createdBy->name) . '&color=FFFFFF&background=111827' : null"
                                     :alt="$note->createdBy?->name ?? 'Unknown User'"
-                                >
-                                    <div class="flex items-center justify-center w-full h-full text-sm font-semibold">
-                                        {{ $note->createdBy?->initials() ?? '?' }}
-                                    </div>
-                                </x-filament::avatar>
+                                />
 
                                 <div class="min-w-0 flex-1">
-                                    <div class="fi-section-header-heading text-base font-semibold leading-6 text-gray-950 dark:text-white">
+                                    <div class="fi-section-header-heading text-base">
                                         {{ $note->createdBy?->name ?? 'Unknown User' }}
                                     </div>
-                                    <div class="fi-section-header-description text-xs text-gray-500 dark:text-gray-400">
+                                    <div class="fi-section-header-description">
                                         {{ $note->created_at->diffForHumans() }}
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Note Content Column --}}
-                            <div class="whitespace-pre-wrap break-words text-sm leading-6 text-gray-950 dark:text-white sm:col-span-9">
+                            <div class="flex-1 whitespace-pre-wrap break-words">
                                 {{ $note->note }}
                             </div>
                         </div>
-                    </div>
+                    </x-filament::section>
                 @empty
-                    <x-filament::section class="text-center">
-                        <div class="fi-section-content-ctn p-6">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <x-filament::section>
+                        <div class="fi-section-content-ctn text-center">
+                            <p class="fi-section-header-description">
                                 No notes yet. Add the first note above.
                             </p>
                         </div>
