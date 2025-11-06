@@ -69,7 +69,7 @@ class AdoptionApplicationsTable
                         'archived' => 'Archived',
                     ])
                     ->multiple()
-                    ->default(['submitted', 'interview_scheduled', 'under_review', 'approved', 'rejected']),
+                    ->default(['submitted']),
                 SelectFilter::make('pet_id')
                     ->label('Pet')
                     ->relationship('pet', 'name')
@@ -92,7 +92,7 @@ class AdoptionApplicationsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //DeleteBulkAction::make(),
+                    // DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

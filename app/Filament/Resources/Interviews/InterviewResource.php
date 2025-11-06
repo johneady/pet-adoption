@@ -20,6 +20,8 @@ class InterviewResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?int $navigationSort = 1;
+
     public static function form(Schema $schema): Schema
     {
         return InterviewForm::configure($schema);
@@ -35,6 +37,21 @@ class InterviewResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = Interview::query()
+            ->whereNull('completed_at')
+            ->where('scheduled_at', '<', now())
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
     }
 
     public static function getPages(): array

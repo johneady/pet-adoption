@@ -33,7 +33,7 @@ class AdoptionApplicationForm
                             ->disabled(fn ($record) => $record !== null),
                         Select::make('status')
                             ->options([
-                                'pending' => 'Pending',
+                                'submitted' => 'Submitted',
                                 'interview_scheduled' => 'Interview Scheduled',
                                 'under_review' => 'Under Review',
                                 'approved' => 'Approved',
@@ -41,7 +41,7 @@ class AdoptionApplicationForm
                                 'archived' => 'Archived',
                             ])
                             ->required()
-                            ->default('pending'),
+                            ->default('submitted'),
                         Placeholder::make('created_at')
                             ->label('Submitted on')
                             ->content(fn ($record) => $record?->created_at?->format('M d, Y h:i A') ?? 'Not yet submitted')
