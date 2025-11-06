@@ -8,4 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePet extends CreateRecord
 {
     protected static string $resource = PetResource::class;
+
+    protected static bool $canCreateAnother = false;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

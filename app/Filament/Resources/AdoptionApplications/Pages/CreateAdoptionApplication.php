@@ -9,10 +9,17 @@ class CreateAdoptionApplication extends CreateRecord
 {
     protected static string $resource = AdoptionApplicationResource::class;
 
+    protected static bool $canCreateAnother = false;
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['status'] = $data['status'] ?? 'submitted';
 
         return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }
