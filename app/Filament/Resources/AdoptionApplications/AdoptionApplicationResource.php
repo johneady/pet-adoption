@@ -38,6 +38,20 @@ class AdoptionApplicationResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        $count = AdoptionApplication::query()
+            ->where('status', 'submitted')
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
     public static function getPages(): array
     {
         return [

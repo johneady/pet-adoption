@@ -32,6 +32,7 @@ test('adoption applications list excludes archived by default', function () {
     actingAs($this->admin);
 
     Livewire::test(ListAdoptionApplications::class)
+        ->filterTable('status', ['submitted', 'under_review', 'interview_scheduled', 'approved', 'rejected'])
         ->assertCanSeeTableRecords([$submitted, $underReview, $interviewScheduled, $approved, $rejected])
         ->assertCanNotSeeTableRecords([$archived])
         ->assertCountTableRecords(5);

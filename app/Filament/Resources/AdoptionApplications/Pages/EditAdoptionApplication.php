@@ -12,6 +12,11 @@ class EditAdoptionApplication extends EditRecord
 {
     protected static string $resource = AdoptionApplicationResource::class;
 
+    public function getHeading(): string
+    {
+        return "{$this->record->pet->name} - (Adopting Parent: {$this->record->user->name})";
+    }
+
     protected function getHeaderActions(): array
     {
         return [
