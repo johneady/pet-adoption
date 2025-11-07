@@ -307,3 +307,87 @@ test('creating an interview records application status history', function () {
         ->and($history->changed_by)->toBe($this->admin->id)
         ->and($history->notes)->toBe('Interview scheduled');
 });
+
+test('creating interview notes creates status history entry', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+        'notes' => null,
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.notes', 'These are the initial interview notes.')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Verify interview notes were updated
+    expect($interview->fresh()->notes)->toBe('These are the initial interview notes.');
+
+    // Verify status history was created with notes created message
+    $history = \App\Models\ApplicationStatusHistory::where('adoption_application_id', $application->id)
+        ->where('notes', 'Interview notes created')
+        ->first();
+
+    expect($history)->not->toBeNull()
+        ->and($history->from_status)->toBe('interview_scheduled')
+        ->and($history->to_status)->toBe('interview_scheduled')
+        ->and($history->changed_by)->toBe($this->admin->id);
+});
+
+test('updating interview notes creates status history entry', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+        'notes' => 'Initial notes',
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.notes', 'Updated interview notes with more details.')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Verify interview notes were updated
+    expect($interview->fresh()->notes)->toBe('Updated interview notes with more details.');
+
+    // Verify status history was created with notes updated message
+    $history = \App\Models\ApplicationStatusHistory::where('adoption_application_id', $application->id)
+        ->where('notes', 'Interview notes updated')
+        ->first();
+
+    expect($history)->not->toBeNull()
+        ->and($history->from_status)->toBe('interview_scheduled')
+        ->and($history->to_status)->toBe('interview_scheduled')
+        ->and($history->changed_by)->toBe($this->admin->id);
+});
+
+test('editing interview without changing notes does not create status history entry', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+        'notes' => 'Some notes',
+    ]);
+
+    actingAs($this->admin);
+
+    $historyCountBefore = \App\Models\ApplicationStatusHistory::where('adoption_application_id', $application->id)->count();
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.location', 'Updated Location')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $historyCountAfter = \App\Models\ApplicationStatusHistory::where('adoption_application_id', $application->id)->count();
+
+    // Verify no new status history was created
+    expect($historyCountAfter)->toBe($historyCountBefore);
+});

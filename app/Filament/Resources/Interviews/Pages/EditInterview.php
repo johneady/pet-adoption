@@ -6,7 +6,6 @@ use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Filament\Resources\Interviews\InterviewResource;
 use App\Models\ApplicationStatusHistory;
 use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Icons\Heroicon;
@@ -15,6 +14,14 @@ use Illuminate\Contracts\View\View;
 class EditInterview extends EditRecord
 {
     protected static string $resource = InterviewResource::class;
+
+    protected ?string $originalNotes = null;
+
+    protected function beforeSave(): void
+    {
+        // Store the original notes value right before save
+        $this->originalNotes = $this->record->getOriginal('notes');
+    }
 
     protected function getHeaderActions(): array
     {
@@ -78,6 +85,33 @@ class EditInterview extends EditRecord
                 }),
             $this->getCancelFormAction(),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        // Check if interview notes were created or updated
+        $currentNotes = $this->record->notes;
+
+        // Only create history entry if notes actually changed
+        if ($this->originalNotes !== $currentNotes) {
+            $application = $this->record->adoptionApplication;
+
+            // Determine if notes were created or updated
+            $wasEmpty = empty($this->originalNotes);
+            $noteAction = $wasEmpty ? 'Interview notes created' : 'Interview notes updated';
+
+            // Create status history entry (no status change, just noting the notes update)
+            ApplicationStatusHistory::create([
+                'adoption_application_id' => $application->id,
+                'from_status' => $application->status,
+                'to_status' => $application->status,
+                'notes' => $noteAction,
+                'changed_by' => auth()->id(),
+            ]);
+
+            // Update the original notes to the current value for subsequent saves
+            $this->originalNotes = $currentNotes;
+        }
     }
 
     protected function getRedirectUrl(): string
