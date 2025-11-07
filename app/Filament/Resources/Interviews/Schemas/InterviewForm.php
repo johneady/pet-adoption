@@ -22,7 +22,7 @@ class InterviewForm
                     ->preload()
                     ->required()
                     ->default(fn () => request()->query('adoption_application_id'))
-                    ->disabled(fn () => request()->has('adoption_application_id'))
+                    ->disabled(fn (string $operation) => $operation === 'edit' || request()->has('adoption_application_id'))
                     ->dehydrated(),
                 DateTimePicker::make('scheduled_at')
                     ->required(),
