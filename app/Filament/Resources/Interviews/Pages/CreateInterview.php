@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Interviews\Pages;
 
 use App\Filament\Resources\Interviews\InterviewResource;
+use App\Models\AdoptionApplication;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Contracts\View\View;
 
 class CreateInterview extends CreateRecord
 {
@@ -14,5 +16,24 @@ class CreateInterview extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    public function getFooter(): ?View
+    {
+        $adoptionApplicationId = request()->query('adoption_application_id');
+
+        if (! $adoptionApplicationId) {
+            return null;
+        }
+
+        $adoptionApplication = AdoptionApplication::with(['user', 'pet'])->find($adoptionApplicationId);
+
+        if (! $adoptionApplication) {
+            return null;
+        }
+
+        return view('filament.resources.interviews.pages.create-interview-footer', [
+            'adoptionApplication' => $adoptionApplication,
+        ]);
     }
 }

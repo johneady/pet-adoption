@@ -50,6 +50,7 @@ class FinalDecision extends Page implements HasTable
                     ->where('status', 'under_review')
                     ->with(['user', 'pet.species', 'interview'])
             )
+            ->recordUrl(fn (AdoptionApplication $record): string => AdoptionApplicationResource::getUrl('edit', ['record' => $record]))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Applicant')

@@ -15,13 +15,22 @@ class InterviewForm
         return $schema
             ->components([
                 Select::make('adoption_application_id')
+                    ->label('Adoption Application')
                     ->relationship('adoptionApplication', 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->user->name} - {$record->pet->name}")
+                    ->searchable(['user.name', 'pet.name'])
+                    ->preload()
+                    ->required()
+                    ->default(fn () => request()->query('adoption_application_id'))
+                    ->disabled(fn () => request()->has('adoption_application_id'))
+                    ->dehydrated(),
+                DateTimePicker::make('scheduled_at')
                     ->required(),
-                DateTimePicker::make('scheduled_at'),
                 TextInput::make('location'),
                 Textarea::make('notes')
                     ->columnSpanFull(),
-                DateTimePicker::make('completed_at'),
+                DateTimePicker::make('completed_at')
+                    ->hiddenOn('create'),
             ]);
     }
 }
