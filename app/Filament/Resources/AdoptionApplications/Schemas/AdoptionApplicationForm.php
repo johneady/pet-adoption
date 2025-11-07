@@ -80,7 +80,6 @@ class AdoptionApplicationForm
                                     ])
                                     ->disabled(fn ($record) => $record !== null),
                                 TextInput::make('veterinary_reference')
-                                    ->tel()
                                     ->disabled(fn ($record) => $record !== null),
                             ]),
 

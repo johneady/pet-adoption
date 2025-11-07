@@ -24,7 +24,7 @@ class FinalDecision extends Page implements HasTable
 
     protected static ?string $navigationLabel = 'Final Decisions';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     protected string $view = 'filament.pages.final-decision';
 
