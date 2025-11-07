@@ -25,7 +25,7 @@ class EditAdoptionApplication extends EditRecord
                 ->label('Schedule Interview')
                 ->icon(Heroicon::OutlinedCalendar)
                 ->color('primary')
-                ->visible(fn () => $this->record->interview === null)
+                ->visible(fn () => $this->record->status === 'submitted' && $this->record->interview === null)
                 ->url(fn () => InterviewResource::getUrl('create', ['adoption_application_id' => $this->record->id])),
             Action::make('view_status_history')
                 ->label('View Status History')
