@@ -30,7 +30,7 @@ class InterviewForm
                 Textarea::make('notes')
                     ->columnSpanFull(),
                 DateTimePicker::make('completed_at')
-                    ->hiddenOn('create'),
+                    ->hidden(),
             ]);
     }
 }

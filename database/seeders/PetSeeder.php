@@ -41,7 +41,7 @@ class PetSeeder extends Seeder
                 'slug' => \Illuminate\Support\Str::slug($name.'-'.fake()->randomNumber(4)),
                 'species_id' => $dogSpeciesId,
                 'breed_id' => fake()->randomElement($dogBreeds),
-                'status' => fake()->randomElement(['available', 'available', 'available', 'pending', 'adopted', 'unavailable']),
+                'status' => fake()->randomElement(['available', 'available', 'available', 'pending', 'adopted', 'coming_soon']),
             ]);
         }
 
@@ -51,7 +51,7 @@ class PetSeeder extends Seeder
                 'slug' => \Illuminate\Support\Str::slug($name.'-'.fake()->randomNumber(4)),
                 'species_id' => $catSpeciesId,
                 'breed_id' => fake()->randomElement($catBreeds),
-                'status' => fake()->randomElement(['available', 'available', 'available', 'pending', 'adopted', 'unavailable']),
+                'status' => fake()->randomElement(['available', 'available', 'available', 'pending', 'adopted', 'coming_soon']),
             ]);
         }
 

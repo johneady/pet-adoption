@@ -82,19 +82,19 @@ class PetForm
                                 'available' => 'Available',
                                 'pending' => 'Pending',
                                 'adopted' => 'Adopted',
-                                'unavailable' => 'Unavailable',
+                                'coming_soon' => 'Coming Soon',
                             ])
                             ->icons([
                                 'available' => Heroicon::OutlinedCheckCircle,
                                 'pending' => Heroicon::OutlinedClock,
                                 'adopted' => Heroicon::OutlinedHeart,
-                                'unavailable' => Heroicon::OutlinedXCircle,
+                                'coming_soon' => Heroicon::OutlinedXCircle,
                             ])
                             ->colors([
                                 'available' => 'success',
                                 'pending' => 'warning',
                                 'adopted' => 'gray',
-                                'unavailable' => 'danger',
+                                'coming_soon' => 'danger',
                             ])
                             ->inline()
                             ->required()

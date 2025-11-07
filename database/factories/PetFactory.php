@@ -34,7 +34,7 @@ class PetFactory extends Factory
             'vaccination_status' => fake()->boolean(),
             'special_needs' => fake()->boolean(30),
             'intake_date' => fake()->dateTimeBetween('-2 years', 'now'),
-            'status' => fake()->randomElement(['available', 'pending', 'adopted', 'unavailable']),
+            'status' => fake()->randomElement(['available', 'pending', 'adopted', 'coming_soon']),
         ];
     }
 }

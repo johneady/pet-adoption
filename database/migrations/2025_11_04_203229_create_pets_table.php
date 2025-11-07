@@ -26,7 +26,7 @@ return new class extends Migration
             $table->boolean('vaccination_status')->default(false);
             $table->boolean('special_needs')->default(false);
             $table->date('intake_date');
-            $table->enum('status', ['available', 'pending', 'adopted', 'unavailable'])->default('available');
+            $table->enum('status', ['available', 'pending', 'adopted', 'coming_soon'])->default('available');
             $table->timestamps();
         });
     }

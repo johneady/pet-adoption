@@ -236,3 +236,28 @@ test('interview resource table can search by pet name', function () {
         ->assertCanSeeTableRecords([$interview1])
         ->assertCountTableRecords(1);
 });
+
+test('creating an interview updates pet status to pending', function () {
+    $application = AdoptionApplication::factory()->create();
+    $pet = $application->pet;
+
+    // Ensure pet starts with available status
+    $pet->update(['status' => 'available']);
+    expect($pet->fresh()->status)->toBe('available');
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\CreateInterview::class)
+        ->set('data.adoption_application_id', $application->id)
+        ->set('data.scheduled_at', now()->addDays(3))
+        ->set('data.location', 'Main Office')
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    // Verify interview was created
+    expect(Interview::where('adoption_application_id', $application->id)->exists())->toBeTrue();
+
+    // Verify pet status is now pending
+    expect($pet->fresh()->status)->toBe('pending');
+});
