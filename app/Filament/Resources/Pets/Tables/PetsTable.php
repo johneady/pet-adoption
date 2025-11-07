@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -43,6 +44,14 @@ class PetsTable
                         'female' => 'warning',
                         default => 'gray',
                     })
+                    ->toggleable(),
+                IconColumn::make('vaccination_status')
+                    ->label('Vaccinated')
+                    ->boolean()
+                    ->toggleable(),
+                IconColumn::make('special_needs')
+                    ->label('Special Needs')
+                    ->boolean()
                     ->toggleable(),
                 TextColumn::make('status')
                     ->badge()
@@ -87,6 +96,18 @@ class PetsTable
                         'medium' => 'Medium',
                         'large' => 'Large',
                         'extra_large' => 'Extra Large',
+                    ]),
+                SelectFilter::make('vaccination_status')
+                    ->label('Vaccinated')
+                    ->options([
+                        true => 'Yes',
+                        false => 'No',
+                    ]),
+                SelectFilter::make('special_needs')
+                    ->label('Special Needs')
+                    ->options([
+                        true => 'Yes',
+                        false => 'No',
                     ]),
             ])
             ->recordActions([

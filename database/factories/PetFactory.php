@@ -31,6 +31,8 @@ class PetFactory extends Factory
             'color' => fake()->randomElement(['Black', 'White', 'Brown', 'Gray', 'Golden', 'Mixed']),
             'description' => fake()->paragraphs(3, true),
             'medical_notes' => fake()->optional()->paragraph(),
+            'vaccination_status' => fake()->boolean(),
+            'special_needs' => fake()->boolean(30),
             'intake_date' => fake()->dateTimeBetween('-2 years', 'now'),
             'status' => fake()->randomElement(['available', 'pending', 'adopted', 'unavailable']),
         ];

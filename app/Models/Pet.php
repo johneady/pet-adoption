@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $color
  * @property string|null $description
  * @property string|null $medical_notes
+ * @property bool $vaccination_status
+ * @property bool $special_needs
  * @property \Illuminate\Support\Carbon $intake_date
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -31,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PetPhoto> $primaryPhoto
  * @property-read int|null $primary_photo_count
  * @property-read \App\Models\Species $species
+ *
  * @method static \Database\Factories\PetFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pet newQuery()
@@ -50,6 +53,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pet whereSpeciesId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pet whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pet whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Pet extends Model
@@ -68,6 +72,8 @@ class Pet extends Model
         'color',
         'description',
         'medical_notes',
+        'vaccination_status',
+        'special_needs',
         'intake_date',
         'status',
     ];
@@ -76,6 +82,8 @@ class Pet extends Model
     {
         return [
             'intake_date' => 'date',
+            'vaccination_status' => 'boolean',
+            'special_needs' => 'boolean',
         ];
     }
 

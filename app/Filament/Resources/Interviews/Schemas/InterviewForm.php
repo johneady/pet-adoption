@@ -17,7 +17,7 @@ class InterviewForm
                 Select::make('adoption_application_id')
                     ->label('Adoption Application')
                     ->relationship('adoptionApplication', 'id')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->user->name} - {$record->pet->name}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->user->name} :: Adopting {$record->pet->name}")
                     ->searchable(['user.name', 'pet.name'])
                     ->preload()
                     ->required()

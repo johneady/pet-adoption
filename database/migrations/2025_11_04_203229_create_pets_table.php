@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->text('description')->nullable();
             $table->text('medical_notes')->nullable();
+            $table->boolean('vaccination_status')->default(false);
+            $table->boolean('special_needs')->default(false);
             $table->date('intake_date');
             $table->enum('status', ['available', 'pending', 'adopted', 'unavailable'])->default('available');
             $table->timestamps();

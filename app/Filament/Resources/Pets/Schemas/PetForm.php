@@ -67,6 +67,12 @@ class PetForm
                                 'extra_large' => 'Extra Large',
                             ]),
                         TextInput::make('color'),
+                        Toggle::make('vaccination_status')
+                            ->label('Vaccinated')
+                            ->default(false),
+                        Toggle::make('special_needs')
+                            ->label('Special Needs')
+                            ->default(false),
                         DatePicker::make('intake_date')
                             ->required()
                             ->default(now())
@@ -102,7 +108,7 @@ class PetForm
                             ->rows(5)
                             ->columnSpanFull(),
                         Textarea::make('medical_notes')
-                            ->rows(3)
+                            ->rows(5)
                             ->columnSpanFull(),
                     ]),
 
