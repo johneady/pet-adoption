@@ -42,7 +42,7 @@ class StatusHistoryTable
                     ->placeholder('No notes')
                     ->grow(),
                 TextColumn::make('changedBy.name')
-                    ->label('Triggered By')
+                    ->label('Changed by')
                     ->placeholder('System'),
                 TextColumn::make('created_at')
                     ->label('Date')
@@ -50,6 +50,7 @@ class StatusHistoryTable
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'asc')
-            ->paginated(false);
+            ->paginated(false)
+            ->emptyStateHeading('No status history available');
     }
 }

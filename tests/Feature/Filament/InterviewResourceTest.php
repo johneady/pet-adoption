@@ -261,3 +261,49 @@ test('creating an interview updates pet status to pending', function () {
     // Verify pet status is now pending
     expect($pet->fresh()->status)->toBe('pending');
 });
+
+test('creating an interview updates application status to interview_scheduled', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'submitted']);
+
+    expect($application->fresh()->status)->toBe('submitted');
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\CreateInterview::class)
+        ->set('data.adoption_application_id', $application->id)
+        ->set('data.scheduled_at', now()->addDays(3))
+        ->set('data.location', 'Main Office')
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    // Verify interview was created
+    expect(Interview::where('adoption_application_id', $application->id)->exists())->toBeTrue();
+
+    // Verify application status is now interview_scheduled
+    expect($application->fresh()->status)->toBe('interview_scheduled');
+});
+
+test('creating an interview records application status history', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'submitted']);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\CreateInterview::class)
+        ->set('data.adoption_application_id', $application->id)
+        ->set('data.scheduled_at', now()->addDays(3))
+        ->set('data.location', 'Main Office')
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    // Verify status history was created
+    $history = \App\Models\ApplicationStatusHistory::where('adoption_application_id', $application->id)
+        ->where('from_status', 'submitted')
+        ->where('to_status', 'interview_scheduled')
+        ->first();
+
+    expect($history)->not->toBeNull()
+        ->and($history->changed_by)->toBe($this->admin->id)
+        ->and($history->notes)->toBe('Interview scheduled');
+});

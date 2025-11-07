@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Interviews\Pages;
 
 use App\Filament\Resources\Interviews\InterviewResource;
 use App\Models\AdoptionApplication;
+use App\Models\ApplicationStatusHistory;
 use App\Models\Interview;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Contracts\View\View;
@@ -29,6 +30,22 @@ class CreateInterview extends CreateRecord
         if ($interview->adoptionApplication?->pet) {
             $interview->adoptionApplication->pet->update([
                 'status' => 'pending',
+            ]);
+        }
+
+        if ($interview->adoptionApplication) {
+            $oldStatus = $interview->adoptionApplication->status;
+
+            $interview->adoptionApplication->update([
+                'status' => 'interview_scheduled',
+            ]);
+
+            ApplicationStatusHistory::create([
+                'adoption_application_id' => $interview->adoptionApplication->id,
+                'from_status' => $oldStatus,
+                'to_status' => 'interview_scheduled',
+                'changed_by' => auth()->id(),
+                'notes' => 'Interview scheduled',
             ]);
         }
     }

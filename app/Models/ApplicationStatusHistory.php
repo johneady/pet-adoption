@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\AdoptionApplication $adoptionApplication
  * @property-read \App\Models\User|null $changedBy
+ *
  * @method static \Database\Factories\ApplicationStatusHistoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApplicationStatusHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApplicationStatusHistory newQuery()
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApplicationStatusHistory whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApplicationStatusHistory whereToStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApplicationStatusHistory whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class ApplicationStatusHistory extends Model

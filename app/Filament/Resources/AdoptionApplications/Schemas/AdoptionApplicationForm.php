@@ -7,7 +7,6 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -32,22 +31,21 @@ class AdoptionApplicationForm
                                     ->preload()
                                     ->disabled(fn ($record) => $record !== null),
                                 Select::make('pet_id')
-                                    ->relationship('pet', 'name')
+                                    ->relationship('pet', 'name', fn ($query) => $query->where('status', 'available'))
                                     ->required()
                                     ->searchable()
                                     ->preload()
                                     ->disabled(fn ($record) => $record !== null),
-                                TextEntry::make('status')
-                                    ->badge()
-                                    ->color(fn (string $state): string => match ($state) {
-                                        'submitted' => 'gray',
-                                        'interview_scheduled' => 'warning',
-                                        'under_review' => 'info',
-                                        'approved' => 'success',
-                                        'rejected' => 'danger',
-                                        'archived' => 'gray',
-                                        default => 'gray',
-                                    })
+                                Select::make('status')
+                                    ->options([
+                                        'submitted' => 'Submitted',
+                                        'under_review' => 'Under Review',
+                                        'interview_scheduled' => 'Interview Scheduled',
+                                        'approved' => 'Approved',
+                                        'rejected' => 'Rejected',
+                                        'archived' => 'Archived',
+                                    ])
+                                    ->disabled(fn ($record) => $record !== null)
                                     ->visible(fn ($record) => $record !== null),
                                 Placeholder::make('created_at')
                                     ->label('Submitted on')

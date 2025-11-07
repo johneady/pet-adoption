@@ -28,7 +28,7 @@ class FinalDecision extends Page implements HasTable
 
     protected string $view = 'filament.pages.final-decision';
 
-    protected static ?string $title = 'Applications that have a completed interview';
+    protected static ?string $title = 'Applications ready for final decisioning';
 
     public static function getNavigationBadge(): ?string
     {

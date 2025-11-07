@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $breeds_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Pet> $pets
  * @property-read int|null $pets_count
+ *
  * @method static \Database\Factories\SpeciesFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species newQuery()
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Species extends Model

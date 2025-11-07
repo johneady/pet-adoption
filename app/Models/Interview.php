@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\AdoptionApplication $adoptionApplication
+ *
  * @method static \Database\Factories\InterviewFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview newQuery()
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview whereScheduledAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Interview extends Model
