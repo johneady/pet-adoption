@@ -155,3 +155,54 @@ test('rejected application is removed from final decision list', function () {
 
     $component->assertCanNotSeeTableRecords([$application->refresh()]);
 });
+
+test('approving application updates pet status to adopted', function () {
+    $pet = Pet::factory()->create(['status' => 'pending']);
+    $application = AdoptionApplication::factory()
+        ->for($this->admin, 'user')
+        ->for($pet)
+        ->create(['status' => 'under_review']);
+
+    actingAs($this->admin);
+
+    Livewire::test(FinalDecision::class)
+        ->callAction(TestAction::make('approve')->table($application));
+
+    expect($pet->refresh()->status)->toBe('adopted');
+});
+
+test('rejecting application updates pet status to available when no other active applications exist', function () {
+    $pet = Pet::factory()->create(['status' => 'pending']);
+    $application = AdoptionApplication::factory()
+        ->for($this->admin, 'user')
+        ->for($pet)
+        ->create(['status' => 'under_review']);
+
+    actingAs($this->admin);
+
+    Livewire::test(FinalDecision::class)
+        ->callAction(TestAction::make('reject')->table($application));
+
+    expect($pet->refresh()->status)->toBe('available');
+});
+
+test('rejecting application keeps pet status as pending when other active applications exist', function () {
+    $pet = Pet::factory()->create(['status' => 'pending']);
+    $application = AdoptionApplication::factory()
+        ->for($this->admin, 'user')
+        ->for($pet)
+        ->create(['status' => 'under_review']);
+
+    // Create another active application for the same pet
+    $otherApplication = AdoptionApplication::factory()
+        ->for(User::factory()->create(), 'user')
+        ->for($pet)
+        ->create(['status' => 'interview_scheduled']);
+
+    actingAs($this->admin);
+
+    Livewire::test(FinalDecision::class)
+        ->callAction(TestAction::make('reject')->table($application));
+
+    expect($pet->refresh()->status)->toBe('pending');
+});

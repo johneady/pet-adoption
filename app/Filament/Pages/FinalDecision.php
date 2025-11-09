@@ -96,6 +96,11 @@ class FinalDecision extends Page implements HasTable
 
                         $record->update(['status' => 'approved']);
 
+                        // Update pet status to adopted
+                        if ($record->pet) {
+                            $record->pet->update(['status' => 'adopted']);
+                        }
+
                         ApplicationStatusHistory::create([
                             'adoption_application_id' => $record->id,
                             'from_status' => $oldStatus,
@@ -122,6 +127,18 @@ class FinalDecision extends Page implements HasTable
                         $oldStatus = $record->status;
 
                         $record->update(['status' => 'rejected']);
+
+                        // Update pet status to available only if no other active applications exist
+                        if ($record->pet) {
+                            $hasOtherActiveApplications = $record->pet->adoptionApplications()
+                                ->whereIn('status', ['under_review', 'interview_scheduled'])
+                                ->where('id', '!=', $record->id)
+                                ->exists();
+
+                            if (! $hasOtherActiveApplications) {
+                                $record->pet->update(['status' => 'available']);
+                            }
+                        }
 
                         ApplicationStatusHistory::create([
                             'adoption_application_id' => $record->id,
