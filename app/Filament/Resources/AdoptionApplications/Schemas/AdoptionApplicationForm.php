@@ -109,22 +109,22 @@ class AdoptionApplicationForm
                     ->schema([
                         DateTimePicker::make('scheduled_at')
                             ->label('Scheduled At')
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->disabled(),
                         TextInput::make('location')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->disabled(),
                         Textarea::make('notes')
                             ->rows(3)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(),
                         DateTimePicker::make('completed_at')
                             ->label('Completed At')
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->disabled(),
                     ])
                     ->visible(fn ($record) => $record !== null && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'archived']))
-                    ->saveRelationshipsUsing(function ($component, $state, $record) {
-                        if ($record && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'archived'])) {
-                            $component->saveRelationships();
-                        }
-                    })
+                    ->columnSpanFull()
                     ->collapsible()
                     ->collapsed(),
             ]);

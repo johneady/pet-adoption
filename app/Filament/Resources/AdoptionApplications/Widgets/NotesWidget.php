@@ -29,6 +29,7 @@ class NotesWidget extends Widget implements HasActions, HasForms
     {
         return Action::make('addNote')
             ->label('Add Note')
+            ->visible(fn () => $this->record->status !== 'archived')
             ->form([
                 Textarea::make('note')
                     ->label('Note')
@@ -57,7 +58,7 @@ class NotesWidget extends Widget implements HasActions, HasForms
         return $this->record
             ->notes()
             ->with('createdBy')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
     }
 }

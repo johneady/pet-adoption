@@ -60,7 +60,7 @@ test('note requires content', function () {
         ->assertHasActionErrors(['note' => 'required']);
 });
 
-test('notes are displayed in descending order', function () {
+test('notes are displayed in ascending order', function () {
     actingAs($this->admin);
 
     $note1 = AdoptionApplicationNote::factory()
@@ -79,8 +79,8 @@ test('notes are displayed in descending order', function () {
 
     $notes = $widget->instance()->getNotes();
 
-    expect($notes->first()->note)->toBe('Third note')
-        ->and($notes->last()->note)->toBe('First note');
+    expect($notes->first()->note)->toBe('First note')
+        ->and($notes->last()->note)->toBe('Third note');
 });
 
 test('notes display user information', function () {
@@ -117,4 +117,22 @@ test('notes widget is displayed on edit adoption application page', function () 
 
     Livewire::test(EditAdoptionApplication::class, ['record' => $this->application->id])
         ->assertSuccessful();
+});
+
+test('add note action is visible for non-archived applications', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'submitted']);
+
+    actingAs($this->admin);
+
+    Livewire::test(NotesWidget::class, ['record' => $application])
+        ->assertActionVisible('addNote');
+});
+
+test('add note action is hidden for archived applications', function () {
+    $application = AdoptionApplication::factory()->create(['status' => 'archived']);
+
+    actingAs($this->admin);
+
+    Livewire::test(NotesWidget::class, ['record' => $application])
+        ->assertActionHidden('addNote');
 });

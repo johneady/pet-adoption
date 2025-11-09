@@ -27,6 +27,19 @@ class EditAdoptionApplication extends EditRecord
                 ->color('primary')
                 ->visible(fn () => $this->record->status === 'submitted' && $this->record->interview === null)
                 ->url(fn () => InterviewResource::getUrl('create', ['adoption_application_id' => $this->record->id])),
+            Action::make('archive')
+                ->label('Archive')
+                ->icon(Heroicon::OutlinedArchiveBox)
+                ->color('warning')
+                ->outlined()
+                ->visible(fn () => in_array($this->record->status, ['approved', 'rejected']))
+                ->requiresConfirmation()
+                ->modalHeading('Archive Application')
+                ->modalDescription('Are you sure you want to archive this application? This will move it to archived status.')
+                ->action(function () {
+                    $this->record->update(['status' => 'archived']);
+                    $this->redirect($this->getResource()::getUrl('index'));
+                }),
             Action::make('view_status_history')
                 ->label('View Status History')
                 ->icon(Heroicon::OutlinedClock)
