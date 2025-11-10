@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Filament\Widgets\ApplicationsChart;
 use App\Filament\Widgets\LatestApplicationsWidget;
 use App\Filament\Widgets\PetsStatsWidget;
+use App\Filament\Widgets\RecentUsersWidget;
 use App\Models\AdoptionApplication;
 use App\Models\Interview;
 use App\Models\Pet;
@@ -125,4 +126,19 @@ test('latest applications widget displays recent applications', function () {
         ->assertSee('John Doe')
         ->assertSee('Max')
         ->assertSee('submitted');
+});
+
+test('recent users widget displays recent users with time ago format', function () {
+    User::factory()->create(['name' => 'Alice Smith', 'created_at' => now()->subMinutes(5)]);
+    User::factory()->create(['name' => 'Bob Johnson', 'created_at' => now()->subHours(2)]);
+    User::factory()->create(['name' => 'Charlie Brown', 'created_at' => now()->subDays(1)]);
+
+    actingAs($this->admin);
+
+    Livewire::test(RecentUsersWidget::class)
+        ->assertSee('Recent Users')
+        ->assertSee('Alice Smith')
+        ->assertSee('Bob Johnson')
+        ->assertSee('Charlie Brown')
+        ->assertSee($this->admin->name);
 });
