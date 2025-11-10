@@ -13,11 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->admin()->create([
-            'name' => 'Tony Testing',
-            'email' => 'tony@testing.com',
-            'password' => 'testing',
-        ]);
+        $user = User::where('email', 'tony@testing.com')->first();
+
+        if (!$user) {
+            User::factory()->admin()->create([
+                'name' => 'Tony Testing',
+                'email' => 'tony@testing.com',
+                'password' => 'testing',
+            ]);
+        }
 
         $this->call([
             SpeciesSeeder::class,
@@ -26,6 +30,8 @@ class DatabaseSeeder extends Seeder
             ApplicationStatusHistorySeeder::class,
             InterviewSeeder::class,
             SettingSeeder::class,
+            TagSeeder::class,
+            BlogPostSeeder::class,
         ]);
     }
 }
