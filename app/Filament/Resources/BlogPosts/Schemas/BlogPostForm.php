@@ -84,9 +84,22 @@ class BlogPostForm
                             ->options(function (callable $get) {
                                 $currentStatus = $get('status');
 
+                                if ($currentStatus === 'draft') {
+                                    return [
+                                        'draft' => 'Draft',
+                                        'published' => 'Published',
+                                    ];
+                                }
+
                                 if ($currentStatus === 'published') {
                                     return [
                                         'published' => 'Published',
+                                        'archived' => 'Archived',
+                                    ];
+                                }
+
+                                if ($currentStatus === 'archived') {
+                                    return [
                                         'archived' => 'Archived',
                                     ];
                                 }
