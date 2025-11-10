@@ -27,6 +27,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property bool $is_admin
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdoptionApplication> $adoptionApplications
  * @property-read int|null $adoption_applications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BlogPost> $blogPosts
+ * @property-read int|null $blog_posts_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  *
@@ -107,6 +109,11 @@ class User extends Authenticatable implements FilamentUser
     public function adoptionApplications(): HasMany
     {
         return $this->hasMany(AdoptionApplication::class);
+    }
+
+    public function blogPosts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class);
     }
 
     public function canAccessPanel(Panel $panel): bool
