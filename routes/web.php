@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Pets\Index as PetsIndex;
+use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -10,6 +12,9 @@ use Laravel\Fortify\Features;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/pets', PetsIndex::class)->name('pets.index');
+Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
