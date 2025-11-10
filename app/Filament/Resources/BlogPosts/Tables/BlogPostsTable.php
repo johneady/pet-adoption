@@ -48,6 +48,7 @@ class BlogPostsTable
                     ->label('Published')
                     ->dateTime()
                     ->sortable()
+                    ->dateTime('M j, Y')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Created')
