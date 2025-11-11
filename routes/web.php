@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Blog\Index as BlogIndex;
+use App\Livewire\Blog\Show as BlogShow;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
@@ -15,6 +17,9 @@ Route::get('/', function () {
 
 Route::get('/pets', PetsIndex::class)->name('pets.index');
 Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
+
+Route::get('/blog', BlogIndex::class)->name('blog.index');
+Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

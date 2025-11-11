@@ -1,0 +1,149 @@
+<div class="px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl">
+        <!-- Header -->
+        <div class="mb-8">
+            <flux:heading size="xl" class="mb-2">Blog</flux:heading>
+            <flux:text class="text-zinc-600 dark:text-zinc-400">Read our latest articles and updates</flux:text>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
+            <!-- Filters Sidebar -->
+            <div class="space-y-4">
+                <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+                    <div class="mb-4 flex items-center justify-between">
+                        <flux:heading size="lg">Filters</flux:heading>
+                        @if($search || $tagId)
+                            <flux:button wire:click="clearFilters" variant="ghost" size="sm">Clear</flux:button>
+                        @endif
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Search -->
+                        <div>
+                            <flux:field>
+                                <flux:label>Search</flux:label>
+                                <flux:input wire:model.live.debounce.300ms="search" placeholder="Search posts..." />
+                            </flux:field>
+                        </div>
+
+                        <!-- Tags -->
+                        @if($tags->isNotEmpty())
+                            <div>
+                                <flux:field>
+                                    <flux:label>Tag</flux:label>
+                                    <flux:select wire:model.live="tagId">
+                                        <option value="">All tags</option>
+                                        @foreach($tags as $tag)
+                                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                        @endforeach
+                                    </flux:select>
+                                </flux:field>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Grid -->
+            <div>
+                <div wire:loading.class="opacity-50 transition-opacity" class="min-h-screen">
+                    @if($posts->count() > 0)
+                        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            @foreach($posts as $post)
+                                <a href="{{ route('blog.show', $post->slug) }}" wire:navigate
+                                   class="group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                                    <!-- Featured Image -->
+                                    <div class="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                                        @if($post->featured_image)
+                                            <img src="{{ Storage::url($post->featured_image) }}"
+                                                 alt="{{ $post->title }}"
+                                                 class="h-full w-full object-cover transition-transform group-hover:scale-105"
+                                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="hidden h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                                                <svg class="h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                        @else
+                                            <div class="flex h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                                                <svg class="h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Post Info -->
+                                    <div class="p-4">
+                                        <div class="mb-2">
+                                            <flux:heading size="lg" class="mb-2">{{ $post->title }}</flux:heading>
+
+                                            <!-- Author and Date -->
+                                            <div class="mb-3 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                                                <span>{{ $post->author->name }}</span>
+                                                <span>&middot;</span>
+                                                <span>{{ $post->published_at->format('M j, Y') }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Excerpt -->
+                                        @if($post->excerpt)
+                                            <flux:text size="sm" class="mb-3 line-clamp-3 text-zinc-600 dark:text-zinc-400">
+                                                {{ $post->excerpt }}
+                                            </flux:text>
+                                        @endif
+
+                                        <!-- Tags -->
+                                        @if($post->tags->isNotEmpty())
+                                            <div class="flex flex-wrap gap-2">
+                                                @foreach($post->tags->take(3) as $tag)
+                                                    <flux:badge variant="outline" size="sm">
+                                                        {{ $tag->name }}
+                                                    </flux:badge>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-8">
+                            {{ $posts->links() }}
+                        </div>
+                    @else
+                        <!-- Empty State -->
+                        <div class="flex min-h-[400px] items-center justify-center rounded-xl border border-zinc-200 bg-white p-12 dark:border-zinc-700 dark:bg-zinc-900">
+                            <div class="text-center">
+                                <svg class="mx-auto h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <flux:heading size="lg" class="mb-2 mt-4">No posts found</flux:heading>
+                                <flux:text class="mb-4 text-zinc-600 dark:text-zinc-400">
+                                    Try adjusting your filters to see more results
+                                </flux:text>
+                                @if($search || $tagId)
+                                    <flux:button wire:click="clearFilters" variant="primary">Clear all filters</flux:button>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Loading Indicator -->
+                <div wire:loading class="fixed inset-0 z-50 flex items-center justify-center bg-black/5 backdrop-blur-sm">
+                    <div class="rounded-lg bg-white px-6 py-4 shadow-lg dark:bg-zinc-900">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <flux:text>Loading...</flux:text>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
