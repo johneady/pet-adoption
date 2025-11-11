@@ -12,23 +12,49 @@
                 <div>
                     <flux:heading size="lg" class="mb-4">Pet Selection</flux:heading>
 
-                    <flux:field>
-                        <flux:label>
-                            Which pet would you like to adopt?
-                            <span class="text-red-600 dark:text-red-400">*</span>
-                        </flux:label>
-                        <flux:select wire:model="pet_id">
-                            <option value="">Select a pet</option>
-                            @foreach($availablePets as $pet)
-                                <option value="{{ $pet->id }}">
-                                    {{ $pet->name }} - {{ $pet->species->name }}@if($pet->breed), {{ $pet->breed->name }}@endif
-                                </option>
-                            @endforeach
-                        </flux:select>
-                        @error('pet_id')
-                            <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                        @enderror
-                    </flux:field>
+                    @if($selectedPet)
+                        <div class="rounded-lg border-2 border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
+                            <flux:field>
+                                <flux:label>
+                                    Selected Pet
+                                </flux:label>
+                                <div class="rounded-lg border border-blue-300 bg-white p-4 dark:border-blue-700 dark:bg-zinc-900">
+                                    <div class="flex items-center gap-3">
+                                        <svg class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <div>
+                                            <flux:text class="font-semibold">{{ $selectedPet->name }}</flux:text>
+                                            <flux:text size="sm" class="text-zinc-600 dark:text-zinc-400">
+                                                {{ $selectedPet->species->name }}@if($selectedPet->breed), {{ $selectedPet->breed->name }}@endif
+                                            </flux:text>
+                                        </div>
+                                    </div>
+                                </div>
+                                <flux:text size="sm" class="mt-2 text-blue-700 dark:text-blue-300">
+                                    This application is for {{ $selectedPet->name }}. To apply for a different pet, please return to the pet listings.
+                                </flux:text>
+                            </flux:field>
+                        </div>
+                    @else
+                        <flux:field>
+                            <flux:label>
+                                Which pet would you like to adopt?
+                                <span class="text-red-600 dark:text-red-400">*</span>
+                            </flux:label>
+                            <flux:select wire:model="pet_id">
+                                <option value="">Select a pet</option>
+                                @foreach($availablePets as $pet)
+                                    <option value="{{ $pet->id }}">
+                                        {{ $pet->name }} - {{ $pet->species->name }}@if($pet->breed), {{ $pet->breed->name }}@endif
+                                    </option>
+                                @endforeach
+                            </flux:select>
+                            @error('pet_id')
+                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+                            @enderror
+                        </flux:field>
+                    @endif
                 </div>
 
                 <flux:separator />

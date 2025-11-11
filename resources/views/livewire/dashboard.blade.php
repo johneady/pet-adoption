@@ -1,13 +1,8 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-7xl">
-        <div class="mb-8 flex items-center justify-between">
-            <div>
-                <flux:heading size="xl" class="mb-2">Dashboard</flux:heading>
-                <flux:text class="text-zinc-600 dark:text-zinc-400">Welcome back, {{ Auth::user()->name }}!</flux:text>
-            </div>
-            <flux:button href="{{ route('applications.create') }}" wire:navigate variant="primary">
-                New Application
-            </flux:button>
+        <div class="mb-8">
+            <flux:heading size="xl" class="mb-2">Dashboard</flux:heading>
+            <flux:text class="text-zinc-600 dark:text-zinc-400">Welcome back, {{ Auth::user()->name }}!</flux:text>
         </div>
 
         @if(session('message'))
@@ -203,8 +198,8 @@
                     <flux:text class="mb-4 text-zinc-600 dark:text-zinc-400">
                         You haven't submitted any adoption applications. Ready to find your perfect companion?
                     </flux:text>
-                    <flux:button href="{{ route('applications.create') }}" wire:navigate variant="primary">
-                        Start Your Application
+                    <flux:button href="{{ route('pets.index') }}" wire:navigate variant="primary">
+                        Browse Our Pets
                     </flux:button>
                 </div>
             </div>

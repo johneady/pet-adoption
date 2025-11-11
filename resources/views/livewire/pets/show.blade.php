@@ -165,7 +165,7 @@
                             </flux:text>
 
                             @auth
-                                <flux:button variant="primary" class="w-full">
+                                <flux:button href="{{ route('applications.create', ['petId' => $pet->id]) }}" wire:navigate variant="primary" class="w-full">
                                     Apply to Adopt {{ $pet->name }}
                                 </flux:button>
                             @else

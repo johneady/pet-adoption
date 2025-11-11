@@ -13,6 +13,8 @@ class Create extends Component
 {
     public ?int $pet_id = null;
 
+    public ?Pet $selectedPet = null;
+
     public string $living_situation = '';
 
     public string $experience = '';
@@ -31,6 +33,7 @@ class Create extends Component
     {
         if ($petId) {
             $this->pet_id = $petId;
+            $this->selectedPet = Pet::with(['species', 'breed'])->find($petId);
         }
     }
 
@@ -69,6 +72,7 @@ class Create extends Component
     {
         return view('livewire.applications.create', [
             'availablePets' => $this->availablePets,
+            'selectedPet' => $this->selectedPet,
         ]);
     }
 }

@@ -220,3 +220,23 @@ test('success message is shown after submission', function () {
         ->call('submit')
         ->assertSessionHas('message', 'Your adoption application has been submitted successfully!');
 });
+
+test('prefilled pet is shown as protected and not editable', function () {
+    $user = User::factory()->create();
+    $species = Species::factory()->create(['name' => 'Dog']);
+    $pet = Pet::factory()->create([
+        'species_id' => $species->id,
+        'status' => 'available',
+        'name' => 'Buddy',
+    ]);
+
+    actingAs($user);
+
+    Livewire::test(Create::class, ['petId' => $pet->id])
+        ->assertSet('pet_id', $pet->id)
+        ->assertSet('selectedPet.name', 'Buddy')
+        ->assertSee('Selected Pet')
+        ->assertSee('Buddy')
+        ->assertSee('This application is for Buddy')
+        ->assertDontSee('Select a pet');
+});
