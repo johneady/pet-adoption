@@ -23,7 +23,7 @@ class Dashboard extends Component
         return [
             'submitted' => [
                 'label' => 'Submitted',
-                'description' => 'Your application has been received and is awaiting review.',
+                'description' => 'Your application has been received. The next step is you will be contacted for an interview.',
                 'color' => 'blue',
             ],
             'under_review' => [

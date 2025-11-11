@@ -129,10 +129,10 @@ test('dashboard shows adoption process tracker', function () {
 
     Livewire::test(Dashboard::class)
         ->assertSee('Adoption Process')
-        ->assertSee('Application Submitted')
+        ->assertSee('Submitted')
         ->assertSee('Under Review')
         ->assertSee('Interview')
-        ->assertSee('Approved');
+        ->assertSee('Final Decision');
 });
 
 test('dashboard only shows current user applications', function () {
