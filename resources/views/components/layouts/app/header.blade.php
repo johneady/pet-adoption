@@ -9,7 +9,7 @@
     <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
-        <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0"
+        <a href="{{ route('home') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0"
             wire:navigate>
             <x-app-logo />
         </a>
@@ -21,10 +21,6 @@
                         {{ __('Admin') }}
                     </flux:navbar.item>
                 @endif
-                <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                    wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:navbar.item>
             @endauth
             <flux:navbar.item icon="heart" :href="route('pets.index')" :current="request()->routeIs('pets.*')"
                 wire:navigate>
@@ -95,17 +91,13 @@
         class="lg:hidden border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-        <a href="{{ route('dashboard') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+        <a href="{{ route('home') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
             <x-app-logo />
         </a>
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')">
                 @auth
-                    <flux:navlist.item icon="layout-grid" :href="route('dashboard')"
-                        :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:navlist.item>
                     @if (auth()->user()->is_admin)
                         <flux:navlist.item icon="cog" href="/admin" :current="request()->is('admin*')">
                             {{ __('Admin') }}
@@ -116,8 +108,8 @@
                     wire:navigate>
                     {{ __('Adopt a Pet') }}
                 </flux:navlist.item>
-                <flux:navlist.item icon="document-text" :href="route('blog.index')" :current="request()->routeIs('blog.*')"
-                    wire:navigate>
+                <flux:navlist.item icon="document-text" :href="route('blog.index')"
+                    :current="request()->routeIs('blog.*')" wire:navigate>
                     {{ __('Blog') }}
                 </flux:navlist.item>
             </flux:navlist.group>
