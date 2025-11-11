@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $user = User::where('email', 'tony@testing.com')->first();
 
-        if (!$user) {
+        if (! $user) {
             User::factory()->admin()->create([
                 'name' => 'Tony Testing',
                 'email' => 'tony@testing.com',

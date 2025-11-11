@@ -1,7 +1,9 @@
 <?php
 
+use App\Livewire\Applications\Create as ApplicationsCreate;
 use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
+use App\Livewire\Dashboard;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
@@ -21,9 +23,10 @@ Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
 Route::get('/blog', BlogIndex::class)->name('blog.index');
 Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
+    Route::get('applications/create', ApplicationsCreate::class)->name('applications.create');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\BlogPost;
 use App\Models\Tag;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BlogPostSeeder extends Seeder
