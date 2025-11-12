@@ -6,7 +6,7 @@
 </head>
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
-    <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <flux:header container class="border-b-2 border-ocean-200 bg-gradient-to-r from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
         <a href="{{ route('home') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0"
@@ -88,7 +88,7 @@
 
     <!-- Mobile Menu -->
     <flux:sidebar stashable sticky
-        class="lg:hidden border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        class="lg:hidden border-e-2 border-ocean-200 bg-gradient-to-br from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <a href="{{ route('home') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>

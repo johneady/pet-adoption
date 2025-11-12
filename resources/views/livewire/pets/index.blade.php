@@ -1,17 +1,17 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-7xl">
                 <!-- Header -->
-                <div class="mb-8">
-                    <flux:heading size="xl" class="mb-2">Find Your Perfect Companion</flux:heading>
-                    <flux:text class="text-zinc-600 dark:text-zinc-400">Browse our available pets and find your new best friend</flux:text>
+                <div class="mb-8 rounded-2xl bg-gradient-to-br from-ocean-50 to-teal-50 p-8 dark:from-ocean-950 dark:to-teal-950">
+                    <flux:heading size="xl" class="mb-2 text-ocean-900 dark:text-ocean-100">Find Your Perfect Companion</flux:heading>
+                    <flux:text class="text-ocean-700 dark:text-ocean-300">Browse our available pets and find your new best friend</flux:text>
                 </div>
 
                 <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
                     <!-- Filters Sidebar -->
                     <div class="space-y-4">
-                        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+                        <div class="rounded-xl border-2 border-ocean-200 bg-white p-6 shadow-sm shadow-ocean-100 dark:border-ocean-800 dark:bg-zinc-900 dark:shadow-ocean-950">
                             <div class="mb-4 flex items-center justify-between">
-                                <flux:heading size="lg">Filters</flux:heading>
+                                <flux:heading size="lg" class="text-ocean-900 dark:text-ocean-100">Filters</flux:heading>
                                 @if($search || $speciesId || $breedId || $gender || $size || $minAge || $maxAge)
                                     <flux:button wire:click="clearFilters" variant="ghost" size="sm">Clear</flux:button>
                                 @endif
@@ -103,9 +103,9 @@
                                 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                     @foreach($pets as $pet)
                                         <a href="{{ route('pets.show', $pet->slug) }}" wire:navigate
-                                           class="group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                                           class="group overflow-hidden rounded-xl border-2 border-ocean-200 bg-white transition-all hover:border-ocean-400 hover:shadow-lg hover:shadow-ocean-200/50 dark:border-ocean-800 dark:bg-zinc-900 dark:hover:border-ocean-600 dark:hover:shadow-ocean-900/50">
                                             <!-- Pet Image -->
-                                            <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                                            <div class="relative aspect-square overflow-hidden bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
                                                 @php
                                                     $primaryPhoto = $pet->photos->firstWhere('is_primary', true) ?? $pet->photos->first();
                                                 @endphp
@@ -114,14 +114,14 @@
                                                          alt="{{ $pet->name }}"
                                                          class="h-full w-full object-cover transition-transform group-hover:scale-105"
                                                          onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                    <div class="hidden h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                                        <svg class="h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <div class="hidden h-full w-full items-center justify-center bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
+                                                        <svg class="h-24 w-24 text-ocean-300 dark:text-ocean-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                         </svg>
                                                     </div>
                                                 @else
-                                                    <div class="flex h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                                        <svg class="h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
+                                                        <svg class="h-24 w-24 text-ocean-300 dark:text-ocean-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                         </svg>
                                                     </div>
@@ -129,7 +129,7 @@
 
                                                 <!-- Status Badge -->
                                                 <div class="absolute left-3 top-3">
-                                                    <flux:badge variant="success" size="sm" class="backdrop-blur-sm">Available</flux:badge>
+                                                    <flux:badge variant="success" size="sm" class="border-teal-600 bg-teal-500 backdrop-blur-sm">Available</flux:badge>
                                                 </div>
                                             </div>
 
@@ -180,13 +180,13 @@
                                 </div>
                             @else
                                 <!-- Empty State -->
-                                <div class="flex min-h-[400px] items-center justify-center rounded-xl border border-zinc-200 bg-white p-12 dark:border-zinc-700 dark:bg-zinc-900">
+                                <div class="flex min-h-[400px] items-center justify-center rounded-xl border-2 border-ocean-200 bg-gradient-to-br from-ocean-50 to-teal-50 p-12 dark:border-ocean-800 dark:from-ocean-950 dark:to-zinc-900">
                                     <div class="text-center">
-                                        <svg class="mx-auto h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="mx-auto h-24 w-24 text-ocean-300 dark:text-ocean-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        <flux:heading size="lg" class="mb-2 mt-4">No pets found</flux:heading>
-                                        <flux:text class="mb-4 text-zinc-600 dark:text-zinc-400">
+                                        <flux:heading size="lg" class="mb-2 mt-4 text-ocean-900 dark:text-ocean-100">No pets found</flux:heading>
+                                        <flux:text class="mb-4 text-ocean-700 dark:text-ocean-300">
                                             Try adjusting your filters to see more results
                                         </flux:text>
                                         @if($search || $speciesId || $breedId || $gender || $size || $minAge || $maxAge)
@@ -199,13 +199,13 @@
 
                         <!-- Loading Indicator -->
                         <div wire:loading class="fixed inset-0 z-50 flex items-center justify-center bg-black/5 backdrop-blur-sm">
-                            <div class="rounded-lg bg-white px-6 py-4 shadow-lg dark:bg-zinc-900">
+                            <div class="rounded-lg border-2 border-ocean-300 bg-white px-6 py-4 shadow-lg shadow-ocean-200/50 dark:border-ocean-700 dark:bg-zinc-900 dark:shadow-ocean-900/50">
                                 <div class="flex items-center gap-3">
-                                    <svg class="h-5 w-5 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg class="h-5 w-5 animate-spin text-ocean-600 dark:text-ocean-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    <flux:text>Loading...</flux:text>
+                                    <flux:text class="text-ocean-700 dark:text-ocean-300">Loading...</flux:text>
                                 </div>
                             </div>
                         </div>
