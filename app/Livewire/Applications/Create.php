@@ -54,6 +54,9 @@ class Create extends Component
             'status' => 'submitted',
         ]);
 
+        // Update the pet's status to pending
+        Pet::where('id', $validated['pet_id'])->update(['status' => 'pending']);
+
         session()->flash('message', 'Your adoption application has been submitted successfully!');
 
         $this->redirect(route('dashboard'), navigate: true);

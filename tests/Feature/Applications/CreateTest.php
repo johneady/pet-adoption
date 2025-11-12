@@ -240,3 +240,26 @@ test('prefilled pet is shown as protected and not editable', function () {
         ->assertSee('This application is for Buddy')
         ->assertDontSee('Select a pet');
 });
+
+test('pet status is updated to pending when application is submitted', function () {
+    $user = User::factory()->create();
+    $species = Species::factory()->create();
+    $pet = Pet::factory()->create([
+        'species_id' => $species->id,
+        'status' => 'available',
+    ]);
+
+    actingAs($user);
+
+    Livewire::test(Create::class)
+        ->set('pet_id', $pet->id)
+        ->set('living_situation', 'House with fenced yard')
+        ->set('reason_for_adoption', 'Looking for a companion')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    assertDatabaseHas(Pet::class, [
+        'id' => $pet->id,
+        'status' => 'pending',
+    ]);
+});

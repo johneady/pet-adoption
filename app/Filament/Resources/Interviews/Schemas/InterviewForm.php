@@ -28,6 +28,8 @@ class InterviewForm
                     ->required(),
                 TextInput::make('location'),
                 Textarea::make('notes')
+                    ->rows(6)
+                    ->hiddenOn('create')
                     ->columnSpanFull(),
                 DateTimePicker::make('completed_at')
                     ->hidden(),
