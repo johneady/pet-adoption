@@ -205,3 +205,32 @@ test('dashboard shows success message after application submission', function ()
         ->get(route('dashboard'))
         ->assertSee('Your adoption application has been submitted successfully!');
 });
+
+test('dashboard displays status timestamp in description', function () {
+    $user = User::factory()->create();
+    $species = Species::factory()->create();
+    $pet = Pet::factory()->create(['species_id' => $species->id]);
+    $application = AdoptionApplication::factory()->create([
+        'user_id' => $user->id,
+        'pet_id' => $pet->id,
+        'status' => 'under_review',
+    ]);
+
+    $statusTime = now()->subHours(2);
+
+    // Create status history with specific timestamp
+    $history = new \App\Models\ApplicationStatusHistory([
+        'adoption_application_id' => $application->id,
+        'from_status' => 'submitted',
+        'to_status' => 'under_review',
+    ]);
+    $history->created_at = $statusTime;
+    $history->updated_at = $statusTime;
+    $history->save();
+
+    actingAs($user);
+
+    Livewire::test(Dashboard::class)
+        ->assertSee('Our team is currently reviewing your application.')
+        ->assertSee($statusTime->format('M j, Y \a\t g:i A'));
+});

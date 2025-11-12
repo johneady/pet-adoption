@@ -15,7 +15,7 @@
 
         @if($userApplications->count() > 0)
             <div class="mb-8">
-                <flux:heading size="lg" class="mb-4">My Application</flux:heading>
+                <flux:heading size="lg" class="mb-4">Latest Applicaiton</flux:heading>
 
                 <div class="space-y-4">
                     @foreach($userApplications as $application)
@@ -198,12 +198,15 @@
                                     @endif
                                 </flux:text>
                                 @if($isCurrent && isset($applicationStatuses[$currentStatus]))
+                                    @php
+                                        $timestamp = $this->getStatusTimestamp($userApplications->first(), $currentStatus);
+                                    @endphp
                                     <flux:text size="sm" class="
                                         @if($currentStatus === 'approved') text-green-700 dark:text-green-300
                                         @elseif($currentStatus === 'rejected') text-red-700 dark:text-red-300
                                         @else text-blue-700 dark:text-blue-300
                                         @endif">
-                                        {{ $applicationStatuses[$currentStatus]['description'] }}
+                                        {{ $applicationStatuses[$currentStatus]['description'] }}@if($timestamp) ({{ $timestamp }})@endif
                                     </flux:text>
                                 @endif
                             </div>

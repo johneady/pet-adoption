@@ -61,6 +61,15 @@ class Dashboard extends Component
         return $application?->status;
     }
 
+    public function getStatusTimestamp(AdoptionApplication $application, string $status): ?string
+    {
+        $statusHistory = $application->statusHistory
+            ->where('to_status', $status)
+            ->first();
+
+        return $statusHistory?->created_at?->format('M j, Y \a\t g:i a');
+    }
+
     public function render(): mixed
     {
         return view('livewire.dashboard', [
