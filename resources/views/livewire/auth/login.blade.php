@@ -36,8 +36,8 @@
 
         @env('local')
             <div class="space-y-2">
-                <x-login-link email="tony@testing.com" label="Login as admin" />
-                <x-login-link email="user@testing.com" label="Login as regular user" />
+                <x-login-link email="tony@testing.com" label="Login as tony@testing.com" />
+                <x-login-link email="user@testing.com" label="Login as new regular user" />
             </div>
         @endenv
 

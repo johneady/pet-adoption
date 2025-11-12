@@ -38,12 +38,12 @@ class Dashboard extends Component
             ],
             'approved' => [
                 'label' => 'Approved',
-                'description' => 'Congratulations! Your application has been approved.',
+                'description' => 'Congratulations! Your adoption has been approved.',
                 'color' => 'green',
             ],
             'rejected' => [
                 'label' => 'Rejected',
-                'description' => 'Unfortunately, your application was not approved at this time.',
+                'description' => 'Unfortunately, your adoption was not approved at this time.',
                 'color' => 'red',
             ],
             'withdrawn' => [
