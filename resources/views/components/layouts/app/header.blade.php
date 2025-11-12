@@ -1,15 +1,25 @@
 @php
-    $dynamicMenus = \App\Models\Menu::with(['children' => function($query) {
-            $query->visible();
-            if (!auth()->check()) {
-                $query->where('requires_auth', false);
+    $dynamicMenus = \App\Models\Menu::with([
+            'children' => function($query) {
+                $query->visible();
+                if (!auth()->check()) {
+                    $query->where('requires_auth', false);
+                }
+            },
+            'children.submenuPages' => function($query) {
+                $query->published();
+                if (!auth()->check()) {
+                    $query->where('requires_auth', false);
+                }
+            },
+            'pages' => function($query) {
+                $query->published()
+                    ->whereNull('submenu_id');
+                if (!auth()->check()) {
+                    $query->where('requires_auth', false);
+                }
             }
-        }, 'pages' => function($query) {
-            $query->published();
-            if (!auth()->check()) {
-                $query->where('requires_auth', false);
-            }
-        }])
+        ])
         ->whereNull('parent_id')
         ->visible()
         ->when(!auth()->check(), fn($query) => $query->where('requires_auth', false))
@@ -57,9 +67,9 @@
 
                         <flux:menu>
                             @foreach($menu->children as $submenu)
-                                @if($submenu->pages->isNotEmpty())
+                                @if($submenu->submenuPages->isNotEmpty())
                                     <flux:menu.submenu :heading="$submenu->name">
-                                        @foreach($submenu->pages as $page)
+                                        @foreach($submenu->submenuPages as $page)
                                             <flux:menu.item :href="route('page.show', $page->slug)" wire:navigate>
                                                 {{ $page->title }}
                                             </flux:menu.item>
@@ -171,9 +181,9 @@
                 @if($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
                     <flux:navlist.group :heading="$menu->name">
                         @foreach($menu->children as $submenu)
-                            @if($submenu->pages->isNotEmpty())
+                            @if($submenu->submenuPages->isNotEmpty())
                                 <flux:navlist.item disabled class="text-xs font-semibold">{{ $submenu->name }}</flux:navlist.item>
-                                @foreach($submenu->pages as $page)
+                                @foreach($submenu->submenuPages as $page)
                                     <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate class="ps-4">
                                         {{ $page->title }}
                                     </flux:navlist.item>

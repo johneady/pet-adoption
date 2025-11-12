@@ -72,6 +72,12 @@ class Menu extends Model
             ->orderBy('display_order');
     }
 
+    public function submenuPages(): HasMany
+    {
+        return $this->hasMany(Page::class, 'submenu_id')
+            ->orderBy('display_order');
+    }
+
     public function scopeVisible(Builder $query): Builder
     {
         return $query->where('is_visible', true);
