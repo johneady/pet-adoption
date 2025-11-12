@@ -1,3 +1,20 @@
+@php
+    $dynamicMenus = \App\Models\Menu::with(['children' => function($query) {
+            $query->visible();
+            if (!auth()->check()) {
+                $query->where('requires_auth', false);
+            }
+        }, 'pages' => function($query) {
+            $query->published();
+            if (!auth()->check()) {
+                $query->where('requires_auth', false);
+            }
+        }])
+        ->whereNull('parent_id')
+        ->visible()
+        ->when(!auth()->check(), fn($query) => $query->where('requires_auth', false))
+        ->get();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
@@ -30,6 +47,42 @@
                 wire:navigate>
                 {{ __('Blog') }}
             </flux:navbar.item>
+
+            @foreach($dynamicMenus as $menu)
+                @if($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
+                    <flux:dropdown>
+                        <flux:navbar.item>
+                            {{ $menu->name }}
+                        </flux:navbar.item>
+
+                        <flux:menu>
+                            @foreach($menu->children as $submenu)
+                                @if($submenu->pages->isNotEmpty())
+                                    <flux:menu.submenu :heading="$submenu->name">
+                                        @foreach($submenu->pages as $page)
+                                            <flux:menu.item :href="route('page.show', $page->slug)" wire:navigate>
+                                                {{ $page->title }}
+                                            </flux:menu.item>
+                                        @endforeach
+                                    </flux:menu.submenu>
+                                @else
+                                    <flux:menu.item disabled>{{ $submenu->name }}</flux:menu.item>
+                                @endif
+                            @endforeach
+
+                            @if($menu->children->isNotEmpty() && $menu->pages->isNotEmpty())
+                                <flux:menu.separator />
+                            @endif
+
+                            @foreach($menu->pages as $page)
+                                <flux:menu.item :href="route('page.show', $page->slug)" wire:navigate>
+                                    {{ $page->title }}
+                                </flux:menu.item>
+                            @endforeach
+                        </flux:menu>
+                    </flux:dropdown>
+                @endif
+            @endforeach
         </flux:navbar>
 
         <flux:spacer />
@@ -113,6 +166,29 @@
                     {{ __('Blog') }}
                 </flux:navlist.item>
             </flux:navlist.group>
+
+            @foreach($dynamicMenus as $menu)
+                @if($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
+                    <flux:navlist.group :heading="$menu->name">
+                        @foreach($menu->children as $submenu)
+                            @if($submenu->pages->isNotEmpty())
+                                <flux:navlist.item disabled class="text-xs font-semibold">{{ $submenu->name }}</flux:navlist.item>
+                                @foreach($submenu->pages as $page)
+                                    <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate class="ps-4">
+                                        {{ $page->title }}
+                                    </flux:navlist.item>
+                                @endforeach
+                            @endif
+                        @endforeach
+
+                        @foreach($menu->pages as $page)
+                            <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate>
+                                {{ $page->title }}
+                            </flux:navlist.item>
+                        @endforeach
+                    </flux:navlist.group>
+                @endif
+            @endforeach
         </flux:navlist>
 
         <flux:spacer />

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use App\Livewire\Applications\Create as ApplicationsCreate;
 use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
@@ -22,6 +23,8 @@ Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
 
 Route::get('/blog', BlogIndex::class)->name('blog.index');
 Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
+
+Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');

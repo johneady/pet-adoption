@@ -1,3 +1,16 @@
+@php
+    $footerPages = \App\Models\Page::whereNotNull('menu_id')
+        ->published()
+        ->when(!auth()->check(), fn($query) => $query->where('requires_auth', false))
+        ->orderBy('display_order')
+        ->limit(6)
+        ->get();
+
+    $specialPages = \App\Models\Page::whereIn('slug', ['about-us', 'contact-us', 'privacy-policy', 'terms-of-service'])
+        ->published()
+        ->get()
+        ->keyBy('slug');
+@endphp
 <footer class="mt-auto border-t-2 border-ocean-200 bg-gradient-to-r from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div class="grid gap-8 md:grid-cols-3">
@@ -21,12 +34,21 @@
                     <a href="{{ route('blog.index') }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
                         Blog
                     </a>
-                    <a href="#" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
-                        About Us
-                    </a>
-                    <a href="#" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
-                        Contact
-                    </a>
+                    @if($specialPages->has('about-us'))
+                        <a href="{{ route('page.show', 'about-us') }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
+                            About Us
+                        </a>
+                    @endif
+                    @if($specialPages->has('contact-us'))
+                        <a href="{{ route('page.show', 'contact-us') }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
+                            Contact
+                        </a>
+                    @endif
+                    @foreach($footerPages as $page)
+                        <a href="{{ route('page.show', $page->slug) }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
+                            {{ $page->title }}
+                        </a>
+                    @endforeach
                 </nav>
             </div>
 
@@ -68,12 +90,16 @@
 
                 <!-- Legal Links -->
                 <nav class="flex flex-col gap-2">
-                    <a href="#" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
-                        Privacy Policy
-                    </a>
-                    <a href="#" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
-                        Terms of Service
-                    </a>
+                    @if($specialPages->has('privacy-policy'))
+                        <a href="{{ route('page.show', 'privacy-policy') }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
+                            Privacy Policy
+                        </a>
+                    @endif
+                    @if($specialPages->has('terms-of-service'))
+                        <a href="{{ route('page.show', 'terms-of-service') }}" class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100" wire:navigate>
+                            Terms of Service
+                        </a>
+                    @endif
                 </nav>
             </div>
         </div>

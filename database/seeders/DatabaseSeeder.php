@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Page;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -32,6 +33,8 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             TagSeeder::class,
             BlogPostSeeder::class,
+            MenuSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }
