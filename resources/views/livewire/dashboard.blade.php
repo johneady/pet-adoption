@@ -24,7 +24,7 @@
                 <div class="space-y-4">
                     @foreach ($userApplications as $application)
                         <div
-                            class="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                            class="overflow-hidden rounded-xl border-2 border-ocean-200 bg-white dark:border-ocean-800 dark:bg-gray-900">
                             <div class="grid gap-6 p-6 md:grid-cols-[200px_1fr]">
                                 <div class="overflow-hidden rounded-lg">
                                     @if ($application->pet->primaryPhoto->first())
@@ -32,8 +32,8 @@
                                             alt="{{ $application->pet->name }}" class="h-full w-full object-cover"
                                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                         <div
-                                            class="hidden h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none"
+                                            class="hidden h-48 w-full items-center justify-center bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
+                                            <svg class="h-16 w-16 text-ocean-300 dark:text-ocean-700" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -41,8 +41,8 @@
                                         </div>
                                     @else
                                         <div
-                                            class="flex h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none"
+                                            class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
+                                            <svg class="h-16 w-16 text-ocean-300 dark:text-ocean-700" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -61,7 +61,7 @@
                                                     $applicationStatuses['submitted'];
                                                 $colorClasses = [
                                                     'blue' =>
-                                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
+                                                        'bg-ocean-100 text-ocean-800 dark:bg-ocean-900/30 dark:text-ocean-200',
                                                     'yellow' =>
                                                         'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200',
                                                     'purple' =>
@@ -149,7 +149,7 @@
                 </div>
             </div>
 
-            <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+            <div class="rounded-xl border-2 border-ocean-200 bg-white p-6 dark:border-ocean-800 dark:bg-gray-900">
                 <flux:heading size="lg" class="mb-4">Adoption Process</flux:heading>
                 <flux:text class="mb-6 text-zinc-600 dark:text-zinc-400">
                     Track your application progress through our adoption workflow. We'll keep you updated at each step.
@@ -196,8 +196,8 @@
                                 @if ($isCompleted) bg-green-100 dark:bg-green-900/30
                                 @elseif($isCurrent && $currentStatus === 'approved') bg-green-100 dark:bg-green-900/30
                                 @elseif($isCurrent && $currentStatus === 'rejected') bg-red-100 dark:bg-red-900/30
-                                @elseif($isCurrent) bg-blue-100 dark:bg-blue-900/30
-                                @else bg-zinc-100 dark:bg-zinc-800 @endif">
+                                @elseif($isCurrent) bg-ocean-100 dark:bg-ocean-900/30
+                                @else bg-ocean-50 dark:bg-ocean-950 @endif">
                                 @if ($isCompleted || ($isCurrent && $currentStatus === 'approved'))
                                     <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
@@ -211,13 +211,13 @@
                                             d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 @elseif($isCurrent)
-                                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none"
+                                    <svg class="h-6 w-6 text-ocean-600 dark:text-ocean-400" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 @else
-                                    <div class="h-4 w-4 rounded-full bg-zinc-300 dark:bg-zinc-600"></div>
+                                    <div class="h-4 w-4 rounded-full bg-ocean-300 dark:bg-ocean-700"></div>
                                 @endif
                             </div>
                             <div class="flex-1">
@@ -226,8 +226,8 @@
                                     @if ($isCompleted) text-green-900 dark:text-green-100
                                     @elseif($isCurrent && $currentStatus === 'approved') text-green-900 dark:text-green-100
                                     @elseif($isCurrent && $currentStatus === 'rejected') text-red-900 dark:text-red-100
-                                    @elseif($isCurrent) text-blue-900 dark:text-blue-100
-                                    @else text-zinc-400 dark:text-zinc-600 @endif">
+                                    @elseif($isCurrent) text-ocean-900 dark:text-ocean-100
+                                    @else text-ocean-400 dark:text-ocean-600 @endif">
                                     {{ $step['label'] }}
                                     @if ($stepStatus === 'final' && $isCurrent)
                                         - {{ ucfirst($currentStatus) }}
@@ -244,7 +244,7 @@
                                         class="
                                         @if ($currentStatus === 'approved') text-green-700 dark:text-green-300
                                         @elseif($currentStatus === 'rejected') text-red-700 dark:text-red-300
-                                        @else text-blue-700 dark:text-blue-300 @endif">
+                                        @else text-ocean-700 dark:text-ocean-300 @endif">
                                         {{ $applicationStatuses[$currentStatus]['description'] }}@if ($timestamp)
                                             ({{ $timestamp }})
                                         @endif
@@ -257,7 +257,7 @@
                             <div
                                 class="ml-5 h-6 w-0.5
                                 @if ($isCompleted) bg-green-300 dark:bg-green-700
-                                @else bg-zinc-200 dark:bg-zinc-700 @endif">
+                                @else bg-ocean-200 dark:bg-ocean-800 @endif">
                             </div>
                         @endif
                     @endforeach
@@ -265,15 +265,15 @@
             </div>
         @else
             <div
-                class="flex min-h-[400px] items-center justify-center rounded-xl border border-zinc-200 bg-white p-12 dark:border-zinc-700 dark:bg-zinc-900">
+                class="flex min-h-[400px] items-center justify-center rounded-xl border-2 border-ocean-200 bg-gradient-to-br from-ocean-50 to-teal-50 p-12 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
                 <div class="text-center">
-                    <svg class="mx-auto h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none"
+                    <svg class="mx-auto h-24 w-24 text-ocean-300 dark:text-ocean-700" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <flux:heading size="lg" class="mb-2 mt-4">No Applications Yet</flux:heading>
-                    <flux:text class="mb-4 text-zinc-600 dark:text-zinc-400">
+                    <flux:heading size="lg" class="mb-2 mt-4 text-ocean-900 dark:text-ocean-100">No Applications Yet</flux:heading>
+                    <flux:text class="mb-4 text-ocean-700 dark:text-ocean-300">
                         You haven't submitted any adoption applications. Ready to find your perfect companion?
                     </flux:text>
                     <flux:button href="{{ route('pets.index') }}" wire:navigate variant="primary">
