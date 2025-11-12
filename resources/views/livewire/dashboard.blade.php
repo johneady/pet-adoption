@@ -5,38 +5,47 @@
             <flux:text class="text-zinc-600 dark:text-zinc-400">Welcome back, {{ Auth::user()->name }}!</flux:text>
         </div>
 
-        @if(session('message'))
-            <div class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+        @if (session('message'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @mouseenter="clearTimeout($root._x_timeout)"
+                @mouseleave="$root._x_timeout = setTimeout(() => show = false, 2000)"
+                class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
                 <flux:text class="text-green-800 dark:text-green-200">
                     {{ session('message') }}
                 </flux:text>
             </div>
         @endif
 
-        @if($userApplications->count() > 0)
+        @if ($userApplications->count() > 0)
             <div class="mb-8">
                 <flux:heading size="lg" class="mb-4">Latest Applicaiton</flux:heading>
 
                 <div class="space-y-4">
-                    @foreach($userApplications as $application)
-                        <div class="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                    @foreach ($userApplications as $application)
+                        <div
+                            class="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
                             <div class="grid gap-6 p-6 md:grid-cols-[200px_1fr]">
                                 <div class="overflow-hidden rounded-lg">
-                                    @if($application->pet->primaryPhoto->first())
-                                        <img
-                                            src="{{ Storage::url($application->pet->primaryPhoto->first()->file_path) }}"
-                                            alt="{{ $application->pet->name }}"
-                                            class="h-full w-full object-cover"
+                                    @if ($application->pet->primaryPhoto->first())
+                                        <img src="{{ Storage::url($application->pet->primaryPhoto->first()->file_path) }}"
+                                            alt="{{ $application->pet->name }}" class="h-full w-full object-cover"
                                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="hidden h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        <div
+                                            class="hidden h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
                                         </div>
                                     @else
-                                        <div class="flex h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        <div
+                                            class="flex h-48 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                                            <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
                                         </div>
                                     @endif
@@ -47,28 +56,40 @@
                                         <div class="mb-2 flex items-center gap-3">
                                             <flux:heading size="lg">{{ $application->pet->name }}</flux:heading>
                                             @php
-                                                $statusInfo = $applicationStatuses[$application->status] ?? $applicationStatuses['submitted'];
+                                                $statusInfo =
+                                                    $applicationStatuses[$application->status] ??
+                                                    $applicationStatuses['submitted'];
                                                 $colorClasses = [
-                                                    'blue' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
-                                                    'yellow' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200',
-                                                    'purple' => 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
-                                                    'green' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
-                                                    'red' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200',
-                                                    'gray' => 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200',
+                                                    'blue' =>
+                                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
+                                                    'yellow' =>
+                                                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200',
+                                                    'purple' =>
+                                                        'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200',
+                                                    'green' =>
+                                                        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
+                                                    'red' =>
+                                                        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200',
+                                                    'gray' =>
+                                                        'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200',
                                                 ];
                                             @endphp
-                                            <span class="rounded-full px-3 py-1 text-sm font-medium {{ $colorClasses[$statusInfo['color']] }}">
+                                            <span
+                                                class="rounded-full px-3 py-1 text-sm font-medium {{ $colorClasses[$statusInfo['color']] }}">
                                                 {{ $statusInfo['label'] }}
                                             </span>
                                         </div>
                                         <flux:text class="text-zinc-600 dark:text-zinc-400">
-                                            {{ $application->pet->species->name }}@if($application->pet->breed), {{ $application->pet->breed->name }}@endif
+                                            {{ $application->pet->species->name }}@if ($application->pet->breed)
+                                                , {{ $application->pet->breed->name }}
+                                            @endif
                                         </flux:text>
                                     </div>
 
                                     <div class="space-y-3">
                                         <div>
-                                            <flux:text size="sm" class="font-medium text-zinc-700 dark:text-zinc-300">
+                                            <flux:text size="sm"
+                                                class="font-medium text-zinc-700 dark:text-zinc-300">
                                                 Submitted:
                                             </flux:text>
                                             <flux:text size="sm" class="text-zinc-600 dark:text-zinc-400">
@@ -76,26 +97,34 @@
                                             </flux:text>
                                         </div>
 
-                                        @if($application->interview)
-                                            <div class="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
-                                                <flux:text size="sm" class="mb-2 font-medium text-purple-900 dark:text-purple-100">
+                                        @if ($application->interview)
+                                            <div
+                                                class="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
+                                                <flux:text size="sm"
+                                                    class="mb-2 font-medium text-purple-900 dark:text-purple-100">
                                                     Interview Details
                                                 </flux:text>
                                                 <div class="space-y-1">
-                                                    <flux:text size="sm" class="text-purple-800 dark:text-purple-200">
-                                                        <strong>Date:</strong> {{ $application->interview->scheduled_at->format('M j, Y \a\t g:i A') }}
+                                                    <flux:text size="sm"
+                                                        class="text-purple-800 dark:text-purple-200">
+                                                        <strong>Date:</strong>
+                                                        {{ $application->interview->scheduled_at->format('M j, Y \a\t g:i A') }}
                                                     </flux:text>
-                                                    @if($application->interview->location)
-                                                        <flux:text size="sm" class="text-purple-800 dark:text-purple-200">
-                                                            <strong>Location:</strong> {{ $application->interview->location }}
+                                                    @if ($application->interview->location)
+                                                        <flux:text size="sm"
+                                                            class="text-purple-800 dark:text-purple-200">
+                                                            <strong>Location:</strong>
+                                                            {{ $application->interview->location }}
                                                         </flux:text>
                                                     @endif
-                                                    @if($application->interview->completed_at)
-                                                        <flux:text size="sm" class="text-purple-800 dark:text-purple-200">
+                                                    @if ($application->interview->completed_at)
+                                                        <flux:text size="sm"
+                                                            class="text-purple-800 dark:text-purple-200">
                                                             <strong>Status:</strong> Completed
                                                         </flux:text>
                                                     @else
-                                                        <flux:text size="sm" class="text-purple-800 dark:text-purple-200">
+                                                        <flux:text size="sm"
+                                                            class="text-purple-800 dark:text-purple-200">
                                                             <strong>Status:</strong> Scheduled
                                                         </flux:text>
                                                     @endif
@@ -104,7 +133,8 @@
                                         @endif
 
                                         <div>
-                                            <flux:text size="sm" class="font-medium text-zinc-700 dark:text-zinc-300">
+                                            <flux:text size="sm"
+                                                class="font-medium text-zinc-700 dark:text-zinc-300">
                                                 Application ID:
                                             </flux:text>
                                             <flux:text size="sm" class="text-zinc-600 dark:text-zinc-400">
@@ -144,7 +174,7 @@
                         $displayStatus = in_array($currentStatus, ['approved', 'rejected']) ? 'final' : $currentStatus;
                     @endphp
 
-                    @foreach($processSteps as $stepStatus => $step)
+                    @foreach ($processSteps as $stepStatus => $step)
                         @php
                             // Determine step completion status
                             if ($stepStatus === 'final') {
@@ -161,72 +191,86 @@
                         @endphp
 
                         <div class="flex items-center gap-4">
-                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full
-                                @if($isCompleted) bg-green-100 dark:bg-green-900/30
+                            <div
+                                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full
+                                @if ($isCompleted) bg-green-100 dark:bg-green-900/30
                                 @elseif($isCurrent && $currentStatus === 'approved') bg-green-100 dark:bg-green-900/30
                                 @elseif($isCurrent && $currentStatus === 'rejected') bg-red-100 dark:bg-red-900/30
                                 @elseif($isCurrent) bg-blue-100 dark:bg-blue-900/30
-                                @else bg-zinc-100 dark:bg-zinc-800
-                                @endif">
-                                @if($isCompleted || ($isCurrent && $currentStatus === 'approved'))
-                                    <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                @else bg-zinc-100 dark:bg-zinc-800 @endif">
+                                @if ($isCompleted || ($isCurrent && $currentStatus === 'approved'))
+                                    <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                 @elseif($isCurrent && $currentStatus === 'rejected')
-                                    <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 @elseif($isCurrent)
-                                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 @else
                                     <div class="h-4 w-4 rounded-full bg-zinc-300 dark:bg-zinc-600"></div>
                                 @endif
                             </div>
                             <div class="flex-1">
-                                <flux:text class="font-medium
-                                    @if($isCompleted) text-green-900 dark:text-green-100
+                                <flux:text
+                                    class="font-medium
+                                    @if ($isCompleted) text-green-900 dark:text-green-100
                                     @elseif($isCurrent && $currentStatus === 'approved') text-green-900 dark:text-green-100
                                     @elseif($isCurrent && $currentStatus === 'rejected') text-red-900 dark:text-red-100
                                     @elseif($isCurrent) text-blue-900 dark:text-blue-100
-                                    @else text-zinc-400 dark:text-zinc-600
-                                    @endif">
+                                    @else text-zinc-400 dark:text-zinc-600 @endif">
                                     {{ $step['label'] }}
-                                    @if($stepStatus === 'final' && $isCurrent)
+                                    @if ($stepStatus === 'final' && $isCurrent)
                                         - {{ ucfirst($currentStatus) }}
                                     @endif
                                 </flux:text>
-                                @if($isCurrent && isset($applicationStatuses[$currentStatus]))
+                                @if ($isCurrent && isset($applicationStatuses[$currentStatus]))
                                     @php
-                                        $timestamp = $this->getStatusTimestamp($userApplications->first(), $currentStatus);
+                                        $timestamp = $this->getStatusTimestamp(
+                                            $userApplications->first(),
+                                            $currentStatus,
+                                        );
                                     @endphp
-                                    <flux:text size="sm" class="
-                                        @if($currentStatus === 'approved') text-green-700 dark:text-green-300
+                                    <flux:text size="sm"
+                                        class="
+                                        @if ($currentStatus === 'approved') text-green-700 dark:text-green-300
                                         @elseif($currentStatus === 'rejected') text-red-700 dark:text-red-300
-                                        @else text-blue-700 dark:text-blue-300
-                                        @endif">
-                                        {{ $applicationStatuses[$currentStatus]['description'] }}@if($timestamp) ({{ $timestamp }})@endif
+                                        @else text-blue-700 dark:text-blue-300 @endif">
+                                        {{ $applicationStatuses[$currentStatus]['description'] }}@if ($timestamp)
+                                            ({{ $timestamp }})
+                                        @endif
                                     </flux:text>
                                 @endif
                             </div>
                         </div>
 
-                        @if(!$loop->last)
-                            <div class="ml-5 h-6 w-0.5
-                                @if($isCompleted) bg-green-300 dark:bg-green-700
-                                @else bg-zinc-200 dark:bg-zinc-700
-                                @endif">
+                        @if (!$loop->last)
+                            <div
+                                class="ml-5 h-6 w-0.5
+                                @if ($isCompleted) bg-green-300 dark:bg-green-700
+                                @else bg-zinc-200 dark:bg-zinc-700 @endif">
                             </div>
                         @endif
                     @endforeach
                 </div>
             </div>
         @else
-            <div class="flex min-h-[400px] items-center justify-center rounded-xl border border-zinc-200 bg-white p-12 dark:border-zinc-700 dark:bg-zinc-900">
+            <div
+                class="flex min-h-[400px] items-center justify-center rounded-xl border border-zinc-200 bg-white p-12 dark:border-zinc-700 dark:bg-zinc-900">
                 <div class="text-center">
-                    <svg class="mx-auto h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <svg class="mx-auto h-24 w-24 text-zinc-300 dark:text-zinc-600" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <flux:heading size="lg" class="mb-2 mt-4">No Applications Yet</flux:heading>
                     <flux:text class="mb-4 text-zinc-600 dark:text-zinc-400">
