@@ -12,7 +12,7 @@ class MenuSeeder extends Seeder
      */
     public function run(): void
     {
-        
+
         $about = Menu::create([
             'name' => 'About',
             'slug' => 'about',
