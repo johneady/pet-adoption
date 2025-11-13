@@ -6,6 +6,7 @@ use App\Filament\Widgets\ApplicationsChart;
 use App\Filament\Widgets\LatestApplicationsWidget;
 use App\Filament\Widgets\PetsStatsWidget;
 use App\Filament\Widgets\RecentUsersWidget;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -43,6 +44,17 @@ class AdminPanelProvider extends PanelProvider
                     ->url('/')
                     ->icon('heroicon-o-globe-alt')
                     ->sort(999),
+            ])
+            ->userMenuItems([
+                'logout' => fn (Action $action) => $action->hidden(),
+                Action::make('viewWebsite')
+                    ->label('View Website')
+                    ->url('/')
+                    ->icon('heroicon-o-globe-alt'),
+                Action::make('logOut')
+                    ->label('Logout')
+                    ->url('/')
+                    ->icon('heroicon-o-arrow-right-start-on-rectangle'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
