@@ -1,2 +1,3 @@
 Add email alerts. 
-Add email preferences (e.g. do not send - with exception service emails related to your account)
+Add email preferences (user and admin - new adoptions, new users)
+Customize the Larvel auth email layouts
