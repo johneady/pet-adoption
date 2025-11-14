@@ -7,16 +7,16 @@
     <x-filament::section heading="Applicant Details" description="Information about the person applying to adopt"
         :collapsible="true" :collapsed="false">
         @if ($applicant)
-            <table>
-                <tr>
-                    <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Name: </td>
-                    <td>{{ $applicant->name }}</td>
-                </tr>
+            <div class="space-y-6">
+                <div class="flex flex-col gap-1.5">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
+                    <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->name }}</dd>
+                </div>
 
-                <tr>
-                    <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Email:</td>
-                    <td>
-                        {{ $applicant->email }}
+                <div class="flex flex-col gap-1.5">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
+                    <dd class="flex flex-wrap items-center gap-2">
+                        <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->email }}</span>
                         @if ($applicant->email_verified_at)
                             <x-filament::badge color="success" icon="heroicon-m-check-circle">
                                 Email Verified
@@ -31,16 +31,16 @@
                                 Admin
                             </x-filament::badge>
                         @endif
-                    </td>
-                </tr>
+                    </dd>
+                </div>
 
-                <tr>
-                    <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Member Since:</td>
-                    <td>{{ $applicant->created_at->format('M d, Y') }}</td>
-                </tr>
-            </table>
+                <div class="flex flex-col gap-1.5">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Member Since</dt>
+                    <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->created_at->format('M d, Y') }}</dd>
+                </div>
+            </div>
         @else
-            <p>No applicant information available.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">No applicant information available.</p>
         @endif
     </x-filament::section>
 </x-filament-widgets::widget>

@@ -36,64 +36,65 @@
                     </div>
                 </div>
 
-                <table>
-                    @if ($pet->age)
-                        <tr>
-                            <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Age:</td>
-                            <td class="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $pet->age }} {{ Str::plural('year', $pet->age) }}
-                            </td>
-                        </tr>
-                    @endif
+                <div class="space-y-4">
+                    <div class="grid grid-cols-4 gap-4">
+                        @if ($pet->age)
+                            <div class="flex flex-col gap-1.5">
+                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Age</dt>
+                                <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">
+                                    {{ $pet->age }} {{ Str::plural('year', $pet->age) }}
+                                </dd>
+                            </div>
+                        @endif
 
-                    @if ($pet->gender)
-                        <tr>
-                            <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Gender:</td>
-                            <td>
-                                <x-filament::badge class="ml-2" :color="match ($pet->gender) {
-                                    'male' => 'info',
-                                    'female' => 'danger',
+                        @if ($pet->gender)
+                            <div class="flex flex-col gap-1.5">
+                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Gender</dt>
+                                <dd>
+                                    <x-filament::badge :color="match ($pet->gender) {
+                                        'male' => 'info',
+                                        'female' => 'danger',
+                                        default => 'gray',
+                                    }">
+                                        {{ ucfirst($pet->gender) }}
+                                    </x-filament::badge>
+                                </dd>
+                            </div>
+                        @endif
+
+                        @if ($pet->size)
+                            <div class="flex flex-col gap-1.5">
+                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Size</dt>
+                                <dd>
+                                    <x-filament::badge>
+                                        {{ ucfirst(str_replace('_', ' ', $pet->size)) }}
+                                    </x-filament::badge>
+                                </dd>
+                            </div>
+                        @endif
+
+                        <div class="flex flex-col gap-1.5">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                            <dd>
+                                <x-filament::badge :color="match ($pet->status) {
+                                    'available' => 'success',
+                                    'pending' => 'warning',
+                                    'adopted' => 'info',
                                     default => 'gray',
                                 }">
-                                    {{ ucfirst($pet->gender) }}
+                                    {{ ucfirst($pet->status) }}
                                 </x-filament::badge>
-                            </td>
-                        </tr>
-                    @endif
+                            </dd>
+                        </div>
+                    </div>
 
-                    @if ($pet->size)
-                        <tr>
-                            <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Size:</td>
-                            <td>
-                                <x-filament::badge class="ml-2">
-                                    {{ ucfirst(str_replace('_', ' ', $pet->size)) }}
-                                </x-filament::badge>
-                            </td </tr>
-                    @endif
-
-                    <tr>
-                        <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Status:</td>
-                        <td>
-
-                            <x-filament::badge class="ml-2" :color="match ($pet->status) {
-                                'available' => 'success',
-                                'pending' => 'warning',
-                                'adopted' => 'info',
-                                default => 'gray',
-                            }">
-                                {{ ucfirst($pet->status) }}
-                            </x-filament::badge>
-                        </td>
-                    </tr>
                     @if ($pet->description)
-                        <tr>
-                        <tr>
-                            <td class="text-sm font-semibold text-gray-700 dark:text-gray-300">Description:</td>
-                            <td class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ $pet->description }}</td>
-                        </tr>
-                        </tr>
+                        <div class="flex flex-col gap-1.5">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</dt>
+                            <dd class="text-base text-gray-900 dark:text-gray-100">{{ $pet->description }}</dd>
+                        </div>
                     @endif
-                </table>
+                </div>
             </div>
         @else
             <p class="text-sm text-gray-500 dark:text-gray-400">No pet information available.</p>
