@@ -28,7 +28,7 @@ Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
-    Route::get('applications/create', ApplicationsCreate::class)->name('applications.create');
+    Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
 });
 
 Route::middleware(['auth'])->group(function () {

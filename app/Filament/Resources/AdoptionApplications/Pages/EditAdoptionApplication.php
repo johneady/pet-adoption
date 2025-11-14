@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\AdoptionApplications\Pages;
 
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
+use App\Filament\Resources\AdoptionApplications\Widgets\ApplicantDetailsWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\NotesWidget;
+use App\Filament\Resources\AdoptionApplications\Widgets\PetDetailsWidget;
 use App\Filament\Resources\Interviews\InterviewResource;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
@@ -52,6 +54,14 @@ class EditAdoptionApplication extends EditRecord
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            PetDetailsWidget::make(['record' => $this->record]),
+            ApplicantDetailsWidget::make(['record' => $this->record]),
+        ];
     }
 
     protected function getFormActions(): array

@@ -29,17 +29,24 @@ class Create extends Component
 
     public string $reason_for_adoption = '';
 
-    public function mount(?int $petId = null): void
+    public function mount(int $petId): void
     {
-        if ($petId) {
-            $this->pet_id = $petId;
-            $this->selectedPet = Pet::with(['species', 'breed'])->find($petId);
-        }
+        $this->pet_id = $petId;
+        $this->selectedPet = Pet::with(['species', 'breed', 'photos'])->findOrFail($petId);
     }
 
     public function submit(): void
     {
         $validated = $this->validate((new StoreAdoptionApplicationRequest)->rules());
+
+        // Verify the pet is still available
+        $pet = Pet::find($validated['pet_id']);
+
+        if (! $pet || $pet->status !== 'available') {
+            $this->addError('pet_id', 'This pet is no longer available for adoption.');
+
+            return;
+        }
 
         $application = AdoptionApplication::create([
             'user_id' => Auth::id(),

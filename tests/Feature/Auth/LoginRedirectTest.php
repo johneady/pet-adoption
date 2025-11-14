@@ -40,9 +40,10 @@ test('users are redirected to intended page after login from protected route', f
 
 test('users are redirected to intended page after login from application create route', function () {
     $user = User::factory()->withoutTwoFactor()->create();
+    $pet = \App\Models\Pet::factory()->create(['status' => 'available']);
 
     // Try to access the application create page while not authenticated
-    $this->get(route('applications.create'))
+    $this->get(route('applications.create', ['petId' => $pet->id]))
         ->assertRedirect(route('login'));
 
     // Now login
@@ -54,7 +55,7 @@ test('users are redirected to intended page after login from application create 
     // Should be redirected back to the intended page (applications.create)
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('applications.create', absolute: false));
+        ->assertRedirect(route('applications.create', ['petId' => $pet->id], absolute: false));
 
     $this->assertAuthenticated();
 });
