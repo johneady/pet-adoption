@@ -1,7 +1,7 @@
 <x-filament-widgets::widget>
     <x-filament::section collapsible>
         <x-slot name="heading">
-            Notes
+        Private Notes for Admin &amp; Staff
         </x-slot>
 
         <div class="fi-wi-stats-overview-stat-card grid gap-y-6">
@@ -20,7 +20,7 @@
                     </div>
                 </x-filament::section>
             @else
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid gap-4">
                     @foreach ($this->getNotes() as $note)
                         <br>
                         <x-filament::section>

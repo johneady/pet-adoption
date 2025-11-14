@@ -68,11 +68,6 @@ class FinalDecision extends Page implements HasTable
                     ->toggleable(),
                 TextColumn::make('employment_status')
                     ->toggleable(),
-                TextColumn::make('interview.scheduled_at')
-                    ->label('Interview Date')
-                    ->dateTime('M j, Y @ H:i a')
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Submitted')
                     ->dateTime()

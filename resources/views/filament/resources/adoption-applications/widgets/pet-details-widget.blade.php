@@ -4,21 +4,16 @@
 @endphp
 
 <x-filament-widgets::widget>
-    <x-filament::section heading="Pet Details" description="Information about the pet being adopted" :collapsible="true"
-        :collapsed="false">
+    <x-filament::section heading="{{ $pet->name }}" description="Information about the pet being adopted" :collapsible="true"
+        :collapsed="true">
         @if ($pet)
             <div class="space-y-4">
                 <div class="flex items-start gap-4">
                     <div class="shrink-0">
-                        @if ($primaryPhoto)
-                            <img src="{{ Storage::disk('public')->url($primaryPhoto->file_path) }}"
-                                alt="{{ $pet->name }}" class="h-24 w-24 rounded-lg object-cover" />
-                        @else
-                            <div
-                                class="flex h-24 w-24 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
-                                <x-filament::icon icon="heroicon-o-photo" class="h-12 w-12 text-gray-400" />
-                            </div>
-                        @endif
+                        <img src="{{ $primaryPhoto ? Storage::disk('public')->url($primaryPhoto->file_path) : asset('images/placeholder-pet.png') }}"
+                            alt="{{ $pet->name }}"
+                            class="h-24 w-24 rounded-lg object-cover"
+                            onerror="this.onerror=null; this.src='{{ asset('images/placeholder-pet.png') }}';" />
                     </div>
 
                     <div class="flex-1">

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdoptionApplications\Pages;
 
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Filament\Resources\AdoptionApplications\Widgets\ApplicantDetailsWidget;
+use App\Filament\Resources\AdoptionApplications\Widgets\InterviewDetailsWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\NotesWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\PetDetailsWidget;
 use App\Filament\Resources\Interviews\InterviewResource;
@@ -72,6 +73,7 @@ class EditAdoptionApplication extends EditRecord
     protected function getFooterWidgets(): array
     {
         return [
+            InterviewDetailsWidget::make(['record' => $this->record]),
             NotesWidget::make(['record' => $this->record]),
         ];
     }

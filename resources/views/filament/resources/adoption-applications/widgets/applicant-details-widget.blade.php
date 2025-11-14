@@ -4,8 +4,8 @@
 @endphp
 
 <x-filament-widgets::widget>
-    <x-filament::section heading="Applicant Details" description="Information about the person applying to adopt"
-        :collapsible="true" :collapsed="false">
+    <x-filament::section heading="{{ $applicant->name }}" description="Information about {{ $applicant->name }}"
+        :collapsible="true" :collapsed="true">
         @if ($applicant)
             <div class="space-y-6">
                 <div class="flex flex-col gap-1.5">

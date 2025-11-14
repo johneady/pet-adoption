@@ -58,7 +58,7 @@ class NotesWidget extends Widget implements HasActions, HasForms
         return $this->record
             ->notes()
             ->with('createdBy')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 }
