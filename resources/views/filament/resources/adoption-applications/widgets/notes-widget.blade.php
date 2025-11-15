@@ -4,14 +4,13 @@
         Private Notes for Admin &amp; Staff
         </x-slot>
 
-        <div class="fi-wi-stats-overview-stat-card grid gap-y-6">
+        <div class="fi-wi-stats-overview-stat-card grid gap-y-2">
             {{-- Add Note Button --}}
             <div>
                 {{ $this->addNoteAction }}
             </div>
             {{-- Notes List --}}
             @if ($this->getNotes()->isEmpty())
-                <br>
                 <x-filament::section>
                     <div class="fi-section-content-ctn text-center">
                         <p class="fi-section-header-description">
@@ -20,13 +19,12 @@
                     </div>
                 </x-filament::section>
             @else
-                <div class="grid gap-4">
+                <div class="grid gap-1">
                     @foreach ($this->getNotes() as $note)
-                        <br>
                         <x-filament::section>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-1.5">
                                 {{-- User Info --}}
-                                <div class="flex items-start gap-3">
+                                <div class="flex items-start gap-2">
                                     <div class="min-w-0 flex-1">
                                         <div class="fi-section-header-heading text-base">
                                             {{ $note->createdBy?->name ?? 'Unknown User' }}
