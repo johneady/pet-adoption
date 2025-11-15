@@ -49,13 +49,6 @@ class SettingSeeder extends Seeder
                 'group' => 'general',
                 'description' => 'Path to the site favicon',
             ],
-            [
-                'key' => 'maintenance_mode',
-                'value' => '0',
-                'type' => 'boolean',
-                'group' => 'general',
-                'description' => 'Enable or disable maintenance mode',
-            ],
 
             // SEO Settings
             [
@@ -85,20 +78,6 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'group' => 'seo',
                 'description' => 'Default social media sharing image',
-            ],
-            [
-                'key' => 'google_analytics_id',
-                'value' => null,
-                'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Google Analytics tracking ID',
-            ],
-            [
-                'key' => 'google_site_verification',
-                'value' => null,
-                'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Google Search Console verification code',
             ],
 
             // Contact Settings

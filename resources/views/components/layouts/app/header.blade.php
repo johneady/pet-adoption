@@ -1,25 +1,24 @@
 @php
     $dynamicMenus = \App\Models\Menu::with([
-            'children' => function($query) {
-                $query->visible();
-                if (!auth()->check()) {
-                    $query->where('requires_auth', false);
-                }
-            },
-            'children.submenuPages' => function($query) {
-                $query->published();
-                if (!auth()->check()) {
-                    $query->where('requires_auth', false);
-                }
-            },
-            'pages' => function($query) {
-                $query->published()
-                    ->whereNull('submenu_id');
-                if (!auth()->check()) {
-                    $query->where('requires_auth', false);
-                }
+        'children' => function ($query) {
+            $query->visible();
+            if (!auth()->check()) {
+                $query->where('requires_auth', false);
             }
-        ])
+        },
+        'children.submenuPages' => function ($query) {
+            $query->published();
+            if (!auth()->check()) {
+                $query->where('requires_auth', false);
+            }
+        },
+        'pages' => function ($query) {
+            $query->published()->whereNull('submenu_id');
+            if (!auth()->check()) {
+                $query->where('requires_auth', false);
+            }
+        },
+    ])
         ->whereNull('parent_id')
         ->visible()
         ->when(!auth()->check(), fn($query) => $query->where('requires_auth', false))
@@ -33,7 +32,8 @@
 </head>
 
 <body class="flex min-h-screen flex-col bg-white dark:bg-zinc-800">
-    <flux:header container class="border-b-2 border-ocean-200 bg-gradient-to-r from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
+    <flux:header container
+        class="border-b-2 border-ocean-200 bg-gradient-to-r from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
         <a href="{{ route('home') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0"
@@ -58,18 +58,18 @@
                 {{ __('Blog') }}
             </flux:navbar.item>
 
-            @foreach($dynamicMenus as $menu)
-                @if($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
+            @foreach ($dynamicMenus as $menu)
+                @if ($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
                     <flux:dropdown>
                         <flux:navbar.item>
                             {{ $menu->name }}
                         </flux:navbar.item>
 
                         <flux:menu>
-                            @foreach($menu->children as $submenu)
-                                @if($submenu->submenuPages->isNotEmpty())
+                            @foreach ($menu->children as $submenu)
+                                @if ($submenu->submenuPages->isNotEmpty())
                                     <flux:menu.submenu :heading="$submenu->name">
-                                        @foreach($submenu->submenuPages as $page)
+                                        @foreach ($submenu->submenuPages as $page)
                                             <flux:menu.item :href="route('page.show', $page->slug)" wire:navigate>
                                                 {{ $page->title }}
                                             </flux:menu.item>
@@ -80,11 +80,11 @@
                                 @endif
                             @endforeach
 
-                            @if($menu->children->isNotEmpty() && $menu->pages->isNotEmpty())
+                            @if ($menu->children->isNotEmpty() && $menu->pages->isNotEmpty())
                                 <flux:menu.separator />
                             @endif
 
-                            @foreach($menu->pages as $page)
+                            @foreach ($menu->pages as $page)
                                 <flux:menu.item :href="route('page.show', $page->slug)" wire:navigate>
                                     {{ $page->title }}
                                 </flux:menu.item>
@@ -181,21 +181,23 @@
                 </flux:navlist.item>
             </flux:navlist.group>
 
-            @foreach($dynamicMenus as $menu)
-                @if($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
+            @foreach ($dynamicMenus as $menu)
+                @if ($menu->children->isNotEmpty() || $menu->pages->isNotEmpty())
                     <flux:navlist.group :heading="$menu->name">
-                        @foreach($menu->children as $submenu)
-                            @if($submenu->submenuPages->isNotEmpty())
-                                <flux:navlist.item disabled class="text-xs font-semibold">{{ $submenu->name }}</flux:navlist.item>
-                                @foreach($submenu->submenuPages as $page)
-                                    <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate class="ps-4">
+                        @foreach ($menu->children as $submenu)
+                            @if ($submenu->submenuPages->isNotEmpty())
+                                <flux:navlist.item disabled class="text-xs font-semibold">{{ $submenu->name }}
+                                </flux:navlist.item>
+                                @foreach ($submenu->submenuPages as $page)
+                                    <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate
+                                        class="ps-4">
                                         {{ $page->title }}
                                     </flux:navlist.item>
                                 @endforeach
                             @endif
                         @endforeach
 
-                        @foreach($menu->pages as $page)
+                        @foreach ($menu->pages as $page)
                             <flux:navlist.item :href="route('page.show', $page->slug)" wire:navigate>
                                 {{ $page->title }}
                             </flux:navlist.item>

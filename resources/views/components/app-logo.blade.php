@@ -2,5 +2,5 @@
     <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
 </div>
 <div class="ms-1 grid flex-1 text-start text-sm">
-    <span class="mb-0.5 truncate leading-tight font-semibold">KcKitties</span>
+    <span class="mb-0.5 truncate leading-tight font-semibold">{{ App\Models\Setting::get('site_name') }}</span>
 </div>

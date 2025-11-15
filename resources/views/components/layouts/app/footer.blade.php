@@ -20,7 +20,7 @@
                     <x-app-logo />
                 </div>
                 <flux:text size="sm" class="text-ocean-700 dark:text-ocean-300">
-                    Connecting loving families with pets in need of a home.
+                    {{ App\Models\Setting::get('site_tagline') }}
                 </flux:text>
             </div>
 
@@ -108,7 +108,7 @@
         <flux:separator class="my-6" />
         <div class="text-center">
             <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                &copy; {{ date('Y') }} Pet Adoption. All rights reserved.
+                &copy; {{ date('Y') }} {{ App\Models\Setting::get('site_name') }}. All rights reserved.
             </flux:text>
         </div>
     </div>

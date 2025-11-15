@@ -91,12 +91,6 @@ class ManageSettings extends Page
                                                 ->acceptedFileTypes(['image/x-icon', 'image/png']),
                                         ])
                                         ->columns(2),
-                                    Section::make('Maintenance')
-                                        ->schema([
-                                            Toggle::make('maintenance_mode')
-                                                ->label('Maintenance Mode')
-                                                ->helperText('Enable this to put the site in maintenance mode'),
-                                        ]),
                                 ]),
                             Tabs\Tab::make('SEO')
                                 ->icon(Heroicon::OutlinedMagnifyingGlass)
@@ -124,17 +118,6 @@ class ManageSettings extends Page
                                                 ->helperText('Recommended: 1200x630px'),
                                         ])
                                         ->columns(1),
-                                    Section::make('Tracking & Analytics')
-                                        ->schema([
-                                            TextInput::make('google_analytics_id')
-                                                ->label('Google Analytics ID')
-                                                ->placeholder('G-XXXXXXXXXX')
-                                                ->maxLength(255),
-                                            TextInput::make('google_site_verification')
-                                                ->label('Google Site Verification Code')
-                                                ->maxLength(255),
-                                        ])
-                                        ->columns(2),
                                 ]),
                             Tabs\Tab::make('Contact')
                                 ->icon(Heroicon::OutlinedEnvelope)
@@ -150,9 +133,8 @@ class ManageSettings extends Page
                                                 ->label('Phone Number')
                                                 ->tel()
                                                 ->maxLength(255),
-                                            Textarea::make('contact_address')
+                                            TextInput::make('contact_address')
                                                 ->label('Physical Address')
-                                                ->rows(3)
                                                 ->maxLength(500),
                                         ])
                                         ->columns(1),
