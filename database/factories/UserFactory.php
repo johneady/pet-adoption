@@ -32,6 +32,8 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
             'is_admin' => false,
+            'receive_new_user_alerts' => true,
+            'receive_new_adoption_alerts' => true,
         ];
     }
 
@@ -64,6 +66,17 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_admin' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the admin receives notification alerts.
+     */
+    public function receivesNotifications(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'receive_new_user_alerts' => true,
+            'receive_new_adoption_alerts' => true,
         ]);
     }
 }

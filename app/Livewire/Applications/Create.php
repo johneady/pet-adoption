@@ -3,10 +3,14 @@
 namespace App\Livewire\Applications;
 
 use App\Http\Requests\StoreAdoptionApplicationRequest;
+use App\Mail\AdoptionApplicationReceived;
+use App\Mail\NewAdoptionApplication;
 use App\Models\AdoptionApplication;
 use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class Create extends Component
@@ -60,6 +64,21 @@ class Create extends Component
             'reason_for_adoption' => $validated['reason_for_adoption'],
             'status' => 'submitted',
         ]);
+
+        // Load relationships for email
+        $application->load(['user', 'pet.species']);
+
+        // Send confirmation email to the applicant
+        Mail::to(Auth::user())->send(new AdoptionApplicationReceived($application));
+
+        // Notify admins who have opted in to receive new adoption alerts
+        $adminsToNotify = User::where('is_admin', true)
+            ->where('receive_new_adoption_alerts', true)
+            ->get();
+
+        foreach ($adminsToNotify as $admin) {
+            Mail::to($admin)->send(new NewAdoptionApplication($application));
+        }
 
         // Update the pet's status to pending
         Pet::where('id', $validated['pet_id'])->update(['status' => 'pending']);

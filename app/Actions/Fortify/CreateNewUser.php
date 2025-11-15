@@ -2,7 +2,9 @@
 
 namespace App\Actions\Fortify;
 
+use App\Mail\NewUserRegistered;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -30,10 +32,21 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+
+        // Notify admins who have opted in to receive new user alerts
+        $adminsToNotify = User::where('is_admin', true)
+            ->where('receive_new_user_alerts', true)
+            ->get();
+
+        foreach ($adminsToNotify as $admin) {
+            Mail::to($admin)->send(new NewUserRegistered($user));
+        }
+
+        return $user;
     }
 }

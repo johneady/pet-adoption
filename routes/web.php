@@ -8,6 +8,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Notifications;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
@@ -37,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
     Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
+    Route::get('settings/notifications', Notifications::class)->name('notifications.edit');
 
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(

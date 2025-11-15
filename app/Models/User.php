@@ -26,6 +26,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property string|null $two_factor_confirmed_at
  * @property bool $is_admin
+ * @property bool $receive_new_user_alerts
+ * @property bool $receive_new_adoption_alerts
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdoptionApplication> $adoptionApplications
  * @property-read int|null $adoption_applications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BlogPost> $blogPosts
@@ -67,6 +69,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'is_admin',
+        'receive_new_user_alerts',
+        'receive_new_adoption_alerts',
     ];
 
     /**
@@ -92,6 +96,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'receive_new_user_alerts' => 'boolean',
+            'receive_new_adoption_alerts' => 'boolean',
         ];
     }
 
