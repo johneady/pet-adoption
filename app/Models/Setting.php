@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ThemeService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -136,10 +137,20 @@ class Setting extends Model
     {
         static::saved(function ($setting) {
             Cache::forget("setting.{$setting->key}");
+
+            // Clear theme cache if theme settings were changed
+            if (in_array($setting->key, ['theme_preset', 'theme_primary_color', 'theme_secondary_color'])) {
+                app(ThemeService::class)->clearCache();
+            }
         });
 
         static::deleted(function ($setting) {
             Cache::forget("setting.{$setting->key}");
+
+            // Clear theme cache if theme settings were deleted
+            if (in_array($setting->key, ['theme_preset', 'theme_primary_color', 'theme_secondary_color'])) {
+                app(ThemeService::class)->clearCache();
+            }
         });
     }
 }

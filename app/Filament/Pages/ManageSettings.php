@@ -3,9 +3,11 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use App\Services\ThemeService;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -223,6 +225,21 @@ class ManageSettings extends Page
                                         ])
                                         ->columns(2),
                                 ]),
+                            Tabs\Tab::make('Theme')
+                                ->icon(Heroicon::OutlinedPaintBrush)
+                                ->schema([
+                                    Section::make('Color Theme')
+                                        ->description('Customize the color scheme for your frontend pages')
+                                        ->schema([
+                                            Select::make('theme_preset')
+                                                ->label('Color Theme Preset')
+                                                ->options(fn () => app(ThemeService::class)->getPresetOptions())
+                                                ->required()
+                                                ->default('ocean-blue')
+                                                ->helperText('Select a color theme for your website. Changes will apply to all frontend pages after saving.'),
+                                        ])
+                                        ->columns(1),
+                                ]),
                         ])
                         ->columnSpanFull(),
                 ])
@@ -254,6 +271,11 @@ class ManageSettings extends Page
         }
 
         Setting::clearCache();
+
+        // Clear theme cache if theme settings were changed
+        if (isset($data['theme_preset']) || isset($data['theme_primary_color']) || isset($data['theme_secondary_color'])) {
+            app(ThemeService::class)->clearCache();
+        }
 
         Notification::make()
             ->success()
