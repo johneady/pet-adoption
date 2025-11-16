@@ -12,7 +12,7 @@ test('theme preset setting exists in database after migration', function () {
     $themeSetting = Setting::where('key', 'theme_preset')->first();
 
     expect($themeSetting)->not->toBeNull()
-        ->and($themeSetting->value)->toBe('ocean-blue')
+        ->and($themeSetting->value)->toBe('navy-gold')
         ->and($themeSetting->group)->toBe('theme');
 });
 
@@ -33,10 +33,10 @@ test('color shade generator returns base color for 500 shade', function () {
     expect($shades[500])->toBe($baseColor);
 });
 
-test('theme service returns default ocean-blue preset', function () {
+test('theme service returns default navy-gold preset', function () {
     $themeService = app(ThemeService::class);
 
-    expect($themeService->getCurrentThemePreset())->toBe('ocean-blue');
+    expect($themeService->getCurrentThemePreset())->toBe('navy-gold');
 });
 
 test('theme service returns correct colors for preset', function () {
@@ -44,8 +44,8 @@ test('theme service returns correct colors for preset', function () {
     $colors = $themeService->getThemeColors();
 
     expect($colors)->toHaveKeys(['primary', 'secondary'])
-        ->and($colors['primary'])->toBe('#0ea5e9')
-        ->and($colors['secondary'])->toBe('#14b8a6');
+        ->and($colors['primary'])->toBe('#1e40af')
+        ->and($colors['secondary'])->toBe('#f59e0b');
 });
 
 test('theme service generates valid css', function () {
@@ -87,7 +87,7 @@ test('theme service clears cache correctly', function () {
     $themeService->clearCache();
 
     // Cache key should not exist
-    expect(Cache::has('theme_css_ocean-blue'))->toBeFalse();
+    expect(Cache::has('theme_css_navy-gold'))->toBeFalse();
 });
 
 test('changing theme preset clears theme cache', function () {
@@ -102,7 +102,7 @@ test('changing theme preset clears theme cache', function () {
     $setting->save();
 
     // Old cache should be cleared
-    expect(Cache::has('theme_css_ocean-blue'))->toBeFalse();
+    expect(Cache::has('theme_css_navy-gold'))->toBeFalse();
 });
 
 test('theme service returns all available presets', function () {
