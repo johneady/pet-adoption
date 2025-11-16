@@ -5,7 +5,6 @@ namespace App\Filament\Resources\AdoptionApplications\Tables;
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -30,27 +29,11 @@ class AdoptionApplicationsTable
                     ->label('Species')
                     ->badge()
                     ->toggleable(),
-                TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'submitted' => 'gray',
-                        'interview_scheduled' => 'warning',
-                        'under_review' => 'info',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
-                        'archived' => 'gray',
-                        default => 'gray',
-                    })
-                    ->sortable(),
                 TextColumn::make('living_situation')
-                    ->toggleable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Living Situation')
+                    ->toggleable(),
                 TextColumn::make('employment_status')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('interview.scheduled_at')
-                    ->label('Interview Date')
-                    ->dateTime('M j, Y @ H:i a')
-                    ->sortable()
+                    ->label('Employment Status')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Submitted')
