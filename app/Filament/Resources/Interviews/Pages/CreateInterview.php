@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\Interviews\Pages;
 
 use App\Filament\Resources\Interviews\InterviewResource;
+use App\Mail\InterviewScheduled;
 use App\Models\AdoptionApplication;
 use App\Models\ApplicationStatusHistory;
 use App\Models\Interview;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 
 class CreateInterview extends CreateRecord
 {
@@ -20,12 +22,21 @@ class CreateInterview extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+    protected function getCreateFormAction(): \Filament\Actions\Action
+    {
+        return parent::getCreateFormAction()
+            ->requiresConfirmation()
+            ->modalHeading('Schedule Interview')
+            ->modalDescription('This will schedule the interview and send email notifications to the applicant and you.')
+            ->modalSubmitActionLabel('Schedule & Send Emails');
+    }
+
     protected function afterCreate(): void
     {
         /** @var Interview $interview */
         $interview = $this->record;
 
-        $interview->load('adoptionApplication.pet');
+        $interview->load('adoptionApplication.pet.species', 'adoptionApplication.user');
 
         if ($interview->adoptionApplication?->pet) {
             $interview->adoptionApplication->pet->update([
@@ -47,6 +58,13 @@ class CreateInterview extends CreateRecord
                 'changed_by' => auth()->id(),
                 'notes' => 'Interview scheduled',
             ]);
+
+            // Send email notifications to applicant and admin who scheduled the interview
+            $applicant = $interview->adoptionApplication->user;
+            $admin = auth()->user();
+
+            Mail::to($applicant)->send(new InterviewScheduled($interview, $admin));
+            Mail::to($admin)->send(new InterviewScheduled($interview, $admin));
         }
     }
 

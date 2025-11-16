@@ -26,7 +26,8 @@ class InterviewForm
                     ->dehydrated(),
                 DateTimePicker::make('scheduled_at')
                     ->required(),
-                TextInput::make('location'),
+                TextInput::make('location')
+                    ->placeholder('e.g., Home visit, video call, office meeting'),
                 Textarea::make('notes')
                     ->rows(6)
                     ->hiddenOn('create')

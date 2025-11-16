@@ -4,12 +4,15 @@ namespace App\Filament\Resources\Interviews\Pages;
 
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Filament\Resources\Interviews\InterviewResource;
+use App\Mail\InterviewRescheduled;
 use App\Models\ApplicationStatusHistory;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class EditInterview extends EditRecord
 {
@@ -17,10 +20,13 @@ class EditInterview extends EditRecord
 
     protected ?string $originalNotes = null;
 
+    protected ?Carbon $originalScheduledAt = null;
+
     protected function beforeSave(): void
     {
-        // Store the original notes value right before save
+        // Store the original notes and scheduled_at values right before save
         $this->originalNotes = $this->record->getOriginal('notes');
+        $this->originalScheduledAt = $this->record->getOriginal('scheduled_at');
     }
 
     protected function getHeaderActions(): array
@@ -37,8 +43,20 @@ class EditInterview extends EditRecord
 
     protected function getFormActions(): array
     {
+
+        //TODO This does not create the model as expected
         return [
-            $this->getSaveFormAction(),
+            Action::make('SaveChanges')
+                ->requiresConfirmation()
+                ->modalHeading('Save Interview Changes')
+                ->modalDescription('If you have changed the scheduled date/time, email notifications will be sent to the applicant.')
+                ->modalSubmitActionLabel('Save Changes')
+                ->action(function () {
+                    // Save any pending changes first
+                    $this->save();
+                    // Redirect to interview list
+                    return redirect($this->getResource()::getUrl('index'));
+                }),
             Action::make('completeInterview')
                 ->label('Complete Interview')
                 ->icon(Heroicon::OutlinedCheckCircle)
@@ -89,6 +107,27 @@ class EditInterview extends EditRecord
 
     protected function afterSave(): void
     {
+        // Check if scheduled_at was changed
+        $currentScheduledAt = $this->record->scheduled_at;
+        $scheduledAtChanged = $this->originalScheduledAt && $currentScheduledAt &&
+            ! $this->originalScheduledAt->eq($currentScheduledAt);
+
+        if ($scheduledAtChanged) {
+            // Load necessary relationships for email
+            $this->record->load('adoptionApplication.pet.species', 'adoptionApplication.user');
+
+            $application = $this->record->adoptionApplication;
+            $applicant = $application->user;
+            $admin = auth()->user();
+
+            // Send reschedule email notifications to applicant and admin
+            Mail::to($applicant)->send(new InterviewRescheduled($this->record, $admin, $this->originalScheduledAt));
+            Mail::to($admin)->send(new InterviewRescheduled($this->record, $admin, $this->originalScheduledAt));
+
+            // Update the original scheduled_at to the current value for subsequent saves
+            $this->originalScheduledAt = $currentScheduledAt;
+        }
+
         // Check if interview notes were created or updated
         $currentNotes = $this->record->notes;
 

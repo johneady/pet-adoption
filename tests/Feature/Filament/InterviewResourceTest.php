@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 use App\Filament\Resources\Interviews\Pages\ListInterviews;
+use App\Mail\InterviewRescheduled;
+use App\Mail\InterviewScheduled;
 use App\Models\AdoptionApplication;
 use App\Models\Interview;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
@@ -390,4 +393,119 @@ test('editing interview without changing notes does not create status history en
 
     // Verify no new status history was created
     expect($historyCountAfter)->toBe($historyCountBefore);
+});
+
+test('creating an interview sends email to applicant and admin', function () {
+    Mail::fake();
+
+    $application = AdoptionApplication::factory()->create(['status' => 'submitted']);
+    $applicant = $application->user;
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\CreateInterview::class)
+        ->set('data.adoption_application_id', $application->id)
+        ->set('data.scheduled_at', now()->addDays(3))
+        ->set('data.location', 'Main Office')
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    // Verify emails were queued for both applicant and admin
+    Mail::assertQueued(InterviewScheduled::class, function ($mail) use ($applicant) {
+        return $mail->hasTo($applicant->email);
+    });
+
+    Mail::assertQueued(InterviewScheduled::class, function ($mail) {
+        return $mail->hasTo($this->admin->email);
+    });
+
+    // Verify exactly 2 emails were queued (one to applicant, one to admin)
+    Mail::assertQueued(InterviewScheduled::class, 2);
+});
+
+test('updating interview scheduled_at sends reschedule email to applicant and admin', function () {
+    Mail::fake();
+
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $applicant = $application->user;
+    $originalScheduledAt = now()->addDays(3);
+    $newScheduledAt = now()->addDays(5);
+
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => $originalScheduledAt,
+        'location' => 'Main Office',
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.scheduled_at', $newScheduledAt)
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Verify interview scheduled_at was updated
+    expect($interview->fresh()->scheduled_at->toDateTimeString())
+        ->toBe($newScheduledAt->toDateTimeString());
+
+    // Verify reschedule emails were queued for both applicant and admin
+    Mail::assertQueued(InterviewRescheduled::class, function ($mail) use ($applicant) {
+        return $mail->hasTo($applicant->email);
+    });
+
+    Mail::assertQueued(InterviewRescheduled::class, function ($mail) {
+        return $mail->hasTo($this->admin->email);
+    });
+
+    // Verify exactly 2 emails were queued (one to applicant, one to admin)
+    Mail::assertQueued(InterviewRescheduled::class, 2);
+});
+
+test('updating interview location does not send emails', function () {
+    Mail::fake();
+
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.location', 'Updated Office Location')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Verify location was updated
+    expect($interview->fresh()->location)->toBe('Updated Office Location');
+
+    // Verify no emails were sent
+    Mail::assertNothingSent();
+});
+
+test('updating interview notes does not send emails', function () {
+    Mail::fake();
+
+    $application = AdoptionApplication::factory()->create(['status' => 'interview_scheduled']);
+    $interview = Interview::create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+        'notes' => 'Initial notes',
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(\App\Filament\Resources\Interviews\Pages\EditInterview::class, ['record' => $interview->id])
+        ->set('data.notes', 'Updated notes')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Verify notes were updated
+    expect($interview->fresh()->notes)->toBe('Updated notes');
+
+    // Verify no emails were sent
+    Mail::assertNothingSent();
 });

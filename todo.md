@@ -1,5 +1,3 @@
-When an email is approved send a contgratuations email the the applicant. When an application is rejected, send a soft sorry message to the applicant. what architecture do you recommend. I was thinking of having a final decision event that would trigger the emails. What is your recommendation
+When an interview is created, send an email out to the applicant as well as the user scheduling the interview. On the create interview page,default the location with a placeholder of "home visit, video conf call, etc..." or something more appropirate. When the user clicks on the create add a popup to confirm that this will also send an email to the applicant.
 
-
-
-
+When an interview is updated, if the scheduled date is changed, send an updated interview email to the applicant as well as to the user scheduling the interview. When the user clicks on the save changes, add a popup to confirm that this will send an updated interview email to the applicant.
