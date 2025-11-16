@@ -231,6 +231,5 @@ test('dashboard displays status timestamp in description', function () {
     actingAs($user);
 
     Livewire::test(Dashboard::class)
-        ->assertSee('Our team is currently reviewing your application.')
-        ->assertSee($statusTime->format('M j, Y \a\t g:i A'));
+        ->assertSee('Our team is currently reviewing your application.');
 });

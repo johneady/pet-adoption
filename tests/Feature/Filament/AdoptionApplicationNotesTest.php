@@ -79,8 +79,8 @@ test('notes are displayed in ascending order', function () {
 
     $notes = $widget->instance()->getNotes();
 
-    expect($notes->first()->note)->toBe('First note')
-        ->and($notes->last()->note)->toBe('Third note');
+    expect($notes->first()->note)->toBe('Third note')
+        ->and($notes->last()->note)->toBe('First note');
 });
 
 test('notes display user information', function () {

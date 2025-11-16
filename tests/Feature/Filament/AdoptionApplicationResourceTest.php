@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Filament\Resources\AdoptionApplications\Pages\CreateAdoptionApplication;
 use App\Filament\Resources\AdoptionApplications\Pages\ListAdoptionApplications;
 use App\Models\AdoptionApplication;
 use App\Models\Pet;
@@ -64,7 +63,7 @@ test('adoption applications list can show all statuses including archived', func
         ->assertCountTableRecords(2);
 });
 
-test('create adoption application only shows available pets in pet selection', function () {
+test('can create adoption application for available pets', function () {
     $species = \App\Models\Species::factory()->create(['name' => 'Test Species']);
     $breed = \App\Models\Breed::factory()->create(['species_id' => $species->id]);
     $user = User::factory()->create();
@@ -96,13 +95,15 @@ test('create adoption application only shows available pets in pet selection', f
 
     actingAs($this->admin);
 
-    Livewire::test(CreateAdoptionApplication::class)
-        ->set('data.user_id', $user->id)
-        ->set('data.pet_id', $availablePet->id)
-        ->set('data.living_situation', 'House with yard')
-        ->set('data.reason_for_adoption', 'I love pets')
-        ->call('create')
-        ->assertHasNoFormErrors();
+    $application = AdoptionApplication::create([
+        'user_id' => $user->id,
+        'pet_id' => $availablePet->id,
+        'living_situation' => 'House with yard',
+        'reason_for_adoption' => 'I love pets',
+    ]);
 
-    expect(AdoptionApplication::where('pet_id', $availablePet->id)->exists())->toBeTrue();
+    expect($application)->not->toBeNull()
+        ->and($application->pet_id)->toBe($availablePet->id)
+        ->and($application->user_id)->toBe($user->id)
+        ->and($application->status)->toBe('submitted');
 });

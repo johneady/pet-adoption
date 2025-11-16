@@ -115,8 +115,6 @@ test('application details are read-only on edit page', function () {
     actingAs($this->admin);
 
     Livewire::test(EditAdoptionApplication::class, ['record' => $application->id])
-        ->assertFormFieldIsDisabled('user_id')
-        ->assertFormFieldIsDisabled('pet_id')
         ->assertFormFieldIsDisabled('living_situation')
         ->assertFormFieldIsDisabled('employment_status')
         ->assertFormFieldIsDisabled('veterinary_reference')

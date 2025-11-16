@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\AdoptionApplication;
-use App\Models\Setting;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;

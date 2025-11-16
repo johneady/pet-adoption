@@ -165,7 +165,8 @@ test('resets page when search changes', function () {
     ]);
 
     Livewire::test(Index::class)
-        ->set('search', 'test');
+        ->set('search', 'test')
+        ->assertSet('search', 'test');
 });
 
 test('resets page when tag filter changes', function () {
@@ -176,7 +177,8 @@ test('resets page when tag filter changes', function () {
     ]);
 
     Livewire::test(Index::class)
-        ->set('tagId', $tag->id);
+        ->set('tagId', $tag->id)
+        ->assertSet('tagId', $tag->id);
 });
 
 test('displays author name on blog posts', function () {
