@@ -10,6 +10,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
+use Filament\Pages\Dashboard;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -41,6 +42,14 @@ class FinalDecision extends Page implements HasTable
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            Dashboard::getUrl() => 'Adoption Applications',
+            static::getUrl() => 'Adoption Applications',
+        ];
     }
 
     public function table(Table $table): Table

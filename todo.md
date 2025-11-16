@@ -1,3 +1,19 @@
-When an interview is created, send an email out to the applicant as well as the user scheduling the interview. On the create interview page,default the location with a placeholder of "home visit, video conf call, etc..." or something more appropirate. When the user clicks on the create add a popup to confirm that this will also send an email to the applicant.
+# Todo 👷
 
-When an interview is updated, if the scheduled date is changed, send an updated interview email to the applicant as well as to the user scheduling the interview. When the user clicks on the save changes, add a popup to confirm that this will send an updated interview email to the applicant.
+## Relelase 1 ✨
+
+* Change the interview updated message to the admin to be more adminy
+
+* Add a better link for the interview email (e.g. maybe an ics file)
+
+* Add the ability to upload a photo to the user profile
+
+* Better use profile editing in the admin.
+
+* Add the ability to define an annual membership that users can pay for (3 levels). The plans are active for a year.
+
+* Add the ability to run 50/50 draws where members can purchase tickets and run a draw on a date/time automatically. Winners
+are notified immediately. Audit logs
+
+## Future release ⚡
+
