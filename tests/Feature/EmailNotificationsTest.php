@@ -171,3 +171,31 @@ test('admin can update notification preferences', function () {
     expect($admin->fresh()->receive_new_user_alerts)->toBeTrue()
         ->and($admin->fresh()->receive_new_adoption_alerts)->toBeTrue();
 });
+
+test('mail from configuration can be stored and retrieved from settings table', function () {
+    // Create mail settings in the database
+    \App\Models\Setting::set('mail_from_address', 'noreply@petadoption.test', 'string', 'email');
+    \App\Models\Setting::set('mail_from_name', 'Pet Adoption Center', 'string', 'email');
+
+    // Retrieve the settings
+    $addressSetting = \App\Models\Setting::where('key', 'mail_from_address')->first();
+    $nameSetting = \App\Models\Setting::where('key', 'mail_from_name')->first();
+
+    expect($addressSetting)->not->toBeNull()
+        ->and($addressSetting->value)->toBe('noreply@petadoption.test')
+        ->and($nameSetting)->not->toBeNull()
+        ->and($nameSetting->value)->toBe('Pet Adoption Center');
+});
+
+test('setting model can retrieve mail configuration values', function () {
+    // Create mail settings
+    \App\Models\Setting::set('mail_from_address', 'test@example.com', 'string', 'email');
+    \App\Models\Setting::set('mail_from_name', 'Test Mailer', 'string', 'email');
+
+    // Test that Setting::get() works for mail settings
+    $fromAddress = \App\Models\Setting::get('mail_from_address');
+    $fromName = \App\Models\Setting::get('mail_from_name');
+
+    expect($fromAddress)->toBe('test@example.com')
+        ->and($fromName)->toBe('Test Mailer');
+});

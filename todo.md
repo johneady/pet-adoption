@@ -1,1 +1,1 @@
-Some of the email links point to localhost:8001 vs localhost:8001. Some are correct. Please fix
+Change the from emails from Pet_Adoption_Platform to be from the settings table for the mail_from_address and mail_from_name fields in that table

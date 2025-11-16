@@ -110,6 +110,9 @@ return [
     |
     */
 
+    // Note: These values are dynamically overridden in AppServiceProvider
+    // using the mail_from_address and mail_from_name settings from the database.
+    // The values below serve as fallbacks only.
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
