@@ -118,4 +118,20 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global "Reply-To" Address
+    |--------------------------------------------------------------------------
+    |
+    | You may wish for all emails to have a reply-to address that is different
+    | from the from address. This is dynamically set in AppServiceProvider
+    | using the mail_reply_to setting from the database.
+    |
+    */
+
+    'reply_to' => [
+        'address' => null,
+        'name' => null,
+    ],
+
 ];

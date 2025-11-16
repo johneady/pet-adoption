@@ -199,3 +199,24 @@ test('setting model can retrieve mail configuration values', function () {
     expect($fromAddress)->toBe('test@example.com')
         ->and($fromName)->toBe('Test Mailer');
 });
+
+test('mail reply-to can be stored and retrieved from settings table', function () {
+    // Create mail reply-to setting in the database
+    \App\Models\Setting::set('mail_reply_to', 'info@petadoption.test', 'string', 'email');
+
+    // Retrieve the setting
+    $replyToSetting = \App\Models\Setting::where('key', 'mail_reply_to')->first();
+
+    expect($replyToSetting)->not->toBeNull()
+        ->and($replyToSetting->value)->toBe('info@petadoption.test');
+});
+
+test('setting model can retrieve mail reply-to value', function () {
+    // Create mail reply-to setting
+    \App\Models\Setting::set('mail_reply_to', 'support@example.com', 'string', 'email');
+
+    // Test that Setting::get() works for reply-to
+    $replyTo = \App\Models\Setting::get('mail_reply_to');
+
+    expect($replyTo)->toBe('support@example.com');
+});
