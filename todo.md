@@ -2,6 +2,10 @@
 
 ## Relelase 1 ✨
 
+* Add users address, and phone detail on their user profile. They are optional, but before they can complete an adoption, they must enter their address and phone
+
+* Create interview generates an N+1 performance issue
+
 * Change the interview updated message to the admin to be more adminy
 
 * Add a better link for the interview email (e.g. maybe an ics file)
