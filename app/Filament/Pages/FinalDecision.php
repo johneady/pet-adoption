@@ -85,7 +85,7 @@ class FinalDecision extends Page implements HasTable
                     ->color('success')
                     ->requiresConfirmation()
                     ->modalHeading('Approve Application')
-                    ->modalDescription('Are you sure you want to approve this adoption application?')
+                    ->modalDescription('Are you sure you want to approve this adoption application? This will also notify the applicant by email.')
                     ->modalSubmitActionLabel('Approve')
                     ->action(function (AdoptionApplication $record): void {
                         $oldStatus = $record->status;
@@ -119,7 +119,7 @@ class FinalDecision extends Page implements HasTable
                     ->color('danger')
                     ->requiresConfirmation()
                     ->modalHeading('Reject Application')
-                    ->modalDescription('Are you sure you want to reject this adoption application?')
+                    ->modalDescription('Are you sure you want to reject this adoption application? This will also notify the applicant by email.')
                     ->modalSubmitActionLabel('Reject')
                     ->action(function (AdoptionApplication $record): void {
                         $oldStatus = $record->status;
