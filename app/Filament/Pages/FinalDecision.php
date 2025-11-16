@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Events\ApplicationDecisionMade;
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Models\AdoptionApplication;
 use App\Models\ApplicationStatusHistory;
@@ -104,6 +105,8 @@ class FinalDecision extends Page implements HasTable
                             'notes' => 'Application approved',
                         ]);
 
+                        ApplicationDecisionMade::dispatch($record, 'approved', 'Application approved');
+
                         Notification::make()
                             ->success()
                             ->title('Application Approved')
@@ -142,6 +145,8 @@ class FinalDecision extends Page implements HasTable
                             'changed_by' => auth()->id(),
                             'notes' => 'Application rejected',
                         ]);
+
+                        ApplicationDecisionMade::dispatch($record, 'rejected', 'Application rejected');
 
                         Notification::make()
                             ->success()
