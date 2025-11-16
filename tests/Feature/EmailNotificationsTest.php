@@ -21,7 +21,8 @@ test('welcome email is queued after user verifies email', function () {
     // Simulate email verification
     event(new Verified($user));
 
-    // Assert welcome email was queued
+    // Assert exactly one welcome email was queued
+    Mail::assertQueuedCount(1);
     Mail::assertQueued(WelcomeNewUser::class, function ($mail) use ($user) {
         return $mail->hasTo($user->email) &&
                $mail->user->id === $user->id;
