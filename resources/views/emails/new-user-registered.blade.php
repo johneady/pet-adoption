@@ -1,7 +1,7 @@
 <x-mail::message>
 # New User Registration
 
-A new user has registered on {{ config('app.name') }}.
+A new user has registered on {{ App\Models\Setting::get('site_name') }}.
 
 **User Details:**
 - **Name:** {{ $user->name }}
@@ -13,5 +13,5 @@ View User in Admin Panel
 </x-mail::button>
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ App\Models\Setting::get('site_name') }}
 </x-mail::message>

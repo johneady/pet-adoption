@@ -1,7 +1,7 @@
 <x-mail::message>
 # New Adoption Application
 
-A new adoption application has been submitted on {{ config('app.name') }}.
+A new adoption application has been submitted on {{ App\Models\Setting::get('site_name') }}.
 
 **Application Details:**
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
@@ -15,5 +15,5 @@ View Application in Admin Panel
 </x-mail::button>
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ App\Models\Setting::get('site_name') }}
 </x-mail::message>

@@ -12,5 +12,5 @@ Browse Available Pets
 If you have any questions or need assistance, please don't hesitate to reach out to us.
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ App\Models\Setting::get('site_name') }}
 </x-mail::message>

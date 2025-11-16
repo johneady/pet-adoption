@@ -27,5 +27,5 @@ View Your Dashboard
 If you have any questions, please don't hesitate to contact us.
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ App\Models\Setting::get('site_name') }}
 </x-mail::message>
