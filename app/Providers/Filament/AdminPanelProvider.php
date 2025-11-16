@@ -6,6 +6,7 @@ use App\Filament\Widgets\ApplicationsChart;
 use App\Filament\Widgets\LatestApplicationsWidget;
 use App\Filament\Widgets\PetsStatsWidget;
 use App\Filament\Widgets\RecentUsersWidget;
+use App\Models\Setting;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -31,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName(fn () => Setting::get('site_name', 'Pet Adoption Platform'))
             ->spa()
             ->spaUrlExceptions([
                 url('/'),
