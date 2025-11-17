@@ -4,7 +4,7 @@
 
 * ~~Create interview generates an N+1 performance issue~~ ✅
 
-* Change the interview updated message to the admin to be more adminy
+* Change the interview updated message to the admin to be addressed to the admin, and be more formal.
 
 * Add a better link for the interview email (e.g. maybe an ics file)
 
