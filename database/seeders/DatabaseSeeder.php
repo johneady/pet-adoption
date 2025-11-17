@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             SpeciesSeeder::class,
+            MembershipPlanSeeder::class,
             PetSeeder::class,
             AdoptionApplicationSeeder::class,
             ApplicationStatusHistorySeeder::class,
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
             BlogPostSeeder::class,
             MenuSeeder::class,
             PageSeeder::class,
+            MembershipSeeder::class,
         ]);
     }
 }

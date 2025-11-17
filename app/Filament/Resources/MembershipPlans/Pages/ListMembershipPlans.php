@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\MembershipPlans\Pages;
 
 use App\Filament\Resources\MembershipPlans\MembershipPlanResource;
-use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListMembershipPlans extends ListRecords
@@ -12,8 +11,6 @@ class ListMembershipPlans extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateAction::make(),
-        ];
+        return [];
     }
 }
