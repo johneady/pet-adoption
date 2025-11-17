@@ -24,12 +24,9 @@
 
                     <div class="mb-6">
                         <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-bold">${{ number_format($plan->annual_price, 0) }}</span>
+                            <span class="text-4xl font-bold">${{ number_format($plan->price, 0) }}</span>
                             <span class="text-ocean-600 dark:text-ocean-400">/year</span>
                         </div>
-                        <flux:text class="text-sm mt-1 text-zinc-600 dark:text-zinc-400">
-                            or ${{ number_format($plan->monthly_price, 0) }}/month
-                        </flux:text>
                     </div>
 
                     <ul class="mb-8 space-y-3 flex-grow">
@@ -43,18 +40,11 @@
 
                     <div class="space-y-2">
                         <flux:button
-                            href="{{ route('membership.checkout', ['plan' => $plan->slug, 'type' => 'annual']) }}"
+                            href="{{ route('membership.checkout', ['plan' => $plan->slug]) }}"
                             variant="{{ $plan->slug === 'gold' ? 'primary' : 'filled' }}"
                             class="w-full"
                         >
-                            Donate Annually
-                        </flux:button>
-                        <flux:button
-                            href="{{ route('membership.checkout', ['plan' => $plan->slug, 'type' => 'monthly']) }}"
-                            variant="outline"
-                            class="w-full"
-                        >
-                            Donate Monthly
+                            Join Now
                         </flux:button>
                     </div>
                 </div>

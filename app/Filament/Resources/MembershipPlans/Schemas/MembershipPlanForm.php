@@ -40,29 +40,16 @@ class MembershipPlanForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make('annual_price')
+                                TextInput::make('price')
                                     ->required()
                                     ->numeric()
                                     ->prefix('$')
                                     ->step(0.01)
                                     ->minValue(0),
-                                TextInput::make('monthly_price')
-                                    ->required()
-                                    ->numeric()
-                                    ->prefix('$')
-                                    ->step(0.01)
-                                    ->minValue(0),
-                            ]),
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('stripe_annual_price_id')
-                                    ->label('Stripe Annual Price ID')
+                                TextInput::make('stripe_price_id')
+                                    ->label('Stripe Price ID')
                                     ->maxLength(255)
-                                    ->helperText('Optional: Stripe Price ID for annual payments'),
-                                TextInput::make('stripe_monthly_price_id')
-                                    ->label('Stripe Monthly Price ID')
-                                    ->maxLength(255)
-                                    ->helperText('Optional: Stripe Price ID for monthly subscriptions'),
+                                    ->helperText('Optional: Stripe Price ID for payments'),
                             ]),
                     ]),
 

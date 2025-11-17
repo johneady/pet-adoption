@@ -9,16 +9,9 @@ class Checkout extends Component
 {
     public string $planSlug;
 
-    public string $type;
-
-    public function mount(string $plan, string $type = 'annual')
+    public function mount(string $plan)
     {
         $this->planSlug = $plan;
-        $this->type = $type;
-
-        if (! in_array($this->type, ['annual', 'monthly'])) {
-            abort(404);
-        }
 
         // Automatically redirect to Stripe checkout
         $this->checkout();
@@ -29,20 +22,10 @@ class Checkout extends Component
         return MembershipPlan::where('slug', $this->planSlug)->firstOrFail();
     }
 
-    public function getAmountProperty()
-    {
-        return $this->type === 'annual' ? $this->plan->annual_price : $this->plan->monthly_price;
-    }
-
     public function checkout()
     {
         $plan = $this->plan;
         $user = auth()->user();
-
-        // Determine which Stripe Price ID to use
-        $stripePriceId = $this->type === 'annual'
-            ? $plan->stripe_annual_price_id
-            : $plan->stripe_monthly_price_id;
 
         // If no Stripe Price ID is configured, use the amount directly
         $checkoutOptions = [
@@ -53,14 +36,13 @@ class Checkout extends Component
             'metadata' => [
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
-                'payment_type' => $this->type,
             ],
         ];
 
-        if ($stripePriceId) {
+        if ($plan->stripe_price_id) {
             // Use Stripe Price ID (recommended)
             $checkoutOptions['line_items'] = [[
-                'price' => $stripePriceId,
+                'price' => $plan->stripe_price_id,
                 'quantity' => 1,
             ]];
         } else {
@@ -72,7 +54,7 @@ class Checkout extends Component
                         'name' => $plan->name.' Membership',
                         'description' => $plan->description ?? 'Support our mission with a '.$plan->name.' membership',
                     ],
-                    'unit_amount' => (int) ($this->amount * 100), // Convert to cents
+                    'unit_amount' => (int) ($plan->price * 100), // Convert to cents
                 ],
                 'quantity' => 1,
             ]];

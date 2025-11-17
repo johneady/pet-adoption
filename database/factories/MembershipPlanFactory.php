@@ -23,8 +23,7 @@ class MembershipPlanFactory extends Factory
         return [
             'name' => $tier,
             'slug' => \Str::slug($tier),
-            'annual_price' => 25 * $multiplier,
-            'monthly_price' => 3 * $multiplier,
+            'price' => 25 * $multiplier,
             'description' => fake()->sentence(),
             'features' => [
                 'Badge of honor on profile',

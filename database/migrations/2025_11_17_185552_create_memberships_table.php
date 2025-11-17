@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('plan_id')->constrained('membership_plans')->cascadeOnDelete();
-            $table->enum('payment_type', ['annual', 'monthly']);
             $table->enum('status', ['active', 'expired', 'canceled', 'refunded'])->default('active');
             $table->decimal('amount_paid', 10, 2);
-            $table->string('stripe_subscription_id')->nullable(); // For monthly payments
-            $table->string('stripe_payment_intent_id')->nullable(); // For annual payments
+            $table->string('stripe_payment_intent_id')->nullable();
             $table->timestamp('started_at');
             $table->timestamp('expires_at');
             $table->timestamp('canceled_at')->nullable();

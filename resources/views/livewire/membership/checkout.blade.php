@@ -5,11 +5,11 @@
         <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
             <flux:heading size="lg" class="mb-4">Order Summary</flux:heading>
             <div class="flex justify-between mb-4">
-                <flux:text>{{ $this->plan->name }} - {{ ucfirst($this->type) }}</flux:text>
-                <flux:text class="font-bold">${{ number_format($this->amount, 2) }}</flux:text>
+                <flux:text>{{ $this->plan->name }} - Annual</flux:text>
+                <flux:text class="font-bold">${{ number_format($this->plan->price, 2) }}</flux:text>
             </div>
             <flux:text class="text-sm">
-                {{ $this->type === 'annual' ? 'One-time annual payment' : '12 monthly payments' }}
+                One-time annual payment
             </flux:text>
         </div>
 

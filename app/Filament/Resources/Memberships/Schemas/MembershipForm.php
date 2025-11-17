@@ -28,29 +28,9 @@ class MembershipForm
                                     ->relationship('plan', 'name')
                                     ->required()
                                     ->live()
-                                    ->afterStateUpdated(function ($state, callable $set, $get) {
+                                    ->afterStateUpdated(function ($state, callable $set) {
                                         if ($state && $plan = \App\Models\MembershipPlan::find($state)) {
-                                            $paymentType = $get('payment_type') ?? 'annual';
-                                            $amount = $paymentType === 'annual' ? $plan->annual_price : $plan->monthly_price;
-                                            $set('amount_paid', $amount);
-                                        }
-                                    }),
-                            ]),
-                        Grid::make(2)
-                            ->schema([
-                                Select::make('payment_type')
-                                    ->options([
-                                        'annual' => 'Annual',
-                                        'monthly' => 'Monthly',
-                                    ])
-                                    ->required()
-                                    ->default('annual')
-                                    ->live()
-                                    ->afterStateUpdated(function ($state, callable $set, $get) {
-                                        if ($planId = $get('plan_id')) {
-                                            $plan = \App\Models\MembershipPlan::find($planId);
-                                            $amount = $state === 'annual' ? $plan->annual_price : $plan->monthly_price;
-                                            $set('amount_paid', $amount);
+                                            $set('amount_paid', $plan->price);
                                         }
                                     }),
                                 Select::make('status')
@@ -72,17 +52,10 @@ class MembershipForm
 
                 Section::make('Stripe Information')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('stripe_subscription_id')
-                                    ->label('Stripe Subscription ID')
-                                    ->disabled()
-                                    ->dehydrated(true),
-                                TextInput::make('stripe_payment_intent_id')
-                                    ->label('Stripe Payment Intent ID')
-                                    ->disabled()
-                                    ->dehydrated(true),
-                            ]),
+                        TextInput::make('stripe_payment_intent_id')
+                            ->label('Stripe Payment Intent ID')
+                            ->disabled()
+                            ->dehydrated(true),
                     ])
                     ->collapsed(),
 

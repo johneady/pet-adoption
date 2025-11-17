@@ -16,8 +16,7 @@ class MembershipPlanSeeder extends Seeder
             [
                 'name' => 'Bronze',
                 'slug' => 'bronze',
-                'annual_price' => 25.00,
-                'monthly_price' => 3.00,
+                'price' => 25.00,
                 'description' => 'Show your support with a Bronze membership badge. Help us provide better care for pets awaiting adoption.',
                 'features' => [
                     'Bronze badge of honor on your profile',
@@ -33,8 +32,7 @@ class MembershipPlanSeeder extends Seeder
             [
                 'name' => 'Silver',
                 'slug' => 'silver',
-                'annual_price' => 50.00,
-                'monthly_price' => 5.00,
+                'price' => 50.00,
                 'description' => 'Demonstrate your commitment with a Silver membership badge. Your donation helps us improve facilities and care.',
                 'features' => [
                     'Silver badge of honor on your profile',
@@ -50,8 +48,7 @@ class MembershipPlanSeeder extends Seeder
             [
                 'name' => 'Gold',
                 'slug' => 'gold',
-                'annual_price' => 100.00,
-                'monthly_price' => 10.00,
+                'price' => 100.00,
                 'description' => 'Be a champion for pets with a Gold membership badge. Your generous support enables us to help more animals.',
                 'features' => [
                     'Gold badge of honor on your profile',

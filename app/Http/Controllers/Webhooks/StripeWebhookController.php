@@ -58,7 +58,6 @@ class StripeWebhookController extends Controller
         // Extract metadata
         $userId = $session->metadata->user_id ?? null;
         $planId = $session->metadata->plan_id ?? null;
-        $paymentType = $session->metadata->payment_type ?? 'annual';
 
         if (! $userId || ! $planId) {
             Log::error('Missing metadata in Stripe checkout session', [
@@ -85,16 +84,13 @@ class StripeWebhookController extends Controller
         // Calculate dates
         $startedAt = now();
         $expiresAt = now()->addYear();
-        $amount = $paymentType === 'annual' ? $plan->annual_price : $plan->monthly_price;
 
         // Create the membership
         $membership = Membership::create([
             'user_id' => $user->id,
             'plan_id' => $plan->id,
-            'payment_type' => $paymentType,
             'status' => 'active',
-            'amount_paid' => $amount,
-            'stripe_subscription_id' => $session->subscription ?? null,
+            'amount_paid' => $plan->price,
             'stripe_payment_intent_id' => $session->payment_intent ?? null,
             'started_at' => $startedAt,
             'expires_at' => $expiresAt,
@@ -104,7 +100,7 @@ class StripeWebhookController extends Controller
         MembershipTransaction::create([
             'membership_id' => $membership->id,
             'type' => 'payment',
-            'amount' => $amount,
+            'amount' => $plan->price,
             'payment_method' => 'stripe',
             'stripe_payment_id' => $session->payment_intent ?? $session->id,
             'status' => 'completed',

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Memberships;
 
 use App\Filament\Resources\Memberships\Pages\CreateMembership;
-use App\Filament\Resources\Memberships\Pages\EditMembership;
 use App\Filament\Resources\Memberships\Pages\ListMemberships;
 use App\Filament\Resources\Memberships\Schemas\MembershipForm;
 use App\Filament\Resources\Memberships\Tables\MembershipsTable;
@@ -42,7 +41,6 @@ class MembershipResource extends Resource
         return [
             'index' => ListMemberships::route('/'),
             'create' => CreateMembership::route('/create'),
-            'edit' => EditMembership::route('/{record}/edit'),
         ];
     }
 }

@@ -10,10 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $name
  * @property string $slug
- * @property float $annual_price
- * @property float $monthly_price
- * @property string|null $stripe_annual_price_id
- * @property string|null $stripe_monthly_price_id
+ * @property float $price
+ * @property string|null $stripe_price_id
  * @property string|null $description
  * @property array|null $features
  * @property string $badge_color
@@ -35,8 +33,7 @@ class MembershipPlan extends Model
     protected function casts(): array
     {
         return [
-            'annual_price' => 'decimal:2',
-            'monthly_price' => 'decimal:2',
+            'price' => 'decimal:2',
             'features' => 'array',
             'is_active' => 'boolean',
         ];
@@ -67,18 +64,10 @@ class MembershipPlan extends Model
     }
 
     /**
-     * Get the formatted annual price.
+     * Get the formatted price.
      */
-    public function getFormattedAnnualPriceAttribute(): string
+    public function getFormattedPriceAttribute(): string
     {
-        return '$'.number_format($this->annual_price, 2);
-    }
-
-    /**
-     * Get the formatted monthly price.
-     */
-    public function getFormattedMonthlyPriceAttribute(): string
-    {
-        return '$'.number_format($this->monthly_price, 2);
+        return '$'.number_format($this->price, 2);
     }
 }

@@ -19,17 +19,14 @@ class MembershipFactory extends Factory
     public function definition(): array
     {
         $startedAt = fake()->dateTimeBetween('-6 months', 'now');
-        $paymentType = fake()->randomElement(['annual', 'monthly']);
         $plan = MembershipPlan::inRandomOrder()->first() ?? MembershipPlan::factory()->create();
 
         return [
             'user_id' => User::factory(),
             'plan_id' => $plan->id,
-            'payment_type' => $paymentType,
             'status' => 'active',
-            'amount_paid' => $paymentType === 'annual' ? $plan->annual_price : $plan->monthly_price,
-            'stripe_subscription_id' => $paymentType === 'monthly' ? 'sub_'.fake()->regexify('[A-Za-z0-9]{24}') : null,
-            'stripe_payment_intent_id' => $paymentType === 'annual' ? 'pi_'.fake()->regexify('[A-Za-z0-9]{24}') : null,
+            'amount_paid' => $plan->price,
+            'stripe_payment_intent_id' => 'pi_'.fake()->regexify('[A-Za-z0-9]{24}'),
             'started_at' => $startedAt,
             'expires_at' => (clone $startedAt)->modify('+1 year'),
             'canceled_at' => null,
@@ -80,39 +77,5 @@ class MembershipFactory extends Factory
             'started_at' => now()->subMonths(fake()->numberBetween(1, 11)),
             'expires_at' => now()->addMonths(fake()->numberBetween(1, 11)),
         ]);
-    }
-
-    /**
-     * Indicate that the membership is annual.
-     */
-    public function annual(): static
-    {
-        return $this->state(function (array $attributes) {
-            $plan = MembershipPlan::find($attributes['plan_id']);
-
-            return [
-                'payment_type' => 'annual',
-                'amount_paid' => $plan->annual_price,
-                'stripe_subscription_id' => null,
-                'stripe_payment_intent_id' => 'pi_'.fake()->regexify('[A-Za-z0-9]{24}'),
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the membership is monthly.
-     */
-    public function monthly(): static
-    {
-        return $this->state(function (array $attributes) {
-            $plan = MembershipPlan::find($attributes['plan_id']);
-
-            return [
-                'payment_type' => 'monthly',
-                'amount_paid' => $plan->monthly_price,
-                'stripe_subscription_id' => 'sub_'.fake()->regexify('[A-Za-z0-9]{24}'),
-                'stripe_payment_intent_id' => null,
-            ];
-        });
     }
 }

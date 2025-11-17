@@ -23,14 +23,10 @@ class MembershipPlansTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('annual_price')
+                TextColumn::make('price')
                     ->money('USD')
                     ->sortable()
-                    ->label('Annual'),
-                TextColumn::make('monthly_price')
-                    ->money('USD')
-                    ->sortable()
-                    ->label('Monthly'),
+                    ->label('Price'),
                 TextColumn::make('memberships_count')
                     ->counts('memberships')
                     ->label('Members')

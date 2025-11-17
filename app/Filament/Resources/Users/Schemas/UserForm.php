@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -55,11 +55,42 @@ class UserForm
                                     Storage::disk('public')->delete($file);
                                 }
                             }),
-                        TextEntry::make('created_at')
+                        Placeholder::make('created_at')
                             ->label('Member Since')
-                            ->formatStateUsing(fn ($record): string => $record?->created_at?->format('F j, Y') ?? 'N/A'),
+                            ->content(fn ($record): string => $record?->created_at?->format('F j, Y') ?? 'N/A'),
                     ])
                     ->columns(2),
+
+                Section::make('Membership')
+                    ->schema([
+                        Placeholder::make('membership_status')
+                            ->hiddenLabel()
+                            ->content(function ($record): \Illuminate\Contracts\Support\Htmlable {
+                                if (! $record) {
+                                    return new \Illuminate\Support\HtmlString('');
+                                }
+
+                                $membership = $record->currentMembership;
+
+                                if (! $membership || ! $membership->isActive()) {
+                                    return new \Illuminate\Support\HtmlString(
+                                        '<span class="text-gray-500 dark:text-gray-400">No active membership</span>'
+                                    );
+                                }
+
+                                $plan = $membership->plan;
+                                $daysRemaining = $membership->daysRemaining();
+                                $expiresAt = $membership->expires_at->format('M j, Y');
+
+                                return new \Illuminate\Support\HtmlString(
+                                    '<div class="space-y-1">'.
+                                    '<div><span style="background-color: '.$plan->badge_color.'; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500; color: white;">'.$plan->name.'</span></div>'.
+                                    '<div class="text-sm text-gray-600 dark:text-gray-400">Expires '.$expiresAt.' ('.$daysRemaining.' days remaining)</div>'.
+                                    '</div>'
+                                );
+                            }),
+                    ])
+                    ->hidden(fn (string $operation): bool => $operation === 'create'),
 
                 Section::make('User Information')
                     ->schema([
@@ -98,18 +129,20 @@ class UserForm
                             ->autocomplete('new-password')
                             ->revealable()
                             ->hidden(fn (string $operation): bool => $operation === 'edit'),
-                        TextEntry::make('account_status')
+                        Placeholder::make('account_status')
                             ->label('Account Status')
-                            ->formatStateUsing(function ($record): \Illuminate\Contracts\Support\Htmlable {
+                            ->content(function ($record): \Illuminate\Contracts\Support\Htmlable {
                                 if (! $record) {
                                     return new \Illuminate\Support\HtmlString('');
                                 }
 
                                 $status = $record->email_verified_at ? 'Verified' : 'Unverified';
-                                $color = $record->email_verified_at ? 'success' : 'warning';
+                                $colors = $record->email_verified_at
+                                    ? 'background-color: rgb(34 197 94); color: white;'
+                                    : 'background-color: rgb(234 179 8); color: white;';
 
                                 return new \Illuminate\Support\HtmlString(
-                                    '<x-filament::badge color="'.$color.'">'.$status.'</x-filament::badge>'
+                                    '<span style="'.$colors.' padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">'.$status.'</span>'
                                 );
                             })
                             ->hidden(fn (string $operation): bool => $operation === 'create'),
@@ -152,7 +185,8 @@ class UserForm
                             ->helperText('Receive notifications when new adoption applications are submitted.')
                             ->default(false),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->visible(fn (): bool => auth()->user()?->is_admin ?? false),
             ]);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Memberships\Tables;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -40,10 +39,6 @@ class MembershipsTable
                         default => 'info',
                     })
                     ->sortable(),
-                TextColumn::make('payment_type')
-                    ->label('Type')
-                    ->badge()
-                    ->sortable(),
                 TextColumn::make('amount_paid')
                     ->money('USD')
                     ->sortable(),
@@ -70,14 +65,8 @@ class MembershipsTable
                     ]),
                 SelectFilter::make('plan')
                     ->relationship('plan', 'name'),
-                SelectFilter::make('payment_type')
-                    ->options([
-                        'annual' => 'Annual',
-                        'monthly' => 'Monthly',
-                    ]),
             ])
             ->recordActions([
-                EditAction::make(),
                 Action::make('refund')
                     ->icon('heroicon-o-currency-dollar')
                     ->color('danger')
@@ -86,9 +75,9 @@ class MembershipsTable
                     ->visible(fn ($record) => $record->status === 'active'),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }
