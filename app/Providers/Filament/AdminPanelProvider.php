@@ -44,16 +44,16 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Blue,
             ])
             ->navigationItems([
-                NavigationItem::make('Profile')
-                    ->url('/settings')
-                    ->icon('heroicon-o-user-circle')
-                    ->sort(998),
                 NavigationItem::make('View Website')
                     ->url('/')
                     ->icon('heroicon-o-globe-alt')
                     ->sort(999),
             ])
             ->userMenuItems([
+                'profile' => Action::make('profile')
+                    ->label('Profile')
+                    ->url(fn (): string => url('/settings'))
+                    ->icon('heroicon-o-user-circle'),
                 'logout' => fn (Action $action) => $action->hidden(),
                 Action::make('viewWebsite')
                     ->label('View Website')
