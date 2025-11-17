@@ -17,7 +17,7 @@ class InterviewForm
             ->components([
                 Select::make('adoption_application_id')
                     ->label('Adoption Application')
-                    ->relationship('adoptionApplication', 'id')
+                    ->relationship('adoptionApplication', 'id', modifyQueryUsing: fn ($query) => $query->with(['user', 'pet']))
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->user->name} :: Adopting {$record->pet->name}")
                     ->searchable(['user.name', 'pet.name'])
                     ->preload()

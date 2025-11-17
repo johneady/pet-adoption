@@ -22,6 +22,14 @@ class EditInterview extends EditRecord
 
     protected ?Carbon $originalScheduledAt = null;
 
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        // Eager load relationships to prevent N+1 queries
+        $this->record->load(['adoptionApplication.user', 'adoptionApplication.pet']);
+    }
+
     protected function beforeSave(): void
     {
         // Store the original notes and scheduled_at values right before save
@@ -44,7 +52,7 @@ class EditInterview extends EditRecord
     protected function getFormActions(): array
     {
 
-        //TODO This does not create the model as expected
+        // TODO This does not create the model as expected
         return [
             Action::make('SaveChanges')
                 ->requiresConfirmation()
@@ -54,6 +62,7 @@ class EditInterview extends EditRecord
                 ->action(function () {
                     // Save any pending changes first
                     $this->save();
+
                     // Redirect to interview list
                     return redirect($this->getResource()::getUrl('index'));
                 }),
@@ -160,8 +169,6 @@ class EditInterview extends EditRecord
 
     public function getFooter(): ?View
     {
-        $this->record->load(['adoptionApplication.user', 'adoptionApplication.pet']);
-
         return view('filament.resources.interviews.pages.create-interview-footer', [
             'adoptionApplication' => $this->record->adoptionApplication,
         ]);

@@ -2,9 +2,7 @@
 
 ## Relelase 1 ✨
 
-* Add the sizes table to the content section on the backend filament
-
-* Create interview generates an N+1 performance issue
+* ~~Create interview generates an N+1 performance issue~~ ✅
 
 * Change the interview updated message to the admin to be more adminy
 

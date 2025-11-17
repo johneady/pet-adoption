@@ -15,7 +15,7 @@ class InterviewsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->whereNull('completed_at'))
+            ->modifyQueryUsing(fn ($query) => $query->whereNull('completed_at')->with(['adoptionApplication.user', 'adoptionApplication.pet']))
             ->defaultSort('scheduled_at', 'asc')
             ->columns([
                 IconColumn::make('overdue')
