@@ -65,14 +65,28 @@ class UserForm
                     ->schema([
                         TextInput::make('name')
                             ->required()
-                            ->readOnly(fn (string $operation): bool => $operation === 'edit')
-                            ->dehydrated(fn (string $operation): bool => $operation === 'create')
+                            ->readOnly(function (string $operation, $livewire): bool {
+                                if ($operation === 'create') {
+                                    return false;
+                                }
+
+                                // Allow editing if the user is editing their own profile
+                                return $livewire->getRecord()?->id !== auth()->id();
+                            })
+                            ->dehydrated()
                             ->maxLength(255),
                         TextInput::make('email')
                             ->email()
                             ->required()
-                            ->readOnly(fn (string $operation): bool => $operation === 'edit')
-                            ->dehydrated(fn (string $operation): bool => $operation === 'create')
+                            ->readOnly(function (string $operation, $livewire): bool {
+                                if ($operation === 'create') {
+                                    return false;
+                                }
+
+                                // Allow editing if the user is editing their own profile
+                                return $livewire->getRecord()?->id !== auth()->id();
+                            })
+                            ->dehydrated()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
                         TextInput::make('password')
@@ -101,7 +115,16 @@ class UserForm
                             ->hidden(fn (string $operation): bool => $operation === 'create'),
                         Toggle::make('is_admin')
                             ->label('Administrator')
-                            ->helperText('Administrators have access to the admin panel.')
+                            ->helperText(function ($livewire): string {
+                                // Warn users they cannot change their own admin status
+                                if ($livewire->getRecord()?->id === auth()->id()) {
+                                    return 'You cannot change your own administrator status to prevent lockout.';
+                                }
+
+                                return 'Administrators have access to the admin panel.';
+                            })
+                            ->disabled(fn ($livewire): bool => $livewire->getRecord()?->id === auth()->id())
+                            ->dehydrated(fn ($livewire): bool => $livewire->getRecord()?->id !== auth()->id())
                             ->default(false),
                     ])
                     ->columns(2),

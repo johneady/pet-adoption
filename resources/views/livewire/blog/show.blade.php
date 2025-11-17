@@ -34,9 +34,7 @@
                 <!-- Meta Information -->
                 <div class="mb-6 flex items-center gap-4 border-b border-zinc-200 pb-6 dark:border-zinc-700">
                     <div class="flex items-center gap-3">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-semibold dark:bg-zinc-700">
-                            {{ $post->author->initials() }}
-                        </div>
+                        <img src="{{ $post->author->profile_picture ? $post->author->profilePictureUrl() : url('/images/default-avatar.svg') }}" alt="{{ $post->author->name }}" class="size-10 rounded-full object-cover">
                         <div>
                             <flux:text class="font-semibold">{{ $post->author->name }}</flux:text>
                             <flux:text size="sm" class="text-zinc-600 dark:text-zinc-400">

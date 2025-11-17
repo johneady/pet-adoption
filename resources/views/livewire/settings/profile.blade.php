@@ -20,9 +20,7 @@
                     @elseif ($profilePicture && $profilePicture->getMimeType() && str_starts_with($profilePicture->getMimeType(), 'image/'))
                         <img src="{{ $profilePicture->temporaryUrl() }}" alt="Preview" class="size-24 rounded-full object-cover">
                     @else
-                        <div class="flex size-24 items-center justify-center rounded-full bg-ocean-100 text-2xl font-semibold text-ocean-700 dark:bg-ocean-900 dark:text-ocean-300">
-                            {{ auth()->user()->initials() }}
-                        </div>
+                        <img src="{{ url('/images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="size-24 rounded-full object-cover">
                     @endif
 
                     <div class="flex flex-col gap-2">
