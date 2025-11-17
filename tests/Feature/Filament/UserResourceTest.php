@@ -157,3 +157,97 @@ test('user resource can update profile fields', function () {
         ->and($user->receive_new_user_alerts)->toBeTrue()
         ->and($user->receive_new_adoption_alerts)->toBeTrue();
 });
+
+test('user resource compresses uploaded profile picture to 150x150', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'phone' => '555-1234',
+        'address' => '123 Test St',
+    ]);
+
+    actingAs($this->admin);
+
+    // Create a test image file
+    $testImage = Illuminate\Http\UploadedFile::fake()->image('profile.jpg', 500, 500);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.profile_picture', [$testImage])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    // Verify the file was stored
+    expect($user->profile_picture)->not->toBeNull()
+        ->and(Storage::disk('public')->exists($user->profile_picture))->toBeTrue();
+
+    // Verify the image is compressed to 150x150
+    $storedImagePath = Storage::disk('public')->path($user->profile_picture);
+    $imageSize = getimagesize($storedImagePath);
+
+    expect($imageSize[0])->toBe(150)
+        ->and($imageSize[1])->toBe(150);
+});
+
+test('user resource deletes old profile picture when uploading a new one', function () {
+    Storage::fake('public');
+
+    // Create user with existing profile picture
+    $oldImagePath = 'profile-pictures/old-image.jpg';
+    Storage::disk('public')->put($oldImagePath, 'old image content');
+
+    $user = User::factory()->create([
+        'profile_picture' => $oldImagePath,
+        'phone' => '555-1234',
+        'address' => '123 Test St',
+    ]);
+
+    actingAs($this->admin);
+
+    // Upload a new image
+    $newImage = Illuminate\Http\UploadedFile::fake()->image('new-profile.jpg', 300, 300);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.profile_picture', [$newImage])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    // Verify old image was deleted
+    expect(Storage::disk('public')->exists($oldImagePath))->toBeFalse()
+        ->and($user->profile_picture)->not->toBe($oldImagePath)
+        ->and(Storage::disk('public')->exists($user->profile_picture))->toBeTrue();
+});
+
+test('user resource deletes profile picture from storage when removed', function () {
+    Storage::fake('public');
+
+    // Create user with existing profile picture
+    $imagePath = 'profile-pictures/test-image.jpg';
+    Storage::disk('public')->put($imagePath, 'test image content');
+
+    $user = User::factory()->create([
+        'profile_picture' => $imagePath,
+        'phone' => '555-1234',
+        'address' => '123 Test St',
+    ]);
+
+    actingAs($this->admin);
+
+    // Remove the profile picture by setting it to empty array (Filament way)
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.profile_picture', [])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    // Verify the image was deleted from storage and database
+    expect(Storage::disk('public')->exists($imagePath))->toBeFalse()
+        ->and($user->profile_picture)->toBeNull();
+});

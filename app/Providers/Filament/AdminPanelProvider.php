@@ -38,11 +38,16 @@ class AdminPanelProvider extends PanelProvider
                 url('/'),
             ])
             ->login()
+            ->topbar(false)
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
                 'primary' => Color::Blue,
             ])
             ->navigationItems([
+                NavigationItem::make('Profile')
+                    ->url('/settings')
+                    ->icon('heroicon-o-user-circle')
+                    ->sort(998),
                 NavigationItem::make('View Website')
                     ->url('/')
                     ->icon('heroicon-o-globe-alt')
@@ -52,11 +57,11 @@ class AdminPanelProvider extends PanelProvider
                 'logout' => fn (Action $action) => $action->hidden(),
                 Action::make('viewWebsite')
                     ->label('View Website')
-                    ->url('/')
+                    ->url(fn (): string => url('/'))
                     ->icon('heroicon-o-globe-alt'),
                 Action::make('logOut')
                     ->label('Logout')
-                    ->url('/')
+                    ->url(fn (): string => url('/'))
                     ->icon('heroicon-o-arrow-right-start-on-rectangle'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

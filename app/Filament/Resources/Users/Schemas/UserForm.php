@@ -8,6 +8,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UserForm
 {
@@ -25,7 +28,33 @@ class UserForm
                             ->circleCropper()
                             ->disk('public')
                             ->directory('profile-pictures')
-                            ->maxSize(2048),
+                            ->maxSize(2048)
+                            ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $set, callable $get, $livewire): string {
+                                // Get the old profile picture from the record
+                                $oldProfilePicture = $livewire->getRecord()?->profile_picture;
+
+                                // Delete old profile picture if it exists
+                                if ($oldProfilePicture) {
+                                    Storage::disk('public')->delete($oldProfilePicture);
+                                }
+
+                                // Generate unique filename
+                                $filename = 'profile-pictures/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                // Compress and resize image to 150x150
+                                $image = Image::read($file->getRealPath());
+                                $image->cover(150, 150);
+
+                                // Store compressed image
+                                Storage::disk('public')->put($filename, (string) $image->encode());
+
+                                return $filename;
+                            })
+                            ->deleteUploadedFileUsing(function (?string $file): void {
+                                if ($file) {
+                                    Storage::disk('public')->delete($file);
+                                }
+                            }),
                         TextEntry::make('created_at')
                             ->label('Member Since')
                             ->formatStateUsing(fn ($record): string => $record?->created_at?->format('F j, Y') ?? 'N/A'),
