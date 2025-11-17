@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class BlogPostResource extends Resource
 {
@@ -23,6 +24,10 @@ class BlogPostResource extends Resource
     protected static ?string $navigationLabel = 'Blog Posts';
 
     protected static ?string $modelLabel = 'Blog Post';
+
+    protected static UnitEnum|string|null $navigationGroup = 'Content';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {

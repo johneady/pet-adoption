@@ -27,6 +27,8 @@ class MenuResource extends Resource
 
     protected static UnitEnum|string|null $navigationGroup = 'Content';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Schema $schema): Schema
     {
         return MenuForm::configure($schema);
