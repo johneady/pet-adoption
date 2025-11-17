@@ -17,6 +17,35 @@
             </div>
         @endif
 
+        @if (Auth::user()->hasActiveMembership())
+            <div class="mb-8 rounded-xl border p-6" style="border-color: {{ Auth::user()->currentMembership->plan->badge_color }}40; background: linear-gradient(135deg, {{ Auth::user()->currentMembership->plan->badge_color }}10, transparent);">
+                <div class="flex items-center gap-4">
+                    <div class="rounded-lg p-3" style="background-color: {{ Auth::user()->currentMembership->plan->badge_color }}20">
+                        <flux:icon.star class="size-8" style="color: {{ Auth::user()->currentMembership->plan->badge_color }}" />
+                    </div>
+                    <div class="flex-grow">
+                        <flux:heading size="lg">{{ Auth::user()->currentMembership->plan->name }} Member</flux:heading>
+                        <flux:text>Thank you for supporting our mission! Your membership expires {{ Auth::user()->currentMembership->expires_at->diffForHumans() }}.</flux:text>
+                    </div>
+                    <flux:button href="{{ route('membership.manage') }}" variant="outline" size="sm">
+                        Manage
+                    </flux:button>
+                </div>
+            </div>
+        @else
+            <div class="mb-8 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <flux:heading size="lg" class="mb-1">Support Our Mission</flux:heading>
+                        <flux:text>Consider becoming a member to help us provide better care for pets.</flux:text>
+                    </div>
+                    <flux:button href="{{ route('membership.plans') }}" variant="primary">
+                        View Plans
+                    </flux:button>
+                </div>
+            </div>
+        @endif
+
         @if ($userApplications->count() > 0)
             <div class="mb-8">
                 <flux:heading size="lg" class="mb-4">Latest Applicaiton</flux:heading>

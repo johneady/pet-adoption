@@ -5,6 +5,9 @@ use App\Livewire\Applications\Create as ApplicationsCreate;
 use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
 use App\Livewire\Dashboard;
+use App\Livewire\Membership\Checkout;
+use App\Livewire\Membership\Manage;
+use App\Livewire\Membership\Plans;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
@@ -27,9 +30,14 @@ Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 
 Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
+Route::get('/membership', Plans::class)->name('membership.plans');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
+
+    Route::get('/membership/checkout/{plan}/{type}', Checkout::class)->name('membership.checkout');
+    Route::get('/membership/manage', Manage::class)->name('membership.manage');
 });
 
 Route::middleware(['auth'])->group(function () {
