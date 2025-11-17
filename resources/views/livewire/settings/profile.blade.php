@@ -3,7 +3,48 @@
         @include('partials.settings-heading')
 
         <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
+        @if (!auth()->user()->hasCompletedProfileForAdoption())
+            <flux:callout variant="warning" class="mb-6">
+                <strong>{{ __('Complete your profile') }}</strong>
+                {{ __('Please add your phone number and address to submit adoption applications.') }}
+            </flux:callout>
+        @endif
+
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
+            {{-- Profile Picture --}}
+            <div>
+                <flux:text class="mb-2 font-medium">{{ __('Profile Picture') }}</flux:text>
+                <div class="flex items-center gap-4">
+                    @if (auth()->user()->profile_picture && !$removeProfilePicture)
+                        <img src="{{ auth()->user()->profilePictureUrl() }}" alt="{{ auth()->user()->name }}" class="size-24 rounded-full object-cover">
+                    @elseif ($profilePicture && $profilePicture->getMimeType() && str_starts_with($profilePicture->getMimeType(), 'image/'))
+                        <img src="{{ $profilePicture->temporaryUrl() }}" alt="Preview" class="size-24 rounded-full object-cover">
+                    @else
+                        <div class="flex size-24 items-center justify-center rounded-full bg-ocean-100 text-2xl font-semibold text-ocean-700 dark:bg-ocean-900 dark:text-ocean-300">
+                            {{ auth()->user()->initials() }}
+                        </div>
+                    @endif
+
+                    <div class="flex flex-col gap-2">
+                        <input type="file" wire:model="profilePicture" accept="image/*" class="text-sm file:mr-4 file:rounded file:border-0 file:bg-ocean-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-ocean-700 hover:file:bg-ocean-100 dark:file:bg-ocean-900 dark:file:text-ocean-300 dark:hover:file:bg-ocean-800">
+
+                        @if (auth()->user()->profile_picture && !$removeProfilePicture)
+                            <flux:button wire:click="$set('removeProfilePicture', true)" variant="ghost" size="sm" type="button">
+                                {{ __('Remove Photo') }}
+                            </flux:button>
+                        @endif
+
+                        @if ($removeProfilePicture)
+                            <flux:button wire:click="$set('removeProfilePicture', false)" variant="ghost" size="sm" type="button">
+                                {{ __('Cancel Removal') }}
+                            </flux:button>
+                        @endif
+                    </div>
+                </div>
+                @error('profilePicture') <flux:text variant="danger" class="mt-2">{{ $message }}</flux:text> @enderror
+                <div wire:loading wire:target="profilePicture" class="mt-2 text-sm text-ocean-600 dark:text-ocean-400">{{ __('Uploading...') }}</div>
+            </div>
+
             <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
 
             <div>
@@ -27,6 +68,10 @@
                     </div>
                 @endif
             </div>
+
+            <flux:input wire:model="phone" :label="__('Phone Number')" type="text" autocomplete="tel" :placeholder="__('Optional - Required for adoption applications')" />
+
+            <flux:input wire:model="address" :label="__('Address')" type="text" autocomplete="street-address" :placeholder="__('Optional - Required for adoption applications')" />
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">

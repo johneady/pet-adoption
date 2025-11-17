@@ -35,6 +35,14 @@ class Create extends Component
 
     public function mount(int $petId): void
     {
+        if (! Auth::user()->hasCompletedProfileForAdoption()) {
+            session()->flash('message', 'Please complete your profile (address and phone number) before submitting an adoption application.');
+
+            $this->redirect(route('profile.edit'), navigate: true);
+
+            return;
+        }
+
         $this->pet_id = $petId;
         $this->selectedPet = Pet::with(['species', 'breed', 'photos'])->findOrFail($petId);
     }

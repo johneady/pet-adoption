@@ -17,6 +17,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string|null $phone
+ * @property string|null $address
+ * @property string|null $profile_picture
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
@@ -68,6 +71,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'profile_picture',
         'is_admin',
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',
@@ -126,5 +132,25 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_admin;
+    }
+
+    /**
+     * Get the URL for the user's profile picture or a placeholder
+     */
+    public function profilePictureUrl(): string
+    {
+        if ($this->profile_picture) {
+            return \Storage::disk('public')->url($this->profile_picture);
+        }
+
+        return '';
+    }
+
+    /**
+     * Check if the user has completed their profile for adoption requests
+     */
+    public function hasCompletedProfileForAdoption(): bool
+    {
+        return ! empty($this->phone) && ! empty($this->address);
     }
 }

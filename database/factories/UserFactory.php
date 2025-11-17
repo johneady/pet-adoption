@@ -28,6 +28,9 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= 'password',
             'remember_token' => Str::random(10),
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'profile_picture' => null,
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
@@ -77,6 +80,17 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'receive_new_user_alerts' => true,
             'receive_new_adoption_alerts' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has an incomplete profile (no phone or address).
+     */
+    public function incompleteProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'phone' => null,
+            'address' => null,
         ]);
     }
 }

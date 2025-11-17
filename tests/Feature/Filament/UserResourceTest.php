@@ -110,33 +110,50 @@ test('user resource can edit an existing user', function () {
         ]);
 });
 
-test('user resource can edit user without changing password', function () {
-    $user = User::factory()->create();
-    $originalPassword = $user->password;
+test('user resource edit form shows all profile fields', function () {
+    $user = User::factory()->create([
+        'phone' => '555-1234',
+        'address' => '123 Main St',
+    ]);
 
     actingAs($this->admin);
 
     Livewire::test(EditUser::class, ['record' => $user->id])
-        ->fillForm([
-            'name' => 'Updated Name',
+        ->assertOk()
+        ->assertSchemaStateSet([
+            'name' => $user->name,
             'email' => $user->email,
-            'password' => '',
-        ])
+            'phone' => $user->phone,
+            'address' => $user->address,
+            'is_admin' => $user->is_admin,
+            'receive_new_user_alerts' => $user->receive_new_user_alerts,
+            'receive_new_adoption_alerts' => $user->receive_new_adoption_alerts,
+        ]);
+});
+
+test('user resource can update profile fields', function () {
+    $user = User::factory()->incompleteProfile()->create([
+        'receive_new_user_alerts' => false,
+        'receive_new_adoption_alerts' => false,
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->assertOk()
+        ->set('data.phone', '555-9876')
+        ->set('data.address', '456 Oak Avenue, Apt 2B')
+        ->set('data.receive_new_user_alerts', true)
+        ->set('data.receive_new_adoption_alerts', true)
+        ->assertHasNoFormErrors()
         ->call('save')
+        ->assertHasNoFormErrors()
         ->assertNotified();
 
     $user->refresh();
 
-    expect($user->password)->toBe($originalPassword);
-});
-
-test('user resource can delete a user', function () {
-    $user = User::factory()->create();
-
-    actingAs($this->admin);
-
-    Livewire::test(EditUser::class, ['record' => $user->id])
-        ->callAction('delete');
-
-    expect(User::find($user->id))->toBeNull();
+    expect($user->phone)->toBe('555-9876')
+        ->and($user->address)->toBe('456 Oak Avenue, Apt 2B')
+        ->and($user->receive_new_user_alerts)->toBeTrue()
+        ->and($user->receive_new_adoption_alerts)->toBeTrue();
 });

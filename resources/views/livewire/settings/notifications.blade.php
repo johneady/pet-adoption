@@ -12,7 +12,7 @@
                     </div>
                 @else
                     <flux:text class="text-sm">
-                        {{ __('Email notification preferences are only available for admin users.') }}
+                        {{ __('No preferences available.') }}
                     </flux:text>
                 @endif
 
