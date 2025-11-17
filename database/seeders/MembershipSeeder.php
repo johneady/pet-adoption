@@ -21,9 +21,12 @@ class MembershipSeeder extends Seeder
         foreach ($usersWithMemberships as $user) {
             // 70% chance of active membership
             if (fake()->boolean(70)) {
-                Membership::factory()
+                $membership = Membership::factory()
                     ->active()
                     ->create(['user_id' => $user->id]);
+
+                // Set this as the user's current membership
+                $user->update(['current_membership_id' => $membership->id]);
             }
             // 15% chance of expired membership
             elseif (fake()->boolean(50)) {

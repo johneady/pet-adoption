@@ -41,7 +41,7 @@
             </flux:button>
         @endif
 
-        <flux:heading size="lg" class="mb-4">Membership History</flux:heading>
+        <flux:heading size="lg" class="mt-8 mb-4">Membership History</flux:heading>
         <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
             <table class="w-full">
                 <thead class="bg-gray-50 dark:bg-gray-800">

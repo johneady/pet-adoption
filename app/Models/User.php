@@ -84,6 +84,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'is_admin',
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',
+        'current_membership_id',
     ];
 
     /**
