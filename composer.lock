@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20eb27956c5c5a49fae7ca7b61bdbfd2",
+    "content-hash": "c4c4f4d33d1dee3b7a25f1de0668e5b9",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5744,6 +5744,65 @@
                 }
             ],
             "time": "2022-12-17T21:53:22+00:00"
+        },
+        {
+            "name": "spatie/icalendar-generator",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/icalendar-generator.git",
+                "reference": "a6ed5500450c4a353eabd768423a5ab367126c3c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/icalendar-generator/zipball/a6ed5500450c4a353eabd768423a5ab367126c3c",
+                "reference": "a6ed5500450c4a353eabd768423a5ab367126c3c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "larapack/dd": "^1.1",
+                "nesbot/carbon": "^3.5",
+                "pestphp/pest": "^2.34",
+                "phpstan/phpstan": "^2.0",
+                "spatie/pest-plugin-snapshots": "^2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\IcalendarGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben Van Assche",
+                    "email": "ruben@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Build calendars in the iCalendar format",
+            "homepage": "https://github.com/spatie/icalendar-generator",
+            "keywords": [
+                "calendar",
+                "iCalendar",
+                "ical",
+                "ics",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/icalendar-generator/issues",
+                "source": "https://github.com/spatie/icalendar-generator/tree/3.1.0"
+            },
+            "time": "2025-10-24T11:33:29+00:00"
         },
         {
             "name": "spatie/invade",
