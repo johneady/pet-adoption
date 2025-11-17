@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Filament\Resources\Interviews\Pages\ListInterviews;
 use App\Mail\InterviewRescheduled;
+use App\Mail\InterviewRescheduledAdmin;
 use App\Mail\InterviewScheduled;
 use App\Models\AdoptionApplication;
 use App\Models\Interview;
@@ -444,21 +445,24 @@ test('updating interview scheduled_at sends reschedule email to applicant and ad
         ->call('save')
         ->assertHasNoFormErrors();
 
-    // Verify interview scheduled_at was updated
-    expect($interview->fresh()->scheduled_at->toDateTimeString())
-        ->toBe($newScheduledAt->toDateTimeString());
+    // Verify interview scheduled_at was updated (compare without seconds due to form precision)
+    expect($interview->fresh()->scheduled_at->format('Y-m-d H:i'))
+        ->toBe($newScheduledAt->format('Y-m-d H:i'));
 
     // Verify reschedule emails were queued for both applicant and admin
     Mail::assertQueued(InterviewRescheduled::class, function ($mail) use ($applicant) {
         return $mail->hasTo($applicant->email);
     });
 
-    Mail::assertQueued(InterviewRescheduled::class, function ($mail) {
+    Mail::assertQueued(InterviewRescheduledAdmin::class, function ($mail) {
         return $mail->hasTo($this->admin->email);
     });
 
-    // Verify exactly 2 emails were queued (one to applicant, one to admin)
-    Mail::assertQueued(InterviewRescheduled::class, 2);
+    // Verify exactly 1 InterviewRescheduled email was queued (to applicant)
+    Mail::assertQueued(InterviewRescheduled::class, 1);
+
+    // Verify exactly 1 InterviewRescheduledAdmin email was queued (to admin)
+    Mail::assertQueued(InterviewRescheduledAdmin::class, 1);
 });
 
 test('updating interview location does not send emails', function () {

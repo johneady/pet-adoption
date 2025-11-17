@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Interviews\Pages;
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Filament\Resources\Interviews\InterviewResource;
 use App\Mail\InterviewRescheduled;
+use App\Mail\InterviewRescheduledAdmin;
 use App\Models\ApplicationStatusHistory;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -131,7 +132,7 @@ class EditInterview extends EditRecord
 
             // Send reschedule email notifications to applicant and admin
             Mail::to($applicant)->send(new InterviewRescheduled($this->record, $admin, $this->originalScheduledAt));
-            Mail::to($admin)->send(new InterviewRescheduled($this->record, $admin, $this->originalScheduledAt));
+            Mail::to($admin)->send(new InterviewRescheduledAdmin($this->record, $admin, $this->originalScheduledAt));
 
             // Update the original scheduled_at to the current value for subsequent saves
             $this->originalScheduledAt = $currentScheduledAt;
