@@ -93,6 +93,18 @@
                     </flux:dropdown>
                 @endif
             @endforeach
+            <flux:navbar.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
+                wire:navigate>
+                {{ __('Membership') }}
+            </flux:navbar.item>
+            @auth
+                @if (!auth()->user()->is_admin)
+                    <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                        wire:navigate>
+                        {{ __('Dashboard') }}
+                    </flux:navbar.item>
+                @endif
+            @endauth
         </flux:navbar>
 
         <flux:spacer />
@@ -202,6 +214,20 @@
                     </flux:navlist.group>
                 @endif
             @endforeach
+            <flux:navlist.group :heading="__('Support')">
+                <flux:navlist.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
+                    wire:navigate>
+                    {{ __('Membership') }}
+                </flux:navlist.item>
+                @auth
+                    @if (!auth()->user()->is_admin)
+                        <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                            wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:navlist.item>
+                    @endif
+                @endauth
+            </flux:navlist.group>
         </flux:navlist>
 
         <flux:spacer />
