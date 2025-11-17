@@ -1,13 +1,16 @@
 <?php
 
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\Webhooks\StripeWebhookController;
 use App\Livewire\Applications\Create as ApplicationsCreate;
 use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
 use App\Livewire\Dashboard;
+use App\Livewire\Membership\Cancel;
 use App\Livewire\Membership\Checkout;
 use App\Livewire\Membership\Manage;
 use App\Livewire\Membership\Plans;
+use App\Livewire\Membership\Success;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
 use App\Livewire\Settings\Appearance;
@@ -32,11 +35,16 @@ Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
 Route::get('/membership', Plans::class)->name('membership.plans');
 
+// Stripe webhook route (CSRF exemption configured in bootstrap/app.php)
+Route::post('/webhooks/stripe', [StripeWebhookController::class, 'handleWebhook'])->name('webhooks.stripe');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
 
     Route::get('/membership/checkout/{plan}/{type}', Checkout::class)->name('membership.checkout');
+    Route::get('/membership/success', Success::class)->name('membership.success');
+    Route::get('/membership/cancel', Cancel::class)->name('membership.cancel');
     Route::get('/membership/manage', Manage::class)->name('membership.manage');
 });
 
