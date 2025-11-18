@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use App\Services\ThemeService;
 use BackedEnum;
+use DateTimeZone;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -93,6 +94,20 @@ class ManageSettings extends Page
                                                 ->acceptedFileTypes(['image/x-icon', 'image/png']),
                                         ])
                                         ->columns(2),
+                                    Section::make('Localization')
+                                        ->description('Configure timezone settings')
+                                        ->schema([
+                                            Select::make('default_timezone')
+                                                ->label('Default Timezone')
+                                                ->options(fn () => collect(DateTimeZone::listIdentifiers())
+                                                    ->mapWithKeys(fn ($tz) => [$tz => $tz])
+                                                    ->toArray())
+                                                ->searchable()
+                                                ->required()
+                                                ->default('America/Toronto')
+                                                ->helperText('Default timezone for new users'),
+                                        ])
+                                        ->columns(1),
                                 ]),
                             Tabs\Tab::make('SEO')
                                 ->icon(Heroicon::OutlinedMagnifyingGlass)

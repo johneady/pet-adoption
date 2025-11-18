@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use DateTimeZone;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -171,6 +173,13 @@ class UserForm
                         TextInput::make('address')
                             ->label('Address')
                             ->columnSpanFull(),
+                        Select::make('timezone')
+                            ->label('Timezone')
+                            ->options(fn () => collect(DateTimeZone::listIdentifiers())
+                                ->mapWithKeys(fn ($tz) => [$tz => $tz])
+                                ->toArray())
+                            ->searchable()
+                            ->default('America/Toronto'),
                     ])
                     ->columns(2),
 

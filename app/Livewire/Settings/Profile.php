@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Models\User;
+use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +25,8 @@ class Profile extends Component
 
     public ?string $address = null;
 
+    public string $timezone = 'America/Toronto';
+
     public ?TemporaryUploadedFile $profilePicture = null;
 
     public bool $removeProfilePicture = false;
@@ -38,6 +41,7 @@ class Profile extends Component
         $this->email = $user->email;
         $this->phone = $user->phone ?? '';
         $this->address = $user->address ?? '';
+        $this->timezone = $user->timezone ?? 'America/Toronto';
     }
 
     /**
@@ -59,6 +63,7 @@ class Profile extends Component
             ],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
+            'timezone' => ['required', 'string', 'timezone'],
             'profilePicture' => ['nullable', 'image', 'max:2048'],
         ]);
 
@@ -67,6 +72,7 @@ class Profile extends Component
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'address' => $validated['address'],
+            'timezone' => $validated['timezone'],
         ]);
 
         if ($user->isDirty('email')) {
@@ -116,6 +122,18 @@ class Profile extends Component
         $user->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
+    }
+
+    /**
+     * Get the list of available timezones.
+     *
+     * @return array<string, string>
+     */
+    public function getTimezoneOptions(): array
+    {
+        return collect(DateTimeZone::listIdentifiers())
+            ->mapWithKeys(fn ($tz) => [$tz => $tz])
+            ->toArray();
     }
 
     public function render(): mixed

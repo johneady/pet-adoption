@@ -49,6 +49,13 @@ class SettingSeeder extends Seeder
                 'group' => 'general',
                 'description' => 'Path to the site favicon',
             ],
+            [
+                'key' => 'default_timezone',
+                'value' => 'America/Toronto',
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Default timezone for the application',
+            ],
 
             // SEO Settings
             [

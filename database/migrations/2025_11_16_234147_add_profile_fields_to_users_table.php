@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('phone', 20)->nullable()->after('email');
             $table->text('address')->nullable()->after('phone');
             $table->string('profile_picture')->nullable()->after('address');
+            $table->string('timezone', 64)->default('America/Toronto')->after('profile_picture');
         });
     }
 
@@ -24,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['phone', 'address', 'profile_picture']);
+            $table->dropColumn(['phone', 'address', 'profile_picture', 'timezone']);
         });
     }
 };

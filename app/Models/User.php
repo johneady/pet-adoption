@@ -80,6 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'phone',
         'address',
         'profile_picture',
+        'timezone',
         'is_admin',
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',

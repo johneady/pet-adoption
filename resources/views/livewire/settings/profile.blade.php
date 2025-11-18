@@ -71,6 +71,12 @@
 
             <flux:input wire:model="address" :label="__('Address')" type="text" autocomplete="street-address" :placeholder="__('Optional - Required for adoption applications')" />
 
+            <flux:select wire:model="timezone" :label="__('Timezone')" searchable>
+                @foreach ($this->getTimezoneOptions() as $tz => $label)
+                    <flux:select.option value="{{ $tz }}">{{ $label }}</flux:select.option>
+                @endforeach
+            </flux:select>
+
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
                     <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>

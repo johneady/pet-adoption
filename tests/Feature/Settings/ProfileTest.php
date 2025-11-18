@@ -56,6 +56,36 @@ test('address cannot exceed 500 characters', function () {
         ->assertHasErrors(['address']);
 });
 
+test('user can update timezone', function () {
+    $user = User::factory()->create(['timezone' => 'America/Toronto']);
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('timezone', 'America/New_York')
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    expect($user->refresh()->timezone)->toBe('America/New_York');
+});
+
+test('timezone must be a valid timezone', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('timezone', 'Invalid/Timezone')
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['timezone']);
+});
+
+test('new users have default timezone of America/Toronto', function () {
+    $user = User::factory()->create();
+
+    expect($user->timezone)->toBe('America/Toronto');
+});
+
 test('user can upload profile picture', function () {
     Storage::fake('public');
 
