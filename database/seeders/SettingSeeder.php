@@ -118,29 +118,6 @@ class SettingSeeder extends Seeder
                 'description' => 'Business operating hours',
             ],
 
-            // Email Settings
-            [
-                'key' => 'mail_from_address',
-                'value' => 'noreply@petadoption.test',
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender email address',
-            ],
-            [
-                'key' => 'mail_from_name',
-                'value' => 'Pet Adoption Center',
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender name',
-            ],
-            [
-                'key' => 'mail_reply_to',
-                'value' => 'info@petadoption.test',
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Reply-to email address',
-            ],
-
             // Social Media Settings
             [
                 'key' => 'social_facebook',

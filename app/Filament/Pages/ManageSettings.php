@@ -141,28 +141,6 @@ class ManageSettings extends Page
                                         ])
                                         ->columns(1),
                                 ]),
-                            Tabs\Tab::make('Email')
-                                ->icon(Heroicon::OutlinedAtSymbol)
-                                ->schema([
-                                    Section::make('Email Configuration')
-                                        ->description('Configure default sender information for system emails')
-                                        ->schema([
-                                            TextInput::make('mail_from_address')
-                                                ->label('From Email Address')
-                                                ->email()
-                                                ->required()
-                                                ->maxLength(255),
-                                            TextInput::make('mail_from_name')
-                                                ->label('From Name')
-                                                ->required()
-                                                ->maxLength(255),
-                                            TextInput::make('mail_reply_to')
-                                                ->label('Reply-To Email')
-                                                ->email()
-                                                ->maxLength(255),
-                                        ])
-                                        ->columns(1),
-                                ]),
                             Tabs\Tab::make('Social Media')
                                 ->icon(Heroicon::OutlinedShare)
                                 ->schema([
