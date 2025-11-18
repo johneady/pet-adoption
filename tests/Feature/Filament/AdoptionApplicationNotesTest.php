@@ -54,10 +54,8 @@ test('note requires content', function () {
     actingAs($this->admin);
 
     Livewire::test(NotesWidget::class, ['record' => $this->application])
-        ->mountAction('addNote')
-        ->setActionData(['note' => ''])
-        ->callMountedAction()
-        ->assertHasActionErrors(['note' => 'required']);
+        ->callAction('addNote', data: ['note' => ''])
+        ->assertHasFormErrors(['note' => 'required']);
 });
 
 test('notes are displayed in ascending order', function () {
