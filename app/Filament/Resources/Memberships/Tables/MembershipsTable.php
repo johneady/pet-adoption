@@ -43,13 +43,16 @@ class MembershipsTable
                     ->money('USD')
                     ->sortable(),
                 TextColumn::make('started_at')
+                    ->timezone(auth()->user()->timezone)
                     ->date()
                     ->sortable(),
                 TextColumn::make('expires_at')
+                    ->timezone(auth()->user()->timezone)
                     ->date()
                     ->sortable()
                     ->description(fn ($record) => $record->isActive() ? $record->daysRemaining().' days remaining' : null),
                 TextColumn::make('created_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

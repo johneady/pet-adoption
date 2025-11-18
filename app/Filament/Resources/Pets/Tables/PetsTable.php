@@ -55,10 +55,12 @@ class PetsTable
                     })
                     ->sortable(),
                 TextColumn::make('intake_date')
+                    ->timezone(auth()->user()->timezone)
                     ->date()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

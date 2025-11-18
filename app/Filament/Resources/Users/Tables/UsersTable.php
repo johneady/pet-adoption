@@ -37,20 +37,24 @@ class UsersTable
                     ->sortable()
                     ->alignment('center'),
                 TextColumn::make('email_verified_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('two_factor_confirmed_at')
                     ->label('2FA Enabled')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable()
                     ->placeholder('Disabled'),
                 TextColumn::make('created_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

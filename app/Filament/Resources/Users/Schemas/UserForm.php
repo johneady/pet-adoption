@@ -58,7 +58,7 @@ class UserForm
                                 }
                             }),
                         Placeholder::make('created_at')
-                            ->label('Member Since')
+                            ->label('User Since')
                             ->content(fn ($record): string => $record?->created_at?->format('F j, Y') ?? 'N/A'),
                     ])
                     ->columns(2),

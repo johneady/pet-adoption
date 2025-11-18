@@ -29,6 +29,7 @@ class RecentUsersWidget extends TableWidget
 
                 TextColumn::make('created_at')
                     ->label('Registered')
+                    ->timezone(auth()->user()->timezone)
                     ->since()
                     ->sortable(),
             ])

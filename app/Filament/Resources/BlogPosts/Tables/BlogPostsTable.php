@@ -46,17 +46,19 @@ class BlogPostsTable
                     ->toggleable(),
                 TextColumn::make('published_at')
                     ->label('Published')
-                    ->dateTime()
-                    ->sortable()
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime('M j, Y')
+                    ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Created')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->label('Updated')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

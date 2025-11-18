@@ -25,6 +25,7 @@ class InterviewsTable
                     ->state(fn ($record) => $record->scheduled_at->isPast())
                     ->tooltip('Overdue'),
                 TextColumn::make('scheduled_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime('M j, Y @ H:i a')
                     ->sortable(),
                 TextColumn::make('adoptionApplication.user.name')
@@ -38,10 +39,12 @@ class InterviewsTable
                 TextColumn::make('location')
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -46,6 +46,7 @@ class StatusHistoryTable
                     ->placeholder('System'),
                 TextColumn::make('created_at')
                     ->label('Date')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime('M d, Y g:i A')
                     ->sortable(),
             ])

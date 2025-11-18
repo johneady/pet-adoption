@@ -49,6 +49,7 @@ class LatestApplicationsWidget extends TableWidget
 
                 TextColumn::make('created_at')
                     ->label('Applied')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable(),
             ])

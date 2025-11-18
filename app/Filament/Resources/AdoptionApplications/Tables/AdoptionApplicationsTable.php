@@ -37,6 +37,7 @@ class AdoptionApplicationsTable
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Submitted')
+                    ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
                     ->since(),
