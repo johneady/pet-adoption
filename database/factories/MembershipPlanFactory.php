@@ -31,7 +31,6 @@ class MembershipPlanFactory extends Factory
                 'Help pets find homes',
             ],
             'badge_color' => ['Bronze' => '#cd7f32', 'Silver' => '#c0c0c0', 'Gold' => '#ffd700'][$tier],
-            'badge_icon' => 'star',
             'display_order' => ['Bronze' => 1, 'Silver' => 2, 'Gold' => 3][$tier],
             'is_active' => true,
         ];

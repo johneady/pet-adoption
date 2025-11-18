@@ -21,11 +21,7 @@
                     <flux:badge color="success">Active</flux:badge>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <flux:text class="text-sm font-medium mb-1 text-ocean-700 dark:text-ocean-300">Payment Type</flux:text>
-                        <flux:text class="text-lg">{{ ucfirst($this->membership->payment_type) }}</flux:text>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <flux:text class="text-sm font-medium mb-1 text-ocean-700 dark:text-ocean-300">Amount Paid</flux:text>
                         <flux:text class="text-lg">${{ number_format($this->membership->amount_paid, 2) }}</flux:text>
@@ -53,7 +49,6 @@
                 <thead class="bg-ocean-50 dark:bg-ocean-950">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase text-ocean-700 dark:text-ocean-300">Plan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase text-ocean-700 dark:text-ocean-300">Type</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase text-ocean-700 dark:text-ocean-300">Amount</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase text-ocean-700 dark:text-ocean-300">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase text-ocean-700 dark:text-ocean-300">Started</th>
@@ -64,7 +59,6 @@
                     @forelse ($this->memberships as $membership)
                         <tr>
                             <td class="px-6 py-4">{{ $membership->plan->name }}</td>
-                            <td class="px-6 py-4">{{ ucfirst($membership->payment_type) }}</td>
                             <td class="px-6 py-4">${{ number_format($membership->amount_paid, 2) }}</td>
                             <td class="px-6 py-4">
                                 <flux:badge :color="match($membership->status) {
@@ -82,7 +76,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center">
+                            <td colspan="5" class="px-6 py-8 text-center">
                                 <flux:text class="text-ocean-700 dark:text-ocean-300">No membership history found.</flux:text>
                             </td>
                         </tr>

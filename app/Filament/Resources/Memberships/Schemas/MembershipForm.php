@@ -50,10 +50,10 @@ class MembershipForm
                             ->step(0.01),
                     ]),
 
-                Section::make('Stripe Information')
+                Section::make('PayPal Information')
                     ->schema([
-                        TextInput::make('stripe_payment_intent_id')
-                            ->label('Stripe Payment Intent ID')
+                        TextInput::make('paypal_transaction_id')
+                            ->label('PayPal Transaction ID')
                             ->disabled()
                             ->dehydrated(true),
                     ])

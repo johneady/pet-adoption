@@ -26,7 +26,7 @@ class MembershipFactory extends Factory
             'plan_id' => $plan->id,
             'status' => 'active',
             'amount_paid' => $plan->price,
-            'stripe_payment_intent_id' => 'pi_'.fake()->regexify('[A-Za-z0-9]{24}'),
+            'paypal_transaction_id' => fake()->regexify('[A-Z0-9]{17}'),
             'started_at' => $startedAt,
             'expires_at' => (clone $startedAt)->modify('+1 year'),
             'canceled_at' => null,

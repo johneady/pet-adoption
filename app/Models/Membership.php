@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $plan_id
  * @property string $status
  * @property float $amount_paid
- * @property string|null $stripe_payment_intent_id
+ * @property string|null $paypal_transaction_id
  * @property \Illuminate\Support\Carbon $started_at
  * @property \Illuminate\Support\Carbon $expires_at
  * @property \Illuminate\Support\Carbon|null $canceled_at

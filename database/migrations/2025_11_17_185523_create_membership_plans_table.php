@@ -16,11 +16,9 @@ return new class extends Migration
             $table->string('name'); // Bronze, Silver, Gold
             $table->string('slug')->unique();
             $table->decimal('price', 10, 2);
-            $table->string('stripe_price_id')->nullable();
             $table->text('description')->nullable();
             $table->json('features')->nullable();
             $table->string('badge_color')->default('#94a3b8'); // Tailwind slate-400
-            $table->string('badge_icon')->default('star');
             $table->unsignedInteger('display_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

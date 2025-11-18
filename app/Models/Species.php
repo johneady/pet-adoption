@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $slug
  * @property string|null $description
- * @property string|null $icon
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Breed> $breeds
@@ -25,7 +24,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereIcon($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Species whereSlug($value)
@@ -42,7 +40,6 @@ class Species extends Model
         'name',
         'slug',
         'description',
-        'icon',
     ];
 
     public function breeds(): HasMany

@@ -22,7 +22,6 @@ class SpeciesFactory extends Factory
             'name' => $name,
             'slug' => \Illuminate\Support\Str::slug($name),
             'description' => fake()->optional()->sentence(),
-            'icon' => null,
         ];
     }
 }

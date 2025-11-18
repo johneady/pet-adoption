@@ -38,19 +38,12 @@ class MembershipPlanForm
 
                 Section::make('Pricing')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('price')
-                                    ->required()
-                                    ->numeric()
-                                    ->prefix('$')
-                                    ->step(0.01)
-                                    ->minValue(0),
-                                TextInput::make('stripe_price_id')
-                                    ->label('Stripe Price ID')
-                                    ->maxLength(255)
-                                    ->helperText('Optional: Stripe Price ID for payments'),
-                            ]),
+                        TextInput::make('price')
+                            ->required()
+                            ->numeric()
+                            ->prefix('$')
+                            ->step(0.01)
+                            ->minValue(0),
                     ]),
 
                 Section::make('Features')
@@ -67,15 +60,11 @@ class MembershipPlanForm
 
                 Section::make('Badge Customization')
                     ->schema([
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 ColorPicker::make('badge_color')
                                     ->required()
                                     ->default('#94a3b8'),
-                                TextInput::make('badge_icon')
-                                    ->required()
-                                    ->default('star')
-                                    ->helperText('Heroicon name'),
                                 TextInput::make('display_order')
                                     ->required()
                                     ->numeric()

@@ -47,6 +47,11 @@
                     <flux:navbar.item icon="cog" href="/admin" :current="request()->is('admin*')">
                         {{ __('Admin') }}
                     </flux:navbar.item>
+                @else
+                    <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                        wire:navigate>
+                        {{ __('Dashboard') }}
+                    </flux:navbar.item>
                 @endif
             @endauth
             <flux:navbar.item icon="heart" :href="route('pets.index')" :current="request()->routeIs('pets.*')"
@@ -97,14 +102,6 @@
                 wire:navigate>
                 {{ __('Membership') }}
             </flux:navbar.item>
-            @auth
-                @if (!auth()->user()->is_admin)
-                    <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                        wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:navbar.item>
-                @endif
-            @endauth
         </flux:navbar>
 
         <flux:spacer />
@@ -178,6 +175,11 @@
                         <flux:navlist.item icon="cog" href="/admin" :current="request()->is('admin*')">
                             {{ __('Admin') }}
                         </flux:navlist.item>
+                    @else
+                        <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                            wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:navlist.item>
                     @endif
                 @endauth
                 <flux:navlist.item icon="heart" :href="route('pets.index')" :current="request()->routeIs('pets.*')"
@@ -219,14 +221,6 @@
                     wire:navigate>
                     {{ __('Membership') }}
                 </flux:navlist.item>
-                @auth
-                    @if (!auth()->user()->is_admin)
-                        <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                            wire:navigate>
-                            {{ __('Dashboard') }}
-                        </flux:navlist.item>
-                    @endif
-                @endauth
             </flux:navlist.group>
         </flux:navlist>
 

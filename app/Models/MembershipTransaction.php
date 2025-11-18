@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $type
  * @property float $amount
  * @property string|null $payment_method
- * @property string|null $stripe_payment_id
+ * @property string|null $paypal_txn_id
  * @property string $status
  * @property int|null $processed_by
  * @property string|null $notes

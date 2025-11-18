@@ -11,11 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $slug
  * @property float $price
- * @property string|null $stripe_price_id
  * @property string|null $description
  * @property array|null $features
  * @property string $badge_color
- * @property string $badge_icon
  * @property int $display_order
  * @property bool $is_active
  * @property \Illuminate\Support\Carbon $created_at

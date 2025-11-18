@@ -12,9 +12,6 @@ class Checkout extends Component
     public function mount(string $plan)
     {
         $this->planSlug = $plan;
-
-        // Automatically redirect to Stripe checkout
-        $this->checkout();
     }
 
     public function getPlanProperty()
@@ -22,47 +19,41 @@ class Checkout extends Component
         return MembershipPlan::where('slug', $this->planSlug)->firstOrFail();
     }
 
-    public function checkout()
+    /**
+     * Get PayPal form action URL.
+     */
+    public function getPaypalUrlProperty(): string
     {
-        $plan = $this->plan;
-        $user = auth()->user();
+        return config('services.paypal.mode') === 'sandbox'
+            ? 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+            : 'https://www.paypal.com/cgi-bin/webscr';
+    }
 
-        // If no Stripe Price ID is configured, use the amount directly
-        $checkoutOptions = [
-            'success_url' => route('membership.success').'?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('membership.cancel'),
-            'mode' => 'payment',
-            'customer_email' => $user->email,
-            'metadata' => [
-                'user_id' => $user->id,
-                'plan_id' => $plan->id,
-            ],
-        ];
+    /**
+     * Get PayPal business email.
+     */
+    public function getPaypalEmailProperty(): string
+    {
+        return config('services.paypal.email');
+    }
 
-        if ($plan->stripe_price_id) {
-            // Use Stripe Price ID (recommended)
-            $checkoutOptions['line_items'] = [[
-                'price' => $plan->stripe_price_id,
-                'quantity' => 1,
-            ]];
-        } else {
-            // Use amount directly (fallback)
-            $checkoutOptions['line_items'] = [[
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $plan->name.' Membership',
-                        'description' => $plan->description ?? 'Support our mission with a '.$plan->name.' membership',
-                    ],
-                    'unit_amount' => (int) ($plan->price * 100), // Convert to cents
-                ],
-                'quantity' => 1,
-            ]];
-        }
+    /**
+     * Get custom data for PayPal (JSON encoded).
+     */
+    public function getCustomDataProperty(): string
+    {
+        return json_encode([
+            'user_id' => auth()->id(),
+            'plan_id' => $this->plan->id,
+        ]);
+    }
 
-        $checkout = $user->checkout($checkoutOptions);
-
-        return redirect($checkout->url);
+    /**
+     * Get the IPN notify URL.
+     */
+    public function getNotifyUrlProperty(): string
+    {
+        return route('webhooks.paypal-ipn');
     }
 
     public function render()

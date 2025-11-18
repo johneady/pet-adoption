@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\Webhooks\StripeWebhookController;
+use App\Http\Controllers\Webhooks\PayPalIPNController;
 use App\Livewire\Applications\Create as ApplicationsCreate;
 use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
@@ -35,8 +35,8 @@ Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
 Route::get('/membership', Plans::class)->name('membership.plans');
 
-// Stripe webhook route (CSRF exemption configured in bootstrap/app.php)
-Route::post('/webhooks/stripe', [StripeWebhookController::class, 'handleWebhook'])->name('webhooks.stripe');
+// PayPal IPN webhook route (CSRF exemption configured in bootstrap/app.php)
+Route::post('/webhooks/paypal-ipn', [PayPalIPNController::class, 'handleIPN'])->name('webhooks.paypal-ipn');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');

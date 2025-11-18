@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('type', ['payment', 'refund']);
             $table->decimal('amount', 10, 2);
             $table->string('payment_method')->nullable();
-            $table->string('stripe_payment_id')->nullable();
+            $table->string('paypal_txn_id')->nullable();
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->foreignId('processed_by')->nullable()->constrained('users')->nullOnDelete(); // Admin who processed refund
             $table->text('notes')->nullable();
