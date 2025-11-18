@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
 
-    Route::get('/membership/checkout/{plan}/{type}', Checkout::class)->name('membership.checkout');
+    Route::get('/membership/checkout/{plan}', Checkout::class)->name('membership.checkout');
     Route::get('/membership/success', Success::class)->name('membership.success');
     Route::get('/membership/cancel', Cancel::class)->name('membership.cancel');
     Route::get('/membership/manage', Manage::class)->name('membership.manage');

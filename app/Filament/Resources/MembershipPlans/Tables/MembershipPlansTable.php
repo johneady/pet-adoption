@@ -27,6 +27,10 @@ class MembershipPlansTable
                     ->money('USD')
                     ->sortable()
                     ->label('Price'),
+                TextColumn::make('stripe_price_id')
+                    ->sortable()
+                    ->searchable()
+                    ->label('Stripe Price ID'),
                 TextColumn::make('memberships_count')
                     ->counts('memberships')
                     ->label('Members')
@@ -51,9 +55,9 @@ class MembershipPlansTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }

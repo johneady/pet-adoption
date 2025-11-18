@@ -15,7 +15,7 @@
                 <div class="flex flex-col rounded-xl border-2 bg-white p-8 shadow-sm dark:bg-zinc-900 {{ $plan->slug === 'gold' ? 'border-yellow-500 ring-2 ring-yellow-500 shadow-yellow-100 dark:shadow-yellow-950' : 'border-ocean-200 shadow-ocean-100 dark:border-ocean-800 dark:shadow-ocean-950' }}">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="rounded-lg p-2" style="background-color: {{ $plan->badge_color }}20">
-                            <flux:icon.{{ $plan->badge_icon }} class="size-6" style="color: {{ $plan->badge_color }}" />
+                            <flux:icon.star class="size-6" style="color: {{ $plan->badge_color }}" />
                         </div>
                         <flux:heading size="lg">{{ $plan->name }}</flux:heading>
                     </div>
