@@ -7,7 +7,7 @@ We are thrilled to inform you that your adoption application for **{{ $pet->name
 
 **Application Details:**
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
-- **Approved:** {{ now()->timezone(App\Models\Setting::get('default_timezone'))->format('F j, Y') }}
+- **Approved:** {{ now()->timezone($user->timezone)->format('F j, Y') }}
 - **Status:** {{ ucfirst($application->status) }}
 
 **Next Steps:**

@@ -9,7 +9,7 @@ This is to inform you that an interview appointment has been rescheduled in the 
 - **Application ID:** #{{ $application->id }}
 - **Applicant:** {{ $applicant->name }} ({{ $applicant->email }})
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
-- **Previous Date & Time:** {{ $oldScheduledAt->timezone(App\Models\Setting::get('default_timezone'))->format('l, F j, Y \a\t g:i A') }}
+- **Previous Date & Time:** {{ $oldScheduledAt->timezone($rescheduledBy->timezone)->format('l, F j, Y \a\t g:i A') }}
 - **New Date & Time:** {{ $interview->scheduled_at->timezone(App\Models\Setting::get('default_timezone'))->format('l, F j, Y \a\t g:i A') }}
 - **Location:** {{ $interview->location ?? 'To be determined' }}
 - **Rescheduled By:** {{ $rescheduledBy->name }}
