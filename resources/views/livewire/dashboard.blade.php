@@ -122,7 +122,7 @@
                                                 Submitted:
                                             </flux:text>
                                             <flux:text size="sm" class="text-zinc-600 dark:text-zinc-400">
-                                                {{ $application->created_at->format('M j, Y \a\t g:i A') }}
+                                                {{ $this->formatDateForUser($application->created_at) }}
                                             </flux:text>
                                         </div>
 
@@ -137,7 +137,7 @@
                                                     <flux:text size="sm"
                                                         class="text-purple-800 dark:text-purple-200">
                                                         <strong>Date:</strong>
-                                                        {{ $application->interview->scheduled_at->format('M j, Y \a\t g:i A') }}
+                                                        {{ $this->formatDateForUser($application->interview->scheduled_at) }}
                                                     </flux:text>
                                                     @if ($application->interview->location)
                                                         <flux:text size="sm"

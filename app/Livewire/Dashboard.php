@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\AdoptionApplication;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -42,7 +43,7 @@ class Dashboard extends Component
                 'color' => 'green',
             ],
             'rejected' => [
-                'label' => 'Rejected',
+                'label' => 'Declined',
                 'description' => 'Unfortunately, your adoption was not approved at this time.',
                 'color' => 'red',
             ],
@@ -61,13 +62,24 @@ class Dashboard extends Component
         return $application?->status;
     }
 
+    public function formatDateForUser(?Carbon $date, string $format = 'M j, Y \a\t g:i A'): ?string
+    {
+        if (! $date) {
+            return null;
+        }
+
+        $timezone = Auth::user()->timezone ?? config('app.timezone');
+
+        return $date->setTimezone($timezone)->format($format);
+    }
+
     public function getStatusTimestamp(AdoptionApplication $application, string $status): ?string
     {
         $statusHistory = $application->statusHistory
             ->where('to_status', $status)
             ->first();
 
-        return $statusHistory?->created_at?->format('M j, Y \a\t g:i a');
+        return $this->formatDateForUser($statusHistory?->created_at);
     }
 
     public function render(): mixed
