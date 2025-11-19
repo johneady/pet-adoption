@@ -7,7 +7,7 @@ Great news! We have scheduled an interview for your adoption application for **{
 
 **Interview Details:**
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
-- **Date & Time:** {{ $interview->scheduled_at->format('l, F j, Y \a\t g:i A') }}
+- **Date & Time:** {{ $interview->scheduled_at->timezone(App\Models\Setting::get('default_timezone'))->format('l, F j, Y \a\t g:i A') }}
 - **Location:** {{ $interview->location ?? 'To be determined' }}
 - **Scheduled By:** {{ $scheduledBy->name }}
 

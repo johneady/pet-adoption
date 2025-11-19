@@ -7,7 +7,7 @@ Thank you for submitting your adoption application for **{{ $pet->name }}**! We 
 
 **Application Details:**
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
-- **Submitted:** {{ $application->created_at->format('F j, Y \a\t g:i A') }}
+- **Submitted:** {{ $application->created_at->timezone(App\Models\Setting::get('default_timezone'))->format('F j, Y \a\t g:i A') }}
 - **Status:** {{ ucfirst($application->status) }}
 
 **Next Steps:**

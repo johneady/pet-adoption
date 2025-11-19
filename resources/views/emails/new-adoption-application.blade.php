@@ -7,7 +7,7 @@ A new adoption application has been submitted on {{ App\Models\Setting::get('sit
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
 - **Applicant:** {{ $applicant->name }}
 - **Email:** {{ $applicant->email }}
-- **Submitted:** {{ $application->created_at->format('F j, Y \a\t g:i A') }}
+- **Submitted:** {{ $application->created_at->timezone(App\Models\Setting::get('default_timezone'))->format('F j, Y \a\t g:i A') }}
 - **Status:** {{ ucfirst($application->status) }}
 
 <x-mail::button :url="$adminUrl">
