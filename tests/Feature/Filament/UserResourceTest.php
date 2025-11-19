@@ -111,7 +111,7 @@ test('user resource can edit an existing user', function () {
 });
 
 test('user resource edit form shows all profile fields', function () {
-    $user = User::factory()->create([
+    $user = User::factory()->admin()->create([
         'phone' => '555-1234',
         'address' => '123 Main St',
     ]);
@@ -128,13 +128,15 @@ test('user resource edit form shows all profile fields', function () {
             'is_admin' => $user->is_admin,
             'receive_new_user_alerts' => $user->receive_new_user_alerts,
             'receive_new_adoption_alerts' => $user->receive_new_adoption_alerts,
+            'receive_draw_result_alerts' => $user->receive_draw_result_alerts,
         ]);
 });
 
 test('user resource can update profile fields', function () {
-    $user = User::factory()->incompleteProfile()->create([
+    $user = User::factory()->admin()->incompleteProfile()->create([
         'receive_new_user_alerts' => false,
         'receive_new_adoption_alerts' => false,
+        'receive_draw_result_alerts' => false,
     ]);
 
     actingAs($this->admin);
@@ -145,6 +147,7 @@ test('user resource can update profile fields', function () {
         ->set('data.address', '456 Oak Avenue, Apt 2B')
         ->set('data.receive_new_user_alerts', true)
         ->set('data.receive_new_adoption_alerts', true)
+        ->set('data.receive_draw_result_alerts', true)
         ->assertHasNoFormErrors()
         ->call('save')
         ->assertHasNoFormErrors()
@@ -155,7 +158,8 @@ test('user resource can update profile fields', function () {
     expect($user->phone)->toBe('555-9876')
         ->and($user->address)->toBe('456 Oak Avenue, Apt 2B')
         ->and($user->receive_new_user_alerts)->toBeTrue()
-        ->and($user->receive_new_adoption_alerts)->toBeTrue();
+        ->and($user->receive_new_adoption_alerts)->toBeTrue()
+        ->and($user->receive_draw_result_alerts)->toBeTrue();
 });
 
 test('user resource compresses uploaded profile picture to 150x150', function () {

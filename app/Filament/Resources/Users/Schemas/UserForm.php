@@ -193,6 +193,10 @@ class UserForm
                             ->label('Receive New Adoption Alerts')
                             ->helperText('Receive notifications when new adoption applications are submitted.')
                             ->default(false),
+                        Toggle::make('receive_draw_result_alerts')
+                            ->label('Receive Draw Result Alerts')
+                            ->helperText('Receive notifications when draw results are announced.')
+                            ->default(false),
                     ])
                     ->columns(2)
                     ->visible(fn ($record): bool => $record?->is_admin ?? false),
