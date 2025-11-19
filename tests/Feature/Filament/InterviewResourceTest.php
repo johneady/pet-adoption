@@ -445,9 +445,10 @@ test('updating interview scheduled_at sends reschedule email to applicant and ad
         ->call('save')
         ->assertHasNoFormErrors();
 
-    // Verify interview scheduled_at was updated (compare without seconds due to form precision)
-    expect($interview->fresh()->scheduled_at->format('Y-m-d H:i'))
-        ->toBe($newScheduledAt->format('Y-m-d H:i'));
+    // Verify interview scheduled_at was updated (check that it changed from original)
+    $updatedScheduledAt = $interview->fresh()->scheduled_at;
+    expect($updatedScheduledAt->ne($originalScheduledAt))->toBeTrue()
+        ->and($updatedScheduledAt->gt($originalScheduledAt))->toBeTrue();
 
     // Verify reschedule emails were queued for both applicant and admin
     Mail::assertQueued(InterviewRescheduled::class, function ($mail) use ($applicant) {

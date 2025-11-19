@@ -11,6 +11,8 @@ class Notifications extends Component
 
     public bool $receive_new_adoption_alerts = false;
 
+    public bool $receive_draw_result_alerts = false;
+
     /**
      * Mount the component.
      */
@@ -19,6 +21,7 @@ class Notifications extends Component
         $user = Auth::user();
         $this->receive_new_user_alerts = $user->receive_new_user_alerts;
         $this->receive_new_adoption_alerts = $user->receive_new_adoption_alerts;
+        $this->receive_draw_result_alerts = $user->receive_draw_result_alerts;
     }
 
     /**
@@ -31,6 +34,7 @@ class Notifications extends Component
         $user->update([
             'receive_new_user_alerts' => $this->receive_new_user_alerts,
             'receive_new_adoption_alerts' => $this->receive_new_adoption_alerts,
+            'receive_draw_result_alerts' => $this->receive_draw_result_alerts,
         ]);
 
         $this->dispatch('notifications-updated');

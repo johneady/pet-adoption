@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('receive_new_user_alerts')->default(true)->after('is_admin');
             $table->boolean('receive_new_adoption_alerts')->default(true)->after('receive_new_user_alerts');
+            $table->boolean('receive_draw_result_alerts')->default(true)->after('receive_new_adoption_alerts');
         });
     }
 
@@ -23,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['receive_new_user_alerts', 'receive_new_adoption_alerts']);
+            $table->dropColumn(['receive_new_user_alerts', 'receive_new_adoption_alerts', 'receive_draw_result_alerts']);
         });
     }
 };

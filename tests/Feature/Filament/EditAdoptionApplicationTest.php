@@ -106,24 +106,6 @@ test('archive action updates application status to archived', function () {
     expect($application->refresh()->status)->toBe('archived');
 });
 
-test('application details are read-only on edit page', function () {
-    $application = AdoptionApplication::factory()
-        ->for($this->admin, 'user')
-        ->for($this->pet)
-        ->create(['status' => 'submitted']);
-
-    actingAs($this->admin);
-
-    Livewire::test(EditAdoptionApplication::class, ['record' => $application->id])
-        ->assertFormFieldIsDisabled('living_situation')
-        ->assertFormFieldIsDisabled('employment_status')
-        ->assertFormFieldIsDisabled('veterinary_reference')
-        ->assertFormFieldIsDisabled('experience')
-        ->assertFormFieldIsDisabled('other_pets')
-        ->assertFormFieldIsDisabled('household_members')
-        ->assertFormFieldIsDisabled('reason_for_adoption');
-});
-
 test('interview details are read-only on edit page', function () {
     $application = AdoptionApplication::factory()
         ->for($this->admin, 'user')

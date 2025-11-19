@@ -38,6 +38,7 @@ class UserFactory extends Factory
             'is_admin' => false,
             'receive_new_user_alerts' => true,
             'receive_new_adoption_alerts' => true,
+            'receive_draw_result_alerts' => true,
         ];
     }
 
@@ -81,6 +82,7 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'receive_new_user_alerts' => true,
             'receive_new_adoption_alerts' => true,
+            'receive_draw_result_alerts' => true,
         ]);
     }
 
@@ -92,6 +94,17 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'phone' => null,
             'address' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has a complete profile (with phone and address).
+     */
+    public function withCompleteProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
         ]);
     }
 }

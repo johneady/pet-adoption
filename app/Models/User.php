@@ -33,6 +33,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property bool $is_admin
  * @property bool $receive_new_user_alerts
  * @property bool $receive_new_adoption_alerts
+ * @property bool $receive_draw_result_alerts
  * @property int|null $current_membership_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdoptionApplication> $adoptionApplications
  * @property-read int|null $adoption_applications_count
@@ -40,6 +41,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property-read int|null $blog_posts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Membership> $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DrawTicket> $drawTickets
+ * @property-read int|null $draw_tickets_count
  * @property-read \App\Models\Membership|null $currentMembership
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
@@ -84,6 +87,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'is_admin',
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',
+        'receive_draw_result_alerts',
         'current_membership_id',
     ];
 
@@ -112,6 +116,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'is_admin' => 'boolean',
             'receive_new_user_alerts' => 'boolean',
             'receive_new_adoption_alerts' => 'boolean',
+            'receive_draw_result_alerts' => 'boolean',
         ];
     }
 
@@ -145,6 +150,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function currentMembership(): BelongsTo
     {
         return $this->belongsTo(Membership::class, 'current_membership_id');
+    }
+
+    public function drawTickets(): HasMany
+    {
+        return $this->hasMany(DrawTicket::class);
     }
 
     /**

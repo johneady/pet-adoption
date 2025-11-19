@@ -7,8 +7,8 @@ We wanted to inform you that your interview for the adoption of **{{ $pet->name 
 
 **Updated Interview Details:**
 - **Pet:** {{ $pet->name }} ({{ $pet->species->name ?? 'Pet' }})
-- **Previous Date & Time:** {{ $oldScheduledAt->timezone($applicant->timezone)->format('l, F j, Y \a\t g:i A') }}
-- **New Date & Time:** {{ $interview->scheduled_at->timezone($applicant->timezone)->format('l, F j, Y \a\t g:i A') }}
+- **Previous Date & Time:** {{ $oldScheduledAt->timezone($applicant->timezone ?? App\Models\Setting::get('default_timezone') ?? 'UTC')->format('l, F j, Y \a\t g:i A') }}
+- **New Date & Time:** {{ $interview->scheduled_at->timezone($applicant->timezone ?? App\Models\Setting::get('default_timezone') ?? 'UTC')->format('l, F j, Y \a\t g:i A') }}
 - **Location:** {{ $interview->location ?? 'To be determined' }}
 - **Updated By:** {{ $rescheduledBy->name }}
 

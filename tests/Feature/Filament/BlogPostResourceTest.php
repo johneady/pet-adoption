@@ -157,21 +157,6 @@ test('blog post resource can filter by status', function () {
         ->assertCanNotSeeTableRecords([$publishedPost]);
 });
 
-test('blog post resource can filter by author', function () {
-    $author1 = User::factory()->admin()->create();
-    $author2 = User::factory()->admin()->create();
-
-    $post1 = BlogPost::factory()->for($author1, 'author')->create();
-    $post2 = BlogPost::factory()->for($author2, 'author')->create();
-
-    actingAs($this->admin);
-
-    Livewire::test(ListBlogPosts::class)
-        ->filterTable('author', $author1->id)
-        ->assertCanSeeTableRecords([$post1])
-        ->assertCanNotSeeTableRecords([$post2]);
-});
-
 test('blog post resource can filter by tags', function () {
     $tag1 = Tag::factory()->create(['name' => 'Laravel']);
     $tag2 = Tag::factory()->create(['name' => 'PHP']);

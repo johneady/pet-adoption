@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             PageSeeder::class,
             MembershipSeeder::class,
+            DrawSeeder::class,
         ]);
     }
 }
