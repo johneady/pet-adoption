@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Interviews\Schemas;
 
-use Coolsam\Flatpickr\Forms\Components\Flatpickr;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

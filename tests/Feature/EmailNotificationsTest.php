@@ -171,4 +171,3 @@ test('admin can update notification preferences', function () {
     expect($admin->fresh()->receive_new_user_alerts)->toBeTrue()
         ->and($admin->fresh()->receive_new_adoption_alerts)->toBeTrue();
 });
-
