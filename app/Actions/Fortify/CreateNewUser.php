@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Mail\NewUserRegistered;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -36,7 +37,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
-            'timezone' => 'America/Toronto',
+            'timezone' => Setting::get('default_timezone', 'America/Toronto'),
         ]);
 
         // Notify admins who have opted in to receive new user alerts

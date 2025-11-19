@@ -74,6 +74,8 @@ class MembershipsTable
                     ->icon('heroicon-o-currency-dollar')
                     ->color('danger')
                     ->requiresConfirmation()
+                    ->modalHeading('Refund Membership')
+                    ->modalDescription('This only removes the membership staus from this user\'s profile. You must process the actual refund through Paypal.')
                     ->action(fn ($record) => $record->refund())
                     ->visible(fn ($record) => $record->status === 'active'),
             ])

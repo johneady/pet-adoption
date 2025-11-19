@@ -25,6 +25,22 @@ class Membership extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'user_id',
+        'plan_id',
+        'status',
+        'amount_paid',
+        'paypal_transaction_id',
+        'started_at',
+        'expires_at',
+        'canceled_at',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

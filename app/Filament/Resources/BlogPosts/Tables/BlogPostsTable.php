@@ -24,11 +24,6 @@ class BlogPostsTable
                     ->searchable()
                     ->sortable()
                     ->limit(50),
-                TextColumn::make('author.name')
-                    ->label('Author')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -43,12 +38,6 @@ class BlogPostsTable
                     ->badge()
                     ->separator(',')
                     ->searchable()
-                    ->toggleable(),
-                TextColumn::make('published_at')
-                    ->label('Published')
-                    ->timezone(auth()->user()->timezone)
-                    ->dateTime('M j, Y')
-                    ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Created')
@@ -70,10 +59,6 @@ class BlogPostsTable
                         'published' => 'Published',
                         'archived' => 'Archived',
                     ]),
-                SelectFilter::make('author')
-                    ->relationship('author', 'name')
-                    ->searchable()
-                    ->preload(),
                 SelectFilter::make('tags')
                     ->relationship('tags', 'name')
                     ->searchable()
@@ -84,9 +69,9 @@ class BlogPostsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ])
             ->defaultSort('created_at', 'desc');
     }

@@ -18,7 +18,7 @@ class PetsTable
         return $table
             ->columns([
                 ImageColumn::make('primaryPhoto.file_path')
-                    ->label('Photo')
+                    ->label('Image')
                     ->circular()
                     ->defaultImageUrl(url('/images/placeholder-pet.png')),
                 TextColumn::make('name')
@@ -104,13 +104,12 @@ class PetsTable
                     ]),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ])
             ->defaultSort('created_at', 'desc');
     }

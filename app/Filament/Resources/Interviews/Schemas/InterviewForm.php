@@ -25,13 +25,15 @@ class InterviewForm
                     ->default(fn () => request()->query('adoption_application_id'))
                     ->disabled(fn (string $operation) => $operation === 'edit' || request()->has('adoption_application_id'))
                     ->dehydrated(),
-                Flatpickr::make('scheduled_at')
+                DateTimePicker::make('scheduled_at')
                     ->required()
+                    ->timezone(auth()->user()->timezone)
+                    ->native(false)
                     ->time(true)
                     ->minDate(fn () => today()) // Set the minimum allowed date
                     ->maxDate(fn () => today()->addMonths(6)) // Set the maximum allowed date.
-                    ->hourIncrement(1) // Intervals of incrementing hours in a time picker
-                    ->minuteIncrement(30) // Intervals of minute increment in a time picker
+                    ->hoursStep(1) // Intervals of incrementing hours in a time picker
+                    ->minutesStep(30) // Intervals of minute increment in a time picker
                     ->seconds(false),
                 TextInput::make('location')
                     ->placeholder('e.g., Home visit, video call, office meeting'),
