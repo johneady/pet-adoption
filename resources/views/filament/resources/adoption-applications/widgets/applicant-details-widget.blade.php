@@ -35,6 +35,16 @@
                 </div>
 
                 <div class="flex flex-col gap-1.5">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</dt>
+                    <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->phone ?? 'Not provided' }}</dd>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</dt>
+                    <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->address ?? 'Not provided' }}</dd>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Member Since</dt>
                     <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $applicant->created_at->format('M d, Y') }}</dd>
                 </div>

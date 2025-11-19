@@ -17,6 +17,18 @@
                 @endif
             </div>
             <div>
+                <div class="fi-section-header-description">Phone</div>
+                <div class="text-base">
+                    {{ $adoptionApplication->user->phone ?? 'Not provided' }}
+                </div>
+            </div>
+            <div>
+                <div class="fi-section-header-description">Address</div>
+                <div class="text-base">
+                    {{ $adoptionApplication->user->address ?? 'Not provided' }}
+                </div>
+            </div>
+            <div>
                 <div class="fi-section-header-description">Member Since</div>
                 <div class="text-base">
                     {{ $adoptionApplication->user->created_at->format('F j, Y') }}
