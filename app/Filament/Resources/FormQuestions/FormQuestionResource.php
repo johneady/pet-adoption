@@ -23,7 +23,7 @@ class FormQuestionResource extends Resource
 
     protected static ?string $navigationLabel = 'Form Questions';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Content';
 
     protected static ?int $navigationSort = 10;
 

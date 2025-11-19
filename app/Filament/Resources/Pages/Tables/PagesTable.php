@@ -2,12 +2,8 @@
 
 namespace App\Filament\Resources\Pages\Tables;
 
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -98,19 +94,6 @@ class PagesTable
                 EditAction::make(),
                 DeleteAction::make()
                     ->hidden(fn ($record) => $record->is_special),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                        ->action(function ($records) {
-                            $records->reject(fn ($record) => $record->is_special)->each->delete();
-                        }),
-                    ForceDeleteBulkAction::make()
-                        ->action(function ($records) {
-                            $records->reject(fn ($record) => $record->is_special)->each->forceDelete();
-                        }),
-                    RestoreBulkAction::make(),
-                ]),
             ])
             ->defaultSort('created_at', 'desc');
     }

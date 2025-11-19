@@ -19,6 +19,8 @@ class MembershipResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?int $navigationSort = 6;
+
     public static function form(Schema $schema): Schema
     {
         return MembershipForm::configure($schema);
