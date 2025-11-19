@@ -195,7 +195,7 @@ class UserForm
                             ->default(false),
                     ])
                     ->columns(2)
-                    ->visible(fn (): bool => auth()->user()?->is_admin ?? false),
+                    ->visible(fn ($record): bool => $record?->is_admin ?? false),
             ]);
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\Draws\Schemas;
 
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -23,23 +22,28 @@ class DrawForm
                             ->required()
                             ->maxLength(255),
                         Textarea::make('description')
+                            ->required()
                             ->rows(4)
                             ->helperText('This description will be displayed to users on the public draws page'),
-                    ]),
+                    ])
+                    ->disabled(fn ($record): bool => $record && ($record->isActive() || $record->is_finalized)),
 
                 Section::make('Schedule')
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                DateTimePicker::make('starts_at')
+                                DatePicker::make('starts_at')
                                     ->required()
-                                    ->default(now()),
-                                DateTimePicker::make('ends_at')
+                                    ->default(now()->addDay())
+                                    ->afterOrEqual('today')
+                                    ->rule('after_or_equal:today'),
+                                DatePicker::make('ends_at')
                                     ->required()
                                     ->default(now()->addDays(30))
                                     ->after('starts_at'),
                             ]),
-                    ]),
+                    ])
+                    ->disabled(fn ($record): bool => $record && ($record->isActive() || $record->is_finalized)),
 
                 Section::make('Ticket Pricing')
                     ->description('Define ticket pricing tiers (e.g., 1 for $1, 5 for $3)')
@@ -70,16 +74,8 @@ class DrawForm
                             ->itemLabel(fn (array $state): ?string => $state['quantity'] && $state['price']
                                 ? "{$state['quantity']} ticket(s) for \${$state['price']}"
                                 : null),
-                    ]),
-
-                Section::make('Status')
-                    ->schema([
-                        Toggle::make('is_finalized')
-                            ->label('Draw Finalized')
-                            ->helperText('Once finalized, the draw cannot be modified and a winner has been selected')
-                            ->disabled(),
                     ])
-                    ->hiddenOn('create'),
+                    ->disabled(fn ($record): bool => $record && ($record->isActive() || $record->is_finalized)),
             ]);
     }
 }

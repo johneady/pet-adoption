@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('draws', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->json('ticket_price_tiers');
-            $table->dateTime('starts_at');
-            $table->dateTime('ends_at');
+            $table->date('starts_at');
+            $table->date('ends_at');
             $table->boolean('is_finalized')->default(false);
             $table->unsignedBigInteger('winner_ticket_id')->nullable();
             $table->timestamps();

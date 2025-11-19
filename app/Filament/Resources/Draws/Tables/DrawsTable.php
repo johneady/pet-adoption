@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Draws\Tables;
 
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -19,12 +20,10 @@ class DrawsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('starts_at')
-                    ->timezone(auth()->user()->timezone)
-                    ->dateTime()
+                    ->date()
                     ->sortable(),
                 TextColumn::make('ends_at')
-                    ->timezone(auth()->user()->timezone)
-                    ->dateTime()
+                    ->date()
                     ->sortable(),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
@@ -61,7 +60,7 @@ class DrawsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('starts_at', 'asc')
             ->filters([
                 SelectFilter::make('status')
                     ->options([
@@ -85,9 +84,11 @@ class DrawsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()
+                    ->visible(fn ($record): bool => ! $record->isActive() && ! $record->is_finalized),
             ])
             ->toolbarActions([
-                DeleteBulkAction::make(),
+                // DeleteBulkAction::make(),
             ]);
     }
 }

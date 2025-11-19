@@ -59,8 +59,8 @@ class Draw extends Model
     {
         return [
             'ticket_price_tiers' => 'array',
-            'starts_at' => 'datetime',
-            'ends_at' => 'datetime',
+            'starts_at' => 'date',
+            'ends_at' => 'date',
             'is_finalized' => 'boolean',
         ];
     }

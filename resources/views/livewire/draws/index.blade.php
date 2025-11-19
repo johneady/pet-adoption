@@ -68,7 +68,7 @@
                         </div>
                         <div class="rounded-lg bg-zinc-100 p-3 text-center dark:bg-zinc-800">
                             <flux:text class="text-sm text-zinc-500">Days Remaining</flux:text>
-                            <flux:text class="text-2xl font-bold">{{ now()->diffInDays($this->activeDraw->ends_at) }}</flux:text>
+                            <flux:text class="text-2xl font-bold">{{ (int) now()->diffInDays($this->activeDraw->ends_at) }}</flux:text>
                         </div>
                         @auth
                             <div class="rounded-lg bg-amber-100 p-3 text-center dark:bg-amber-900">
