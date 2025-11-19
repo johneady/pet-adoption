@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdoptionApplications\Pages;
 
 use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use App\Filament\Resources\AdoptionApplications\Widgets\ApplicantDetailsWidget;
+use App\Filament\Resources\AdoptionApplications\Widgets\ApplicationAnswersWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\InterviewDetailsWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\NotesWidget;
 use App\Filament\Resources\AdoptionApplications\Widgets\PetDetailsWidget;
@@ -62,6 +63,7 @@ class EditAdoptionApplication extends EditRecord
         return [
             PetDetailsWidget::make(['record' => $this->record]),
             ApplicantDetailsWidget::make(['record' => $this->record]),
+            ApplicationAnswersWidget::make(['record' => $this->record]),
         ];
     }
 

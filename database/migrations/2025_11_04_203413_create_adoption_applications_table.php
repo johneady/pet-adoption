@@ -23,13 +23,6 @@ return new class extends Migration
                 'rejected',
                 'archived',
             ])->default('submitted');
-            $table->string('living_situation');
-            $table->text('experience')->nullable();
-            $table->text('other_pets')->nullable();
-            $table->string('veterinary_reference')->nullable();
-            $table->text('household_members')->nullable();
-            $table->string('employment_status')->nullable();
-            $table->text('reason_for_adoption');
             $table->timestamps();
 
             $table->index(['user_id', 'status']);

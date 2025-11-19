@@ -111,132 +111,59 @@
 
                 <flux:separator />
 
+                <!-- Dynamic Questions -->
                 <div>
-                    <flux:heading size="lg" class="mb-4 text-ocean-900 dark:text-ocean-100">About You & Your Home</flux:heading>
+                    <flux:heading size="lg" class="mb-4 text-ocean-900 dark:text-ocean-100">Application Questions</flux:heading>
 
                     <div class="space-y-4">
-                        <flux:field>
-                            <flux:label>
-                                Living Situation
-                                <span class="text-red-600 dark:text-red-400">*</span>
-                            </flux:label>
-                            <flux:input
-                                wire:model="living_situation"
-                                placeholder="e.g., House with fenced yard, Apartment with pet policy"
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                Describe your home type, yard, and whether you own or rent
-                            </flux:text>
-                            @error('living_situation')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
+                        @foreach($questions as $question)
+                            <flux:field>
+                                <flux:label>
+                                    {{ $question->label }}
+                                    @if($question->is_required)
+                                        <span class="text-red-600 dark:text-red-400">*</span>
+                                    @endif
+                                </flux:label>
 
-                        <flux:field>
-                            <flux:label>Household Members</flux:label>
-                            <flux:textarea
-                                wire:model="household_members"
-                                rows="3"
-                                placeholder="e.g., 2 adults, 2 children (ages 8 and 12)"
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                Who else lives in your home? Include ages of children if applicable
-                            </flux:text>
-                            @error('household_members')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
+                                @switch($question->type->value)
+                                    @case('string')
+                                        <flux:input
+                                            wire:model="answers.{{ $question->id }}"
+                                        />
+                                        @break
 
-                        <flux:field>
-                            <flux:label>Employment Status</flux:label>
-                            <flux:input
-                                wire:model="employment_status"
-                                placeholder="e.g., Full-time employed, Work from home"
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                This helps us understand who will be home to care for the pet
-                            </flux:text>
-                            @error('employment_status')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
+                                    @case('textarea')
+                                        <flux:textarea
+                                            wire:model="answers.{{ $question->id }}"
+                                            rows="4"
+                                        />
+                                        @break
+
+                                    @case('dropdown')
+                                        <flux:select wire:model="answers.{{ $question->id }}">
+                                            <option value="">Select an option</option>
+                                            @foreach($question->options ?? [] as $option)
+                                                <option value="{{ $option }}">{{ $option }}</option>
+                                            @endforeach
+                                        </flux:select>
+                                        @break
+
+                                    @case('switch')
+                                        <div class="pt-1">
+                                            <flux:switch
+                                                wire:model="answers.{{ $question->id }}"
+                                                label="Yes"
+                                            />
+                                        </div>
+                                        @break
+                                @endswitch
+
+                                @error("answers.{$question->id}")
+                                    <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
+                                @enderror
+                            </flux:field>
+                        @endforeach
                     </div>
-                </div>
-
-                <flux:separator />
-
-                <div>
-                    <flux:heading size="lg" class="mb-4 text-ocean-900 dark:text-ocean-100">Pet Experience</flux:heading>
-
-                    <div class="space-y-4">
-                        <flux:field>
-                            <flux:label>Previous Pet Experience</flux:label>
-                            <flux:textarea
-                                wire:model="experience"
-                                rows="4"
-                                placeholder="Tell us about your experience with pets..."
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                Have you had pets before? What types? How long did you care for them?
-                            </flux:text>
-                            @error('experience')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
-
-                        <flux:field>
-                            <flux:label>Current Pets</flux:label>
-                            <flux:textarea
-                                wire:model="other_pets"
-                                rows="3"
-                                placeholder="e.g., 1 dog (Golden Retriever, 5 years old, spayed)"
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                List any pets you currently have, including species, breed, age, and spay/neuter status
-                            </flux:text>
-                            @error('other_pets')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
-
-                        <flux:field>
-                            <flux:label>Veterinary Reference</flux:label>
-                            <flux:input
-                                wire:model="veterinary_reference"
-                                placeholder="e.g., Dr. Smith at Happy Paws Clinic, (555) 123-4567"
-                            />
-                            <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                                Name and contact information of your current or previous veterinarian (if applicable)
-                            </flux:text>
-                            @error('veterinary_reference')
-                                <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                            @enderror
-                        </flux:field>
-                    </div>
-                </div>
-
-                <flux:separator />
-
-                <div>
-                    <flux:heading size="lg" class="mb-4 text-ocean-900 dark:text-ocean-100">Your Adoption Goals</flux:heading>
-
-                    <flux:field>
-                        <flux:label>
-                            Why do you want to adopt this pet?
-                            <span class="text-red-600 dark:text-red-400">*</span>
-                        </flux:label>
-                        <flux:textarea
-                            wire:model="reason_for_adoption"
-                            rows="5"
-                            placeholder="Share your reasons for wanting to adopt and what you hope to provide for this pet..."
-                        />
-                        <flux:text size="sm" class="text-ocean-600 dark:text-ocean-400">
-                            Tell us what drew you to this pet and how they'll fit into your life
-                        </flux:text>
-                        @error('reason_for_adoption')
-                            <flux:text size="sm" class="text-red-600 dark:text-red-400">{{ $message }}</flux:text>
-                        @enderror
-                    </flux:field>
                 </div>
 
                 <flux:separator />

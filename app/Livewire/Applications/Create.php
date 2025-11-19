@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Applications;
 
-use App\Http\Requests\StoreAdoptionApplicationRequest;
+use App\Enums\FormType;
 use App\Mail\AdoptionApplicationReceived;
 use App\Mail\NewAdoptionApplication;
 use App\Models\AdoptionApplication;
+use App\Models\ApplicationAnswer;
+use App\Models\FormQuestion;
 use App\Models\Pet;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -19,19 +21,11 @@ class Create extends Component
 
     public ?Pet $selectedPet = null;
 
-    public string $living_situation = '';
+    /** @var array<int, string|bool|null> */
+    public array $answers = [];
 
-    public string $experience = '';
-
-    public string $other_pets = '';
-
-    public string $veterinary_reference = '';
-
-    public string $household_members = '';
-
-    public string $employment_status = '';
-
-    public string $reason_for_adoption = '';
+    /** @var Collection<int, FormQuestion> */
+    public Collection $questions;
 
     public function mount(int $petId): void
     {
@@ -45,11 +39,23 @@ class Create extends Component
 
         $this->pet_id = $petId;
         $this->selectedPet = Pet::with(['species', 'breed', 'photos'])->findOrFail($petId);
+
+        // Load active questions for adoption form
+        $this->questions = FormQuestion::query()
+            ->forFormType(FormType::Adoption)
+            ->active()
+            ->orderBy('sort_order')
+            ->get();
+
+        // Initialize answers array with empty values
+        foreach ($this->questions as $question) {
+            $this->answers[$question->id] = $question->type->value === 'switch' ? false : '';
+        }
     }
 
     public function submit(): void
     {
-        $validated = $this->validate((new StoreAdoptionApplicationRequest)->rules());
+        $validated = $this->validate($this->rules());
 
         // Verify the pet is still available
         $pet = Pet::find($validated['pet_id']);
@@ -60,18 +66,30 @@ class Create extends Component
             return;
         }
 
+        // Create the application
         $application = AdoptionApplication::create([
             'user_id' => Auth::id(),
             'pet_id' => $validated['pet_id'],
-            'living_situation' => $validated['living_situation'],
-            'experience' => $validated['experience'],
-            'other_pets' => $validated['other_pets'],
-            'veterinary_reference' => $validated['veterinary_reference'],
-            'household_members' => $validated['household_members'],
-            'employment_status' => $validated['employment_status'],
-            'reason_for_adoption' => $validated['reason_for_adoption'],
             'status' => 'submitted',
         ]);
+
+        // Store answers with question snapshots
+        foreach ($this->questions as $question) {
+            $answer = $validated['answers'][$question->id] ?? null;
+
+            // Convert boolean/checkbox values to string for storage
+            if ($question->type->value === 'switch') {
+                $answer = $answer ? '1' : '0';
+            }
+
+            ApplicationAnswer::create([
+                'answerable_type' => AdoptionApplication::class,
+                'answerable_id' => $application->id,
+                'question_snapshot' => $question->toSnapshot(),
+                'answer' => $answer,
+                'sort_order' => $question->sort_order,
+            ]);
+        }
 
         // Load relationships for email
         $application->load(['user', 'pet.species']);
@@ -96,6 +114,75 @@ class Create extends Component
         $this->redirect(route('dashboard'), navigate: true);
     }
 
+    /**
+     * Build validation rules dynamically based on questions.
+     *
+     * @return array<string, array<int, string>>
+     */
+    protected function rules(): array
+    {
+        $rules = [
+            'pet_id' => ['required', 'exists:pets,id'],
+        ];
+
+        foreach ($this->questions as $question) {
+            $questionRules = [];
+
+            if ($question->is_required) {
+                $questionRules[] = 'required';
+            } else {
+                $questionRules[] = 'nullable';
+            }
+
+            // Add type-specific validation
+            switch ($question->type->value) {
+                case 'string':
+                    $questionRules[] = 'string';
+                    $questionRules[] = 'max:255';
+                    break;
+                case 'textarea':
+                    $questionRules[] = 'string';
+                    $questionRules[] = 'max:2000';
+                    break;
+                case 'dropdown':
+                    $questionRules[] = 'string';
+                    if ($question->options) {
+                        $questionRules[] = 'in:'.implode(',', $question->options);
+                    }
+                    break;
+                case 'switch':
+                    $questionRules[] = 'boolean';
+                    break;
+            }
+
+            $rules["answers.{$question->id}"] = $questionRules;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    protected function messages(): array
+    {
+        $messages = [
+            'pet_id.required' => 'Please select a pet to adopt.',
+            'pet_id.exists' => 'The selected pet is no longer available.',
+        ];
+
+        foreach ($this->questions as $question) {
+            $label = $question->label;
+            $messages["answers.{$question->id}.required"] = "Please answer: {$label}";
+            $messages["answers.{$question->id}.max"] = "{$label} is too long.";
+            $messages["answers.{$question->id}.in"] = "Please select a valid option for: {$label}";
+        }
+
+        return $messages;
+    }
+
     public function getAvailablePetsProperty(): Collection
     {
         return Pet::query()
@@ -110,6 +197,7 @@ class Create extends Component
         return view('livewire.applications.create', [
             'availablePets' => $this->availablePets,
             'selectedPet' => $this->selectedPet,
+            'questions' => $this->questions,
         ]);
     }
 }

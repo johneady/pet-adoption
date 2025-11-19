@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SpeciesSeeder::class,
             MembershipPlanSeeder::class,
+            FormQuestionSeeder::class,
             PetSeeder::class,
             AdoptionApplicationSeeder::class,
             ApplicationStatusHistorySeeder::class,
