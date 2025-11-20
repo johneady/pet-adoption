@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $draw_id
  * @property int $user_id
  * @property int $ticket_number
+ * @property float $amount_paid
  * @property bool $is_winner
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -38,6 +39,7 @@ class DrawTicket extends Model
         'draw_id',
         'user_id',
         'ticket_number',
+        'amount_paid',
         'is_winner',
     ];
 
@@ -49,6 +51,7 @@ class DrawTicket extends Model
     protected function casts(): array
     {
         return [
+            'amount_paid' => 'float',
             'is_winner' => 'boolean',
         ];
     }

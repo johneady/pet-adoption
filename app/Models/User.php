@@ -132,6 +132,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             ->implode('');
     }
 
+    /**
+     * Get the user's first name
+     */
+    public function firstName(): string
+    {
+        return Str::of($this->name)->explode(' ')->first() ?? '';
+    }
+
     public function adoptionApplications(): HasMany
     {
         return $this->hasMany(AdoptionApplication::class);

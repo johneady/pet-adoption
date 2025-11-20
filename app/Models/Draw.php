@@ -114,7 +114,7 @@ class Draw extends Model
      */
     public function totalTicketsSold(): int
     {
-        return $this->tickets()->count();
+        return $this->tickets_count ?? $this->tickets()->count();
     }
 
     /**
@@ -122,20 +122,7 @@ class Draw extends Model
      */
     public function totalAmountCollected(): float
     {
-        $ticketCount = $this->totalTicketsSold();
-        $tiers = collect($this->ticket_price_tiers)->sortByDesc('quantity');
-
-        $total = 0.0;
-        $remaining = $ticketCount;
-
-        // Calculate based on best value per ticket
-        foreach ($tiers as $tier) {
-            $pricePerTicket = $tier['price'] / $tier['quantity'];
-            $total += $remaining * $pricePerTicket;
-            break; // Use the first tier's price per ticket as estimate
-        }
-
-        return $total;
+        return $this->tickets_sum_amount_paid ?? $this->tickets()->sum('amount_paid');
     }
 
     /**

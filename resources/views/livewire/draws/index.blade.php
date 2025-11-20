@@ -142,7 +142,7 @@
                             <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
                                 <div>
                                     <flux:text class="text-sm text-zinc-500">Winner</flux:text>
-                                    <flux:text class="font-semibold">{{ $draw->winnerTicket?->user?->name ?? 'N/A' }}</flux:text>
+                                    <flux:text class="font-semibold">{{ $draw->winnerTicket?->user?->firstName() ?? 'N/A' }}</flux:text>
                                 </div>
                                 <div>
                                     <flux:text class="text-sm text-zinc-500">Winning Ticket</flux:text>

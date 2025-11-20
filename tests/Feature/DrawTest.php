@@ -113,6 +113,111 @@ describe('Draw Model', function () {
         // User A should have 10 tickets in the draw
         expect($draw->tickets()->where('user_id', $userWithManyTickets->id)->count())->toBe(10);
     });
+
+    it('tracks money collected from ticket registrations', function () {
+        $draw = Draw::factory()->create();
+        $user = User::factory()->create();
+
+        DrawTicket::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'amount_paid' => 1.00,
+        ]);
+
+        DrawTicket::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'amount_paid' => 3.00,
+        ]);
+
+        DrawTicket::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'amount_paid' => 5.00,
+        ]);
+
+        expect($draw->totalAmountCollected())->toBe(9.00);
+    });
+
+    it('calculates prize amount as 50% of total collected', function () {
+        $draw = Draw::factory()->create();
+        $user = User::factory()->create();
+
+        DrawTicket::factory()->count(5)->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'amount_paid' => 2.00,
+        ]);
+
+        expect($draw->totalAmountCollected())->toBe(10.00);
+        expect($draw->prizeAmount())->toBe(5.00);
+    });
+
+    it('returns zero for total amount collected when no tickets sold', function () {
+        $draw = Draw::factory()->create();
+
+        expect($draw->totalAmountCollected())->toBe(0.0);
+        expect($draw->prizeAmount())->toBe(0.0);
+    });
+
+    it('correctly calculates amount paid per ticket from pricing tiers', function () {
+        $draw = Draw::factory()->create([
+            'ticket_price_tiers' => [
+                ['quantity' => 1, 'price' => 1.00],
+                ['quantity' => 5, 'price' => 3.00],
+                ['quantity' => 10, 'price' => 5.00],
+            ],
+        ]);
+        $user = User::factory()->create();
+
+        // Simulate buying the 5-ticket tier ($3.00 total, $0.60 per ticket)
+        $tier = ['quantity' => 5, 'price' => 3.00];
+        $pricePerTicket = $tier['price'] / $tier['quantity'];
+
+        for ($i = 0; $i < $tier['quantity']; $i++) {
+            DrawTicket::factory()->create([
+                'draw_id' => $draw->id,
+                'user_id' => $user->id,
+                'amount_paid' => $pricePerTicket,
+            ]);
+        }
+
+        expect($draw->totalAmountCollected())->toBe(3.00);
+        expect($draw->tickets()->first()->amount_paid)->toBe(0.60);
+    });
+
+    it('handles multiple pricing tier purchases correctly', function () {
+        $draw = Draw::factory()->create([
+            'ticket_price_tiers' => [
+                ['quantity' => 1, 'price' => 1.00],
+                ['quantity' => 5, 'price' => 3.00],
+                ['quantity' => 10, 'price' => 5.00],
+            ],
+        ]);
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        // User 1 buys 1 ticket for $1.00
+        DrawTicket::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user1->id,
+            'amount_paid' => 1.00,
+        ]);
+
+        // User 2 buys 10 tickets for $5.00 ($0.50 each)
+        for ($i = 0; $i < 10; $i++) {
+            DrawTicket::factory()->create([
+                'draw_id' => $draw->id,
+                'user_id' => $user2->id,
+                'amount_paid' => 0.50,
+            ]);
+        }
+
+        // Total collected should be $6.00, prize should be $3.00
+        expect($draw->totalAmountCollected())->toBe(6.00);
+        expect($draw->prizeAmount())->toBe(3.00);
+        expect($draw->totalTicketsSold())->toBe(11);
+    });
 });
 
 describe('Draws Page', function () {
@@ -148,7 +253,8 @@ describe('Draws Page', function () {
 
         $response->assertStatus(200);
         $response->assertSee('Past Draw');
-        $response->assertSee('Winner User');
+        $response->assertSee('Winner');
+        $response->assertDontSee('Winner User');
     });
 
     it('shows user tickets when authenticated', function () {

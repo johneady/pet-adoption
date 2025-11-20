@@ -29,6 +29,8 @@ class Index extends Component
         return Draw::query()
             ->where('is_finalized', true)
             ->with(['winnerTicket.user'])
+            ->withCount('tickets')
+            ->withSum('tickets', 'amount_paid')
             ->orderBy('ends_at', 'desc')
             ->get();
     }

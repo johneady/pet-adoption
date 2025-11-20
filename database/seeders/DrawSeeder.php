@@ -28,6 +28,7 @@ class DrawSeeder extends Seeder
 
         // Add tickets to active draw
         $ticketNumber = 1;
+        $prices = [1.00, 3.00, 5.00];
         foreach ($users->random(min(3, $users->count())) as $user) {
             $numTickets = fake()->numberBetween(1, 10);
             for ($i = 0; $i < $numTickets; $i++) {
@@ -35,6 +36,7 @@ class DrawSeeder extends Seeder
                     'draw_id' => $activeDraw->id,
                     'user_id' => $user->id,
                     'ticket_number' => $ticketNumber++,
+                    'amount_paid' => fake()->randomElement($prices),
                     'is_winner' => false,
                 ]);
             }
@@ -56,6 +58,7 @@ class DrawSeeder extends Seeder
                     'draw_id' => $pastDraw->id,
                     'user_id' => $user->id,
                     'ticket_number' => $ticketNumber++,
+                    'amount_paid' => fake()->randomElement($prices),
                     'is_winner' => false,
                 ]);
                 $pastTickets[] = $ticket;

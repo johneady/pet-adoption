@@ -26,25 +26,43 @@ class EditDraw extends EditRecord
                 ->label('Register Tickets')
                 ->icon(Heroicon::OutlinedPlus)
                 ->color('success')
-                ->form([
-                    \Filament\Forms\Components\Select::make('user_id')
-                        ->label('User')
-                        ->relationship('tickets.user', 'name')
-                        ->options(User::query()->pluck('name', 'id'))
-                        ->searchable()
-                        ->required()
-                        ->preload(),
-                    \Filament\Forms\Components\TextInput::make('quantity')
-                        ->label('Number of Tickets')
-                        ->numeric()
-                        ->required()
-                        ->minValue(1)
-                        ->default(1),
-                ])
+                ->form(function () {
+                    $draw = $this->record;
+                    $pricingOptions = collect($draw->ticket_price_tiers)
+                        ->mapWithKeys(function ($tier) {
+                            $priceFormatted = number_format($tier['price'], 2);
+                            $pricePerTicket = $tier['price'] / $tier['quantity'];
+                            $pricePerTicketFormatted = number_format($pricePerTicket, 2);
+
+                            return [
+                                json_encode($tier) => "{$tier['quantity']} ticket(s) for \${$priceFormatted} (\${$pricePerTicketFormatted} each)",
+                            ];
+                        })
+                        ->toArray();
+
+                    return [
+                        \Filament\Forms\Components\Select::make('user_id')
+                            ->label('User')
+                            ->relationship('tickets.user', 'name')
+                            ->options(User::query()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required()
+                            ->preload(),
+                        \Filament\Forms\Components\Select::make('pricing_tier')
+                            ->label('Ticket Package')
+                            ->options($pricingOptions)
+                            ->required()
+                            ->helperText('Select a pricing tier to register tickets'),
+                    ];
+                })
                 ->action(function (array $data) {
                     $draw = $this->record;
                     $user = User::find($data['user_id']);
-                    $quantity = (int) $data['quantity'];
+                    $tier = json_decode($data['pricing_tier'], true);
+
+                    $quantity = (int) $tier['quantity'];
+                    $totalPrice = (float) $tier['price'];
+                    $pricePerTicket = $totalPrice / $quantity;
 
                     // Create individual tickets for fair random selection
                     for ($i = 0; $i < $quantity; $i++) {
@@ -52,13 +70,14 @@ class EditDraw extends EditRecord
                             'draw_id' => $draw->id,
                             'user_id' => $user->id,
                             'ticket_number' => $draw->nextTicketNumber(),
+                            'amount_paid' => $pricePerTicket,
                             'is_winner' => false,
                         ]);
                     }
 
                     Notification::make()
                         ->title('Tickets Registered')
-                        ->body("Successfully registered {$quantity} ticket(s) for {$user->name}")
+                        ->body("Successfully registered {$quantity} ticket(s) for {$user->name} (\${$totalPrice})")
                         ->success()
                         ->send();
                 })
