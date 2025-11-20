@@ -90,7 +90,28 @@
                                 </div>
                             </div>
                         @endif
+
+                        <!-- Purchase Tickets Button -->
+                        <div class="mt-6">
+                            <flux:button variant="primary" :href="route('draws.purchase', ['draw' => $this->activeDraw->id])" wire:navigate>
+                                Purchase Tickets
+                            </flux:button>
+                        </div>
                     @endauth
+
+                    @guest
+                        <!-- Login Prompt for Guests -->
+                        <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
+                            <div class="flex items-center justify-between gap-4">
+                                <flux:text class="text-amber-900 dark:text-amber-100">
+                                    Log in to purchase tickets for this draw
+                                </flux:text>
+                                <flux:button variant="primary" :href="route('login')" size="sm">
+                                    Log In
+                                </flux:button>
+                            </div>
+                        </div>
+                    @endguest
                 </div>
             </div>
         @endif

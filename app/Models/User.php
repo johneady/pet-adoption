@@ -88,6 +88,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',
         'receive_draw_result_alerts',
+        'receive_ticket_purchase_alerts',
         'current_membership_id',
     ];
 
@@ -117,6 +118,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'receive_new_user_alerts' => 'boolean',
             'receive_new_adoption_alerts' => 'boolean',
             'receive_draw_result_alerts' => 'boolean',
+            'receive_ticket_purchase_alerts' => 'boolean',
         ];
     }
 

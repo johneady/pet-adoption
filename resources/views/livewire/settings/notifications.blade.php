@@ -11,6 +11,8 @@
                         <flux:checkbox wire:model="receive_new_adoption_alerts" :label="__('New Adoption Applications')" :description="__('Receive email alerts when new adoption applications are submitted')" />
 
                         <flux:checkbox wire:model="receive_draw_result_alerts" :label="__('50/50 Draw Results')" :description="__('Receive email alerts when a 50/50 draw winner is selected with draw statistics')" />
+
+                        <flux:checkbox wire:model="receive_ticket_purchase_alerts" :label="__('Ticket Purchase Requests')" :description="__('Receive email alerts when users submit requests to purchase draw tickets')" />
                     </div>
                 @else
                     <flux:text class="text-sm">

@@ -41,21 +41,29 @@ describe('Draw Model', function () {
     it('generates sequential ticket numbers', function () {
         $draw = Draw::factory()->create();
 
-        expect($draw->nextTicketNumber())->toBe(1);
+        // First ticket should be {draw_id}00001
+        $expectedFirst = (int) ($draw->id.str_pad('1', 5, '0', STR_PAD_LEFT));
+        expect($draw->nextTicketNumber())->toBe($expectedFirst);
 
         DrawTicket::factory()->create([
             'draw_id' => $draw->id,
-            'ticket_number' => 1,
+            'ticket_number' => $expectedFirst,
         ]);
 
-        expect($draw->nextTicketNumber())->toBe(2);
+        // Second ticket should be {draw_id}00002
+        $expectedSecond = (int) ($draw->id.str_pad('2', 5, '0', STR_PAD_LEFT));
+        expect($draw->nextTicketNumber())->toBe($expectedSecond);
 
+        // If we skip to ticket number 5
+        $ticketFive = (int) ($draw->id.str_pad('5', 5, '0', STR_PAD_LEFT));
         DrawTicket::factory()->create([
             'draw_id' => $draw->id,
-            'ticket_number' => 5,
+            'ticket_number' => $ticketFive,
         ]);
 
-        expect($draw->nextTicketNumber())->toBe(6);
+        // Next should be {draw_id}00006
+        $expectedSixth = (int) ($draw->id.str_pad('6', 5, '0', STR_PAD_LEFT));
+        expect($draw->nextTicketNumber())->toBe($expectedSixth);
     });
 
     it('can select a random winner', function () {

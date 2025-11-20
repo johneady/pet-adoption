@@ -197,6 +197,10 @@ class UserForm
                             ->label('Receive Draw Result Alerts')
                             ->helperText('Receive notifications when draw results are announced.')
                             ->default(false),
+                        Toggle::make('receive_ticket_purchase_alerts')
+                            ->label('Receive Ticket Purchase Alerts')
+                            ->helperText('Receive notifications when users submit ticket purchase requests.')
+                            ->default(false),
                     ])
                     ->columns(2)
                     ->visible(fn ($record): bool => $record?->is_admin ?? false),

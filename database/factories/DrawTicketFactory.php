@@ -19,11 +19,12 @@ class DrawTicketFactory extends Factory
     public function definition(): array
     {
         $prices = [1.00, 3.00, 5.00];
+        $draw = Draw::factory()->create();
 
         return [
-            'draw_id' => Draw::factory(),
+            'draw_id' => $draw->id,
             'user_id' => User::factory(),
-            'ticket_number' => fake()->unique()->numberBetween(1, 10000),
+            'ticket_number' => $draw->nextTicketNumber(),
             'amount_paid' => fake()->randomElement($prices),
             'is_winner' => false,
         ];

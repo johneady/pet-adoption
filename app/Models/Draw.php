@@ -143,10 +143,24 @@ class Draw extends Model
 
     /**
      * Get the next available ticket number.
+     * Format: {draw_id}{00001} - e.g. Draw 1: 100001, Draw 12: 1200001
      */
     public function nextTicketNumber(): int
     {
-        return ($this->tickets()->max('ticket_number') ?? 0) + 1;
+        $maxTicketNumber = $this->tickets()->max('ticket_number') ?? 0;
+
+        if ($maxTicketNumber == 0) {
+            // First ticket for this draw
+            return (int) ($this->id.str_pad('1', 5, '0', STR_PAD_LEFT));
+        }
+
+        // Extract the last 5 digits and increment
+        $ticketNumberStr = (string) $maxTicketNumber;
+        $lastFiveDigits = (int) substr($ticketNumberStr, -5);
+        $nextSequence = $lastFiveDigits + 1;
+
+        // Format: draw_id + padded 5-digit sequence
+        return (int) ($this->id.str_pad($nextSequence, 5, '0', STR_PAD_LEFT));
     }
 
     /**

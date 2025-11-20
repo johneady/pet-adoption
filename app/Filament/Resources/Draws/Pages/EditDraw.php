@@ -6,6 +6,7 @@ use App\Filament\Resources\Draws\DrawResource;
 use App\Filament\Resources\Draws\Widgets\DrawTicketsWidget;
 use App\Mail\DrawResultsSummary;
 use App\Mail\DrawWinnerNotification;
+use App\Mail\TicketRegistrationConfirmation;
 use App\Models\DrawTicket;
 use App\Models\User;
 use Filament\Actions;
@@ -64,16 +65,25 @@ class EditDraw extends EditRecord
                     $totalPrice = (float) $tier['price'];
                     $pricePerTicket = $totalPrice / $quantity;
 
+                    $createdTickets = collect();
+
                     // Create individual tickets for fair random selection
                     for ($i = 0; $i < $quantity; $i++) {
-                        DrawTicket::create([
+                        $ticket = DrawTicket::create([
                             'draw_id' => $draw->id,
                             'user_id' => $user->id,
                             'ticket_number' => $draw->nextTicketNumber(),
                             'amount_paid' => $pricePerTicket,
                             'is_winner' => false,
                         ]);
+
+                        $createdTickets->push($ticket);
                     }
+
+                    // Send confirmation email to the customer
+                    Mail::to($user->email)->queue(
+                        new TicketRegistrationConfirmation($draw, $createdTickets, $totalPrice)
+                    );
 
                     Notification::make()
                         ->title('Tickets Registered')

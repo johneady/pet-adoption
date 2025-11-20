@@ -13,6 +13,8 @@ class Notifications extends Component
 
     public bool $receive_draw_result_alerts = false;
 
+    public bool $receive_ticket_purchase_alerts = false;
+
     /**
      * Mount the component.
      */
@@ -22,6 +24,7 @@ class Notifications extends Component
         $this->receive_new_user_alerts = $user->receive_new_user_alerts;
         $this->receive_new_adoption_alerts = $user->receive_new_adoption_alerts;
         $this->receive_draw_result_alerts = $user->receive_draw_result_alerts;
+        $this->receive_ticket_purchase_alerts = $user->receive_ticket_purchase_alerts;
     }
 
     /**
@@ -35,6 +38,7 @@ class Notifications extends Component
             'receive_new_user_alerts' => $this->receive_new_user_alerts,
             'receive_new_adoption_alerts' => $this->receive_new_adoption_alerts,
             'receive_draw_result_alerts' => $this->receive_draw_result_alerts,
+            'receive_ticket_purchase_alerts' => $this->receive_ticket_purchase_alerts,
         ]);
 
         $this->dispatch('notifications-updated');

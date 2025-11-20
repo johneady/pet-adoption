@@ -7,6 +7,7 @@ use App\Livewire\Blog\Index as BlogIndex;
 use App\Livewire\Blog\Show as BlogShow;
 use App\Livewire\Dashboard;
 use App\Livewire\Draws\Index as DrawsIndex;
+use App\Livewire\Draws\PurchaseTickets;
 use App\Livewire\Membership\Cancel;
 use App\Livewire\Membership\Checkout;
 use App\Livewire\Membership\Manage;
@@ -44,6 +45,8 @@ Route::post('/webhooks/paypal-ipn', [PayPalIPNController::class, 'handleIPN'])->
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
+
+    Route::get('/draws/{draw}/purchase', PurchaseTickets::class)->name('draws.purchase');
 
     Route::get('/membership/checkout/{plan}', Checkout::class)->name('membership.checkout');
     Route::get('/membership/success', Success::class)->name('membership.success');

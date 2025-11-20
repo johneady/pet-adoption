@@ -27,7 +27,6 @@ class DrawSeeder extends Seeder
         ]);
 
         // Add tickets to active draw
-        $ticketNumber = 1;
         $prices = [1.00, 3.00, 5.00];
         foreach ($users->random(min(3, $users->count())) as $user) {
             $numTickets = fake()->numberBetween(1, 10);
@@ -35,7 +34,7 @@ class DrawSeeder extends Seeder
                 DrawTicket::create([
                     'draw_id' => $activeDraw->id,
                     'user_id' => $user->id,
-                    'ticket_number' => $ticketNumber++,
+                    'ticket_number' => $activeDraw->nextTicketNumber(),
                     'amount_paid' => fake()->randomElement($prices),
                     'is_winner' => false,
                 ]);
@@ -49,7 +48,6 @@ class DrawSeeder extends Seeder
         ]);
 
         // Add tickets to past draw
-        $ticketNumber = 1;
         $pastTickets = [];
         foreach ($users->random(min(4, $users->count())) as $user) {
             $numTickets = fake()->numberBetween(2, 15);
@@ -57,7 +55,7 @@ class DrawSeeder extends Seeder
                 $ticket = DrawTicket::create([
                     'draw_id' => $pastDraw->id,
                     'user_id' => $user->id,
-                    'ticket_number' => $ticketNumber++,
+                    'ticket_number' => $pastDraw->nextTicketNumber(),
                     'amount_paid' => fake()->randomElement($prices),
                     'is_winner' => false,
                 ]);
