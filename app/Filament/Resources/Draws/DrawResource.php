@@ -42,6 +42,21 @@ class DrawResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        $count = Draw::query()
+            ->where('ends_at', '<', now())
+            ->where('is_finalized', false)
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
     public static function getPages(): array
     {
         return [

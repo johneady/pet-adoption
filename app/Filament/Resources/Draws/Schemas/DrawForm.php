@@ -75,6 +75,8 @@ class DrawForm
                                 ? "{$state['quantity']} ticket(s) for \${$state['price']}"
                                 : null),
                     ])
+                    ->collapsible()
+                    ->collapsed(fn ($record): bool => $record && $record->starts_at->isFuture() === false)
                     ->disabled(fn ($record): bool => $record && ($record->isActive() || $record->is_finalized)),
             ]);
     }

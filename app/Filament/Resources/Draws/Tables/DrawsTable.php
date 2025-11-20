@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Draws\Tables;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -16,6 +17,12 @@ class DrawsTable
     {
         return $table
             ->columns([
+                IconColumn::make('pending draw')
+                    ->label('')
+                    ->icon(fn ($state) => $state ? Heroicon::OutlinedExclamationCircle : null)
+                    ->color('danger')
+                    ->state(fn ($record) => $record->ends_at->isPast() && ! $record->is_finalized)
+                    ->tooltip('Ready for winner selection'),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
