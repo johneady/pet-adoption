@@ -39,7 +39,8 @@
 
                 <flux:field>
                     <flux:label>Choose how many tickets you would like to purchase</flux:label>
-                    <flux:select wire:model="selectedPricingTier" placeholder="Select a ticket package">
+                    <flux:select wire:model.live="selectedPricingTier">
+                        <option value="">Select a ticket package</option>
                         @foreach ($draw->ticket_price_tiers as $tier)
                             <option value="{{ json_encode($tier) }}">
                                 {{ $tier['quantity'] }} ticket{{ $tier['quantity'] > 1 ? 's' : '' }} - ${{ number_format($tier['price'], 2) }}

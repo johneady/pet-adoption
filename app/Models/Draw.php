@@ -172,7 +172,7 @@ class Draw extends Model
             return null;
         }
 
-        $winningTicket = $this->tickets()->inRandomOrder()->first();
+        $winningTicket = $this->tickets()->with('user')->inRandomOrder()->first();
 
         if ($winningTicket) {
             $winningTicket->update(['is_winner' => true]);

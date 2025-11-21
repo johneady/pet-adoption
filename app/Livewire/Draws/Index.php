@@ -17,7 +17,8 @@ class Index extends Component
             ->where('starts_at', '<=', now())
             ->where('ends_at', '>', now())
             ->where('is_finalized', false)
-            ->with(['tickets'])
+            ->withCount('tickets')
+            ->withSum('tickets', 'amount_paid')
             ->first();
     }
 

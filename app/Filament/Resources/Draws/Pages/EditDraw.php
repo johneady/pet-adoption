@@ -17,6 +17,16 @@ class EditDraw extends EditRecord
 {
     protected static string $resource = DrawResource::class;
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        // Eager load relationships when loading the record
+        $this->record->loadCount('tickets')
+            ->loadSum('tickets', 'amount_paid')
+            ->load('winnerTicket.user');
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

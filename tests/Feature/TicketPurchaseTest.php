@@ -73,6 +73,30 @@ it('can submit a ticket purchase request', function () {
     });
 });
 
+it('can submit a ticket purchase request for the first ticket option', function () {
+    Mail::fake();
+
+    $draw = Draw::factory()->active()->create();
+    $firstTier = $draw->ticket_price_tiers[0];
+
+    Livewire::actingAs($this->user)
+        ->test(PurchaseTickets::class, ['draw' => $draw])
+        ->set('selectedPricingTier', json_encode($firstTier))
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('draws.index'));
+
+    expect(TicketPurchaseRequest::count())->toBe(1);
+
+    $request = TicketPurchaseRequest::first();
+    expect($request->draw_id)->toBe($draw->id);
+    expect($request->user_id)->toBe($this->user->id);
+    expect($request->quantity)->toBe(1);
+    expect($request->pricing_tier['quantity'])->toBe(1);
+    expect((float) $request->pricing_tier['price'])->toBe(1.00);
+    expect($request->status)->toBe('pending');
+});
+
 it('requires selecting a pricing tier', function () {
     $draw = Draw::factory()->active()->create();
 
