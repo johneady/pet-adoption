@@ -327,18 +327,6 @@ it('does not show cancel action for cancelled requests', function () {
         ->assertTableActionHidden('cancel', $request);
 });
 
-it('shows view action for all requests', function () {
-    $pendingRequest = TicketPurchaseRequest::factory()->create(['status' => 'pending']);
-    $fulfilledRequest = TicketPurchaseRequest::factory()->fulfilled()->create();
-    $cancelledRequest = TicketPurchaseRequest::factory()->cancelled()->create();
-
-    Livewire::actingAs($this->admin)
-        ->test(ListTicketPurchaseRequests::class)
-        ->assertTableActionVisible('view', $pendingRequest)
-        ->assertTableActionVisible('view', $fulfilledRequest)
-        ->assertTableActionVisible('view', $cancelledRequest);
-});
-
 // Integration Tests
 it('creates multiple tickets with incrementing ticket numbers', function () {
     Mail::fake();

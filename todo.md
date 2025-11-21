@@ -3,7 +3,8 @@
 ## Relelase 1 ✨
 
 * fix the n+1 error on the /admin/draws page
-
+* timezone testing for all emails
+* full email testing
 
 
 ## Release 2 ⚡
