@@ -20,6 +20,7 @@ class AdoptionApplicationForm
                         DateTimePicker::make('scheduled_at')
                             ->label('Scheduled At')
                             ->seconds(false)
+                            ->timezone(auth()->user()->timezone)
                             ->disabled(),
                         TextInput::make('location')
                             ->maxLength(255)
@@ -31,6 +32,7 @@ class AdoptionApplicationForm
                         DateTimePicker::make('completed_at')
                             ->label('Completed At')
                             ->seconds(false)
+                            ->timezone(auth()->user()->timezone)
                             ->disabled(),
                     ])
                     ->visible(fn ($record) => $record !== null && in_array($record->status, ['interview_scheduled', 'approved', 'rejected', 'archived']))

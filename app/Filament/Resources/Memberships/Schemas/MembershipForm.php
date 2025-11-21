@@ -65,11 +65,14 @@ class MembershipForm
                             ->schema([
                                 DateTimePicker::make('started_at')
                                     ->required()
+                                    ->timezone(auth()->user()->timezone)
                                     ->default(now()),
                                 DateTimePicker::make('expires_at')
                                     ->required()
+                                    ->timezone(auth()->user()->timezone)
                                     ->default(now()->addYear()),
-                                DateTimePicker::make('canceled_at'),
+                                DateTimePicker::make('canceled_at')
+                                    ->timezone(auth()->user()->timezone),
                             ]),
                     ]),
             ]);

@@ -37,6 +37,7 @@ class DrawForm
                                 DatePicker::make('starts_at')
                                     ->required()
                                     ->native(false)
+                                    ->timezone(auth()->user()->timezone)
                                     ->default(now()->addDay())
                                     ->afterOrEqual('today')
                                     ->rule('after_or_equal:today')
@@ -76,7 +77,8 @@ class DrawForm
                                             $overlappingDraw = $query->first();
 
                                             if ($overlappingDraw) {
-                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->format('M j, Y')} to {$overlappingDraw->ends_at->format('M j, Y')}).");
+                                                $timezone = auth()->user()?->timezone ?? 'UTC';
+                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->setTimezone($timezone)->format('M j, Y')} to {$overlappingDraw->ends_at->setTimezone($timezone)->format('M j, Y')}).");
                                             }
                                         },
                                     ]),
@@ -84,6 +86,7 @@ class DrawForm
                                     ->required()
                                     ->default(now()->addDays(30))
                                     ->native(false)
+                                    ->timezone(auth()->user()->timezone)
                                     ->after('starts_at')
                                     ->live(onBlur: true)
                                     ->rules([
@@ -121,7 +124,8 @@ class DrawForm
                                             $overlappingDraw = $query->first();
 
                                             if ($overlappingDraw) {
-                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->format('M j, Y')} to {$overlappingDraw->ends_at->format('M j, Y')}).");
+                                                $timezone = auth()->user()?->timezone ?? 'UTC';
+                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->setTimezone($timezone)->format('M j, Y')} to {$overlappingDraw->ends_at->setTimezone($timezone)->format('M j, Y')}).");
                                             }
                                         },
                                     ]),

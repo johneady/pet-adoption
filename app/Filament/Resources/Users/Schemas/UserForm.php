@@ -59,7 +59,7 @@ class UserForm
                             }),
                         Placeholder::make('created_at')
                             ->label('User Since')
-                            ->content(fn ($record): string => $record?->created_at?->format('F j, Y') ?? 'N/A'),
+                            ->content(fn ($record): string => $record?->created_at?->setTimezone(auth()->user()->timezone)->format('F j, Y') ?? 'N/A'),
                     ])
                     ->columns(2),
 
@@ -82,7 +82,7 @@ class UserForm
 
                                 $plan = $membership->plan;
                                 $daysRemaining = $membership->daysRemaining();
-                                $expiresAt = $membership->expires_at->format('M j, Y');
+                                $expiresAt = $membership->expires_at->setTimezone(auth()->user()->timezone)->format('M j, Y');
 
                                 return new \Illuminate\Support\HtmlString(
                                     '<div class="space-y-1">'.

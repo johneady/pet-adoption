@@ -28,9 +28,11 @@ class DrawsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('starts_at')
+                    ->timezone(auth()->user()->timezone)
                     ->date()
                     ->sortable(),
                 TextColumn::make('ends_at')
+                    ->timezone(auth()->user()->timezone)
                     ->date()
                     ->sortable(),
                 TextColumn::make('tickets_count')

@@ -75,6 +75,8 @@ class PetForm
                             ->default(false),
                         DatePicker::make('intake_date')
                             ->required()
+                            ->native(false)
+                            ->timezone(auth()->user()->timezone)
                             ->default(now())
                             ->maxDate(now()),
                         ToggleButtons::make('status')

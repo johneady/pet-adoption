@@ -12,7 +12,7 @@
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Interview Date/Time</dt>
                     <dd class="flex items-center gap-2">
                         <span class="text-base font-semibold text-gray-900 dark:text-gray-100">
-                            {{ $interview->scheduled_at->format('M d, Y \a\t h:i A') }}
+                            {{ $interview->scheduled_at->setTimezone(auth()->user()->timezone)->format('M d, Y \a\t h:i A') }}
                         </span>
                         @if ($interview->scheduled_at->isFuture())
                             <x-filament::badge color="info" icon="heroicon-m-clock">
@@ -49,7 +49,7 @@
                     <div class="flex flex-col gap-1.5">
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Completed</dt>
                         <dd class="text-base font-semibold text-gray-900 dark:text-gray-100">
-                            {{ $interview->completed_at->format('M d, Y \a\t h:i A') }}
+                            {{ $interview->completed_at->setTimezone(auth()->user()->timezone)->format('M d, Y \a\t h:i A') }}
                         </dd>
                     </div>
                 @endif
