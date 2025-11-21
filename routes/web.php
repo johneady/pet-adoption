@@ -35,7 +35,7 @@ Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 
 Route::get('/draws', DrawsIndex::class)->name('draws.index')->middleware('draws.enabled');
 
-Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
+Route::get('/page/{slug}', [PageController::class, 'show'])->where('slug', '.*')->name('page.show');
 
 Route::get('/membership', Plans::class)->name('membership.plans')->middleware('memberships.enabled');
 

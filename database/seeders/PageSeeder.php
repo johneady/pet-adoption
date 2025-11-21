@@ -41,6 +41,13 @@ class PageSeeder extends Seeder
                 'status' => 'published',
                 'is_special' => true,
             ],
+            [
+                'title' => 'A Happy Tail',
+                'slug' => 'about/success-stories',
+                'content' => '<h2>Happy Tails</h2><p>Read heartwarming stories from families who have found their perfect companions through our adoption program. Each adoption is a success story that brings joy to both pets and their new families.</p><p>Check back regularly as we share more wonderful adoption stories!</p>',
+                'status' => 'published',
+                'is_special' => false,
+            ],
         ];
 
         foreach ($specialPages as $pageData) {
