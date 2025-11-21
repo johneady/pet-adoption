@@ -9,3 +9,7 @@
 ## Release 2 ⚡
 
 I will perform a artisan migrate:fresh --seed once you are completed.
+
+Add soft deletes to User, Pet, BlogPost models to preserve historical integrity
+
+Restrict Species/Breed deletions if pets exist (change CASCADE to RESTRICT)
