@@ -164,32 +164,18 @@ class SettingSeeder extends Seeder
 
             // Application Settings
             [
-                'key' => 'adoption_fee_enabled',
+                'key' => 'enable_draws',
                 'value' => '1',
                 'type' => 'boolean',
                 'group' => 'application',
-                'description' => 'Enable or disable adoption fees',
+                'description' => 'Enable or disable 50/50 draws',
             ],
             [
-                'key' => 'default_adoption_fee',
-                'value' => '150.00',
-                'type' => 'float',
-                'group' => 'application',
-                'description' => 'Default adoption fee amount',
-            ],
-            [
-                'key' => 'require_application_approval',
+                'key' => 'enable_memberships',
                 'value' => '1',
                 'type' => 'boolean',
                 'group' => 'application',
-                'description' => 'Require admin approval for adoption applications',
-            ],
-            [
-                'key' => 'max_applications_per_user',
-                'value' => '3',
-                'type' => 'integer',
-                'group' => 'application',
-                'description' => 'Maximum number of active applications per user',
+                'description' => 'Enable or disable memberships',
             ],
         ];
 

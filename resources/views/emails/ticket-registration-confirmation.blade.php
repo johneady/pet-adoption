@@ -5,7 +5,7 @@ Your draw tickets have been successfully registered!
 
 **Draw Details:**
 - **Draw Name:** {{ $draw->name }}
-- **Draw End Date:** {{ $draw->ends_at->format('M j, Y g:i A') }}
+- **Draw End Date:** {{ $draw->ends_at->format('M j, Y') }}
 
 **Your Tickets:**
 @foreach($tickets as $ticket)

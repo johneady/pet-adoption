@@ -193,28 +193,15 @@ class ManageSettings extends Page
                             Tabs\Tab::make('Application')
                                 ->icon(Heroicon::OutlinedDocumentText)
                                 ->schema([
-                                    Section::make('Adoption Settings')
-                                        ->description('Configure adoption application settings')
+                                    Section::make('Feature Toggles')
+                                        ->description('Enable or disable application features')
                                         ->schema([
-                                            Toggle::make('adoption_fee_enabled')
-                                                ->label('Enable Adoption Fees')
-                                                ->helperText('Enable or disable adoption fees')
-                                                ->live(),
-                                            TextInput::make('default_adoption_fee')
-                                                ->label('Default Adoption Fee')
-                                                ->numeric()
-                                                ->prefix('$')
-                                                ->minValue(0)
-                                                ->step(0.01)
-                                                ->visible(fn (callable $get) => $get('adoption_fee_enabled')),
-                                            Toggle::make('require_application_approval')
-                                                ->label('Require Application Approval')
-                                                ->helperText('Require admin approval for adoption applications'),
-                                            TextInput::make('max_applications_per_user')
-                                                ->label('Max Applications Per User')
-                                                ->numeric()
-                                                ->minValue(1)
-                                                ->helperText('Maximum number of active applications per user'),
+                                            Toggle::make('enable_draws')
+                                                ->label('Enable 50/50 Draws')
+                                                ->helperText('Enable or disable 50/50 draw functionality'),
+                                            Toggle::make('enable_memberships')
+                                                ->label('Enable Memberships')
+                                                ->helperText('Enable or disable membership functionality'),
                                         ])
                                         ->columns(2),
                                 ]),
