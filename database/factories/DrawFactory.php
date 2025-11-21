@@ -16,8 +16,8 @@ class DrawFactory extends Factory
      */
     public function definition(): array
     {
-        $startsAt = fake()->dateTimeBetween('-1 month', '+1 week');
-        $endsAt = (clone $startsAt)->modify('+'.fake()->numberBetween(7, 30).' days');
+        $startsAt = fake()->dateTimeBetween('-1 month', '+1 week')->format('Y-m-d');
+        $endsAt = fake()->dateTimeBetween($startsAt, $startsAt.' +30 days')->format('Y-m-d');
 
         return [
             'name' => fake()->words(3, true).' Draw',
@@ -40,8 +40,8 @@ class DrawFactory extends Factory
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'starts_at' => now()->subDays(fake()->numberBetween(1, 7)),
-            'ends_at' => now()->addDays(fake()->numberBetween(7, 30)),
+            'starts_at' => now()->subDays(fake()->numberBetween(1, 7))->toDateString(),
+            'ends_at' => now()->addDays(fake()->numberBetween(7, 30))->toDateString(),
             'is_finalized' => false,
         ]);
     }
@@ -52,8 +52,8 @@ class DrawFactory extends Factory
     public function ended(): static
     {
         return $this->state(fn (array $attributes) => [
-            'starts_at' => now()->subDays(fake()->numberBetween(14, 30)),
-            'ends_at' => now()->subDays(fake()->numberBetween(1, 7)),
+            'starts_at' => now()->subDays(fake()->numberBetween(14, 30))->toDateString(),
+            'ends_at' => now()->subDays(fake()->numberBetween(1, 7))->toDateString(),
             'is_finalized' => false,
         ]);
     }
@@ -64,8 +64,8 @@ class DrawFactory extends Factory
     public function finalized(): static
     {
         return $this->state(fn (array $attributes) => [
-            'starts_at' => now()->subDays(fake()->numberBetween(30, 60)),
-            'ends_at' => now()->subDays(fake()->numberBetween(14, 30)),
+            'starts_at' => now()->subDays(fake()->numberBetween(30, 60))->toDateString(),
+            'ends_at' => now()->subDays(fake()->numberBetween(14, 30))->toDateString(),
             'is_finalized' => true,
         ]);
     }
@@ -76,8 +76,8 @@ class DrawFactory extends Factory
     public function upcoming(): static
     {
         return $this->state(fn (array $attributes) => [
-            'starts_at' => now()->addDays(fake()->numberBetween(1, 7)),
-            'ends_at' => now()->addDays(fake()->numberBetween(14, 30)),
+            'starts_at' => now()->addDays(fake()->numberBetween(1, 7))->toDateString(),
+            'ends_at' => now()->addDays(fake()->numberBetween(14, 30))->toDateString(),
             'is_finalized' => false,
         ]);
     }
