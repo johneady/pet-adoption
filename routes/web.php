@@ -33,11 +33,11 @@ Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
 Route::get('/blog', BlogIndex::class)->name('blog.index');
 Route::get('/blog/{slug}', BlogShow::class)->name('blog.show');
 
-Route::get('/draws', DrawsIndex::class)->name('draws.index');
+Route::get('/draws', DrawsIndex::class)->name('draws.index')->middleware('draws.enabled');
 
 Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
 
-Route::get('/membership', Plans::class)->name('membership.plans');
+Route::get('/membership', Plans::class)->name('membership.plans')->middleware('memberships.enabled');
 
 // PayPal IPN webhook route (CSRF exemption configured in bootstrap/app.php)
 Route::post('/webhooks/paypal-ipn', [PayPalIPNController::class, 'handleIPN'])->name('webhooks.paypal-ipn');
@@ -46,12 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('applications/create/{petId}', ApplicationsCreate::class)->name('applications.create');
 
-    Route::get('/draws/{draw}/purchase', PurchaseTickets::class)->name('draws.purchase');
+    Route::get('/draws/{draw}/purchase', PurchaseTickets::class)->name('draws.purchase')->middleware('draws.enabled');
 
-    Route::get('/membership/checkout/{plan}', Checkout::class)->name('membership.checkout');
-    Route::get('/membership/success', Success::class)->name('membership.success');
-    Route::get('/membership/cancel', Cancel::class)->name('membership.cancel');
-    Route::get('/membership/manage', Manage::class)->name('membership.manage');
+    Route::middleware('memberships.enabled')->group(function () {
+        Route::get('/membership/checkout/{plan}', Checkout::class)->name('membership.checkout');
+        Route::get('/membership/success', Success::class)->name('membership.success');
+        Route::get('/membership/cancel', Cancel::class)->name('membership.cancel');
+        Route::get('/membership/manage', Manage::class)->name('membership.manage');
+    });
 });
 
 Route::middleware(['auth'])->group(function () {

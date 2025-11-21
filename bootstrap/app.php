@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'webhooks/*',
         ]);
+
+        $middleware->alias([
+            'draws.enabled' => \App\Http\Middleware\CheckDrawsEnabled::class,
+            'memberships.enabled' => \App\Http\Middleware\CheckMembershipsEnabled::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

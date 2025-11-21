@@ -98,10 +98,18 @@
                     </flux:dropdown>
                 @endif
             @endforeach
-            <flux:navbar.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
-                wire:navigate>
-                {{ __('Membership') }}
-            </flux:navbar.item>
+            @if (\App\Models\Setting::get('enable_draws', true))
+                <flux:navbar.item icon="ticket" :href="route('draws.index')" :current="request()->routeIs('draws.*')"
+                    wire:navigate>
+                    {{ __('50/50 Draws') }}
+                </flux:navbar.item>
+            @endif
+            @if (\App\Models\Setting::get('enable_memberships', true))
+                <flux:navbar.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
+                    wire:navigate>
+                    {{ __('Membership') }}
+                </flux:navbar.item>
+            @endif
         </flux:navbar>
 
         <flux:spacer />
@@ -217,10 +225,18 @@
                 @endif
             @endforeach
             <flux:navlist.group :heading="__('Support')">
-                <flux:navlist.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
-                    wire:navigate>
-                    {{ __('Membership') }}
-                </flux:navlist.item>
+                @if (\App\Models\Setting::get('enable_draws', true))
+                    <flux:navlist.item icon="ticket" :href="route('draws.index')" :current="request()->routeIs('draws.*')"
+                        wire:navigate>
+                        {{ __('50/50 Draws') }}
+                    </flux:navlist.item>
+                @endif
+                @if (\App\Models\Setting::get('enable_memberships', true))
+                    <flux:navlist.item icon="star" :href="route('membership.plans')" :current="request()->routeIs('membership.*')"
+                        wire:navigate>
+                        {{ __('Membership') }}
+                    </flux:navlist.item>
+                @endif
             </flux:navlist.group>
         </flux:navlist>
 
