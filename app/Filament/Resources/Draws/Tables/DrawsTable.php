@@ -16,6 +16,7 @@ class DrawsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->withCount('tickets')->withSum('tickets', 'amount_paid'))
             ->columns([
                 IconColumn::make('pending draw')
                     ->label('')
@@ -33,9 +34,15 @@ class DrawsTable
                     ->date()
                     ->sortable(),
                 TextColumn::make('tickets_count')
-                    ->counts('tickets')
                     ->label('Tickets Sold')
                     ->sortable(),
+                TextColumn::make('total_collected')
+                    ->label('Total Collected')
+                    ->money('USD')
+                    ->getStateUsing(fn ($record) => $record->totalAmountCollected())
+                    ->sortable(query: function ($query, string $direction) {
+                        return $query->orderBy('tickets_sum_amount_paid', $direction);
+                    }),
                 TextColumn::make('status')
                     ->badge()
                     ->getStateUsing(function ($record) {

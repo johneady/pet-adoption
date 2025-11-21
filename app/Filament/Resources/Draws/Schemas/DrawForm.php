@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Draws\Schemas;
 
+use App\Models\Draw;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class DrawForm
@@ -34,13 +36,95 @@ class DrawForm
                             ->schema([
                                 DatePicker::make('starts_at')
                                     ->required()
+                                    ->native(false)
                                     ->default(now()->addDay())
                                     ->afterOrEqual('today')
-                                    ->rule('after_or_equal:today'),
+                                    ->rule('after_or_equal:today')
+                                    ->live(onBlur: true)
+                                    ->rules([
+                                        fn (Get $get, $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                            $startsAt = $value;
+                                            $endsAt = $get('ends_at');
+
+                                            if (! $startsAt || ! $endsAt) {
+                                                return;
+                                            }
+
+                                            $query = Draw::query()
+                                                ->where(function ($query) use ($startsAt, $endsAt) {
+                                                    // Check if new draw overlaps with existing draws
+                                                    $query->where(function ($q) use ($startsAt) {
+                                                        // New draw starts during an existing draw
+                                                        $q->where('starts_at', '<=', $startsAt)
+                                                            ->where('ends_at', '>', $startsAt);
+                                                    })->orWhere(function ($q) use ($endsAt) {
+                                                        // New draw ends during an existing draw
+                                                        $q->where('starts_at', '<', $endsAt)
+                                                            ->where('ends_at', '>=', $endsAt);
+                                                    })->orWhere(function ($q) use ($startsAt, $endsAt) {
+                                                        // New draw completely encompasses an existing draw
+                                                        $q->where('starts_at', '>=', $startsAt)
+                                                            ->where('ends_at', '<=', $endsAt);
+                                                    });
+                                                });
+
+                                            // Exclude current record when editing
+                                            if ($record) {
+                                                $query->where('id', '!=', $record->id);
+                                            }
+
+                                            $overlappingDraw = $query->first();
+
+                                            if ($overlappingDraw) {
+                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->format('M j, Y')} to {$overlappingDraw->ends_at->format('M j, Y')}).");
+                                            }
+                                        },
+                                    ]),
                                 DatePicker::make('ends_at')
                                     ->required()
                                     ->default(now()->addDays(30))
-                                    ->after('starts_at'),
+                                    ->native(false)
+                                    ->after('starts_at')
+                                    ->live(onBlur: true)
+                                    ->rules([
+                                        fn (Get $get, $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                            $startsAt = $get('starts_at');
+                                            $endsAt = $value;
+
+                                            if (! $startsAt || ! $endsAt) {
+                                                return;
+                                            }
+
+                                            $query = Draw::query()
+                                                ->where(function ($query) use ($startsAt, $endsAt) {
+                                                    // Check if new draw overlaps with existing draws
+                                                    $query->where(function ($q) use ($startsAt) {
+                                                        // New draw starts during an existing draw
+                                                        $q->where('starts_at', '<=', $startsAt)
+                                                            ->where('ends_at', '>', $startsAt);
+                                                    })->orWhere(function ($q) use ($endsAt) {
+                                                        // New draw ends during an existing draw
+                                                        $q->where('starts_at', '<', $endsAt)
+                                                            ->where('ends_at', '>=', $endsAt);
+                                                    })->orWhere(function ($q) use ($startsAt, $endsAt) {
+                                                        // New draw completely encompasses an existing draw
+                                                        $q->where('starts_at', '>=', $startsAt)
+                                                            ->where('ends_at', '<=', $endsAt);
+                                                    });
+                                                });
+
+                                            // Exclude current record when editing
+                                            if ($record) {
+                                                $query->where('id', '!=', $record->id);
+                                            }
+
+                                            $overlappingDraw = $query->first();
+
+                                            if ($overlappingDraw) {
+                                                $fail("This draw overlaps with '{$overlappingDraw->name}' (from {$overlappingDraw->starts_at->format('M j, Y')} to {$overlappingDraw->ends_at->format('M j, Y')}).");
+                                            }
+                                        },
+                                    ]),
                             ]),
                     ])
                     ->disabled(fn ($record): bool => $record && ($record->isActive() || $record->is_finalized)),

@@ -6,10 +6,7 @@ use App\Filament\Resources\Draws\DrawResource;
 use App\Filament\Resources\Draws\Widgets\DrawTicketsWidget;
 use App\Mail\DrawResultsSummary;
 use App\Mail\DrawWinnerNotification;
-use App\Mail\TicketRegistrationConfirmation;
-use App\Models\DrawTicket;
 use App\Models\User;
-use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -23,76 +20,6 @@ class EditDraw extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('registerTickets')
-                ->label('Register Tickets')
-                ->icon(Heroicon::OutlinedPlus)
-                ->color('success')
-                ->form(function () {
-                    $draw = $this->record;
-                    $pricingOptions = collect($draw->ticket_price_tiers)
-                        ->mapWithKeys(function ($tier) {
-                            $priceFormatted = number_format($tier['price'], 2);
-                            $pricePerTicket = $tier['price'] / $tier['quantity'];
-                            $pricePerTicketFormatted = number_format($pricePerTicket, 2);
-
-                            return [
-                                json_encode($tier) => "{$tier['quantity']} ticket(s) for \${$priceFormatted} (\${$pricePerTicketFormatted} each)",
-                            ];
-                        })
-                        ->toArray();
-
-                    return [
-                        \Filament\Forms\Components\Select::make('user_id')
-                            ->label('User')
-                            ->relationship('tickets.user', 'name')
-                            ->options(User::query()->pluck('name', 'id'))
-                            ->searchable()
-                            ->required()
-                            ->preload(),
-                        \Filament\Forms\Components\Select::make('pricing_tier')
-                            ->label('Ticket Package')
-                            ->options($pricingOptions)
-                            ->required()
-                            ->helperText('Select a pricing tier to register tickets'),
-                    ];
-                })
-                ->action(function (array $data) {
-                    $draw = $this->record;
-                    $user = User::find($data['user_id']);
-                    $tier = json_decode($data['pricing_tier'], true);
-
-                    $quantity = (int) $tier['quantity'];
-                    $totalPrice = (float) $tier['price'];
-                    $pricePerTicket = $totalPrice / $quantity;
-
-                    $createdTickets = collect();
-
-                    // Create individual tickets for fair random selection
-                    for ($i = 0; $i < $quantity; $i++) {
-                        $ticket = DrawTicket::create([
-                            'draw_id' => $draw->id,
-                            'user_id' => $user->id,
-                            'ticket_number' => $draw->nextTicketNumber(),
-                            'amount_paid' => $pricePerTicket,
-                            'is_winner' => false,
-                        ]);
-
-                        $createdTickets->push($ticket);
-                    }
-
-                    // Send confirmation email to the customer
-                    Mail::to($user->email)->queue(
-                        new TicketRegistrationConfirmation($draw, $createdTickets, $totalPrice)
-                    );
-
-                    Notification::make()
-                        ->title('Tickets Registered')
-                        ->body("Successfully registered {$quantity} ticket(s) for {$user->name} (\${$totalPrice})")
-                        ->success()
-                        ->send();
-                })
-                ->visible(fn () => ! $this->record->is_finalized && $this->record->isActive()),
-
             Action::make('selectWinner')
                 ->label('Select Random Winner')
                 ->icon(Heroicon::OutlinedTrophy)
@@ -138,9 +65,6 @@ class EditDraw extends EditRecord
                     }
                 })
                 ->visible(fn () => ! $this->record->is_finalized && $this->record->hasEnded() && $this->record->tickets()->count() > 0),
-
-            Actions\DeleteAction::make()
-                ->visible(fn () => ! $this->record->is_finalized),
         ];
     }
 

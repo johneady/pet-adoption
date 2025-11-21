@@ -1,10 +1,10 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-7xl">
         <!-- Header -->
-        <div class="mb-8 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 p-8 dark:from-amber-950 dark:to-yellow-950">
+        <div class="mb-8 rounded-2xl bg-gradient-to-br from-ocean-50 to-teal-50 p-8 dark:from-ocean-950 dark:to-teal-950">
             <div class="mx-auto max-w-4xl text-center">
-                <flux:heading size="xl" class="mb-2 text-amber-900 dark:text-amber-100">50/50 Draws</flux:heading>
-                <flux:text class="text-lg text-amber-700 dark:text-amber-300">
+                <flux:heading size="xl" class="mb-2 text-ocean-900 dark:text-ocean-100">50/50 Draws</flux:heading>
+                <flux:text class="text-lg text-ocean-700 dark:text-ocean-300">
                     Support our shelter animals while having a chance to win! Half of all proceeds go to animal care and the other half goes to one lucky winner.
                 </flux:text>
             </div>
@@ -27,7 +27,7 @@
         @if ($this->activeDraw)
             <div class="mb-8">
                 <flux:heading size="lg" class="mb-4">Current Draw</flux:heading>
-                <div class="rounded-xl border-2 border-amber-500 bg-white p-6 shadow-lg dark:bg-zinc-900">
+                <div class="rounded-xl border-2 border-ocean-300 bg-white p-6 shadow-lg shadow-ocean-200/50 dark:border-ocean-700 dark:bg-zinc-900 dark:shadow-ocean-900/50">
                     <div class="mb-4 flex items-start justify-between">
                         <div>
                             <flux:heading size="xl">{{ $this->activeDraw->name }}</flux:heading>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="text-right">
                             <flux:text class="text-sm text-zinc-500">Ends</flux:text>
-                            <flux:text class="font-semibold">{{ $this->activeDraw->ends_at->timezone(auth()->user()?->timezone ?? 'America/Toronto')->format('M j, Y g:i A') }}</flux:text>
+                            <flux:text class="font-semibold">{{ $this->activeDraw->ends_at->timezone(auth()->user()?->timezone ?? 'America/Toronto')->format('M j, Y') }}</flux:text>
                         </div>
                     </div>
 
@@ -48,9 +48,9 @@
                         <flux:heading size="sm" class="mb-3">Ticket Pricing</flux:heading>
                         <div class="flex flex-wrap gap-3">
                             @foreach ($this->activeDraw->ticket_price_tiers as $tier)
-                                <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 dark:border-amber-800 dark:bg-amber-950">
+                                <div class="rounded-lg border border-ocean-200 bg-ocean-50 px-4 py-2 dark:border-ocean-800 dark:bg-ocean-950">
                                     <span class="font-semibold">{{ $tier['quantity'] }} ticket{{ $tier['quantity'] > 1 ? 's' : '' }}</span>
-                                    <span class="text-amber-700 dark:text-amber-300">for ${{ number_format($tier['price'], 2) }}</span>
+                                    <span class="text-ocean-700 dark:text-ocean-300">for ${{ number_format($tier['price'], 2) }}</span>
                                 </div>
                             @endforeach
                         </div>
@@ -71,9 +71,9 @@
                             <flux:text class="text-2xl font-bold">{{ (int) now()->diffInDays($this->activeDraw->ends_at) }}</flux:text>
                         </div>
                         @auth
-                            <div class="rounded-lg bg-amber-100 p-3 text-center dark:bg-amber-900">
-                                <flux:text class="text-sm text-amber-700 dark:text-amber-300">Your Tickets</flux:text>
-                                <flux:text class="text-2xl font-bold text-amber-900 dark:text-amber-100">{{ $this->userTickets->count() }}</flux:text>
+                            <div class="rounded-lg bg-ocean-100 p-3 text-center dark:bg-ocean-900">
+                                <flux:text class="text-sm text-ocean-700 dark:text-ocean-300">Your Tickets</flux:text>
+                                <flux:text class="text-2xl font-bold text-ocean-900 dark:text-ocean-100">{{ $this->userTickets->count() }}</flux:text>
                             </div>
                         @endauth
                     </div>
@@ -85,7 +85,7 @@
                                 <flux:heading size="sm" class="mb-3">Your Ticket Numbers</flux:heading>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach ($this->userTickets as $ticket)
-                                        <flux:badge color="amber">#{{ $ticket->ticket_number }}</flux:badge>
+                                        <flux:badge color="info">#{{ $ticket->ticket_number }}</flux:badge>
                                     @endforeach
                                 </div>
                             </div>
@@ -101,9 +101,9 @@
 
                     @guest
                         <!-- Login Prompt for Guests -->
-                        <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
+                        <div class="mt-6 rounded-lg border border-ocean-200 bg-ocean-50 p-4 dark:border-ocean-800 dark:bg-ocean-950">
                             <div class="flex items-center justify-between gap-4">
-                                <flux:text class="text-amber-900 dark:text-amber-100">
+                                <flux:text class="text-ocean-900 dark:text-ocean-100">
                                     Log in to purchase tickets for this draw
                                 </flux:text>
                                 <flux:button variant="primary" :href="route('login')" size="sm">
@@ -122,7 +122,7 @@
                 <flux:heading size="lg" class="mb-4">Upcoming Draws</flux:heading>
                 <div class="space-y-4">
                     @foreach ($this->upcomingDraws as $draw)
-                        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+                        <div class="rounded-xl border-2 border-ocean-200 bg-white p-6 shadow-sm shadow-ocean-100 dark:border-ocean-800 dark:bg-zinc-900 dark:shadow-ocean-950">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <flux:heading size="md">{{ $draw->name }}</flux:heading>
@@ -148,7 +148,7 @@
                 <flux:heading size="lg" class="mb-4">Past Draws</flux:heading>
                 <div class="space-y-4">
                     @foreach ($this->pastDraws as $draw)
-                        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+                        <div class="rounded-xl border-2 border-ocean-200 bg-white p-6 shadow-sm shadow-ocean-100 dark:border-ocean-800 dark:bg-zinc-900 dark:shadow-ocean-950">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <flux:heading size="md">{{ $draw->name }}</flux:heading>
@@ -186,10 +186,10 @@
 
         <!-- No Draws Message -->
         @if (!$this->activeDraw && $this->upcomingDraws->count() === 0 && $this->pastDraws->count() === 0)
-            <div class="rounded-xl border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-900">
-                <flux:icon.ticket class="mx-auto mb-4 size-12 text-zinc-400" />
-                <flux:heading size="md" class="mb-2">No Draws Available</flux:heading>
-                <flux:text class="text-zinc-600 dark:text-zinc-400">Check back soon for upcoming 50/50 draws!</flux:text>
+            <div class="rounded-xl border-2 border-ocean-200 bg-gradient-to-br from-ocean-50 to-teal-50 p-12 text-center dark:border-ocean-800 dark:from-ocean-950 dark:to-zinc-900">
+                <flux:icon.ticket class="mx-auto mb-4 size-12 text-ocean-300 dark:text-ocean-700" />
+                <flux:heading size="md" class="mb-2 text-ocean-900 dark:text-ocean-100">No Draws Available</flux:heading>
+                <flux:text class="text-ocean-700 dark:text-ocean-300">Check back soon for upcoming 50/50 draws!</flux:text>
             </div>
         @endif
     </div>
