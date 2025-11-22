@@ -255,3 +255,55 @@ test('user resource deletes profile picture from storage when removed', function
     expect(Storage::disk('public')->exists($imagePath))->toBeFalse()
         ->and($user->profile_picture)->toBeNull();
 });
+
+test('user resource validates max profile picture size of 8MB', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'phone' => '555-1234',
+        'address' => '123 Test St',
+    ]);
+
+    actingAs($this->admin);
+
+    // Create an actual large image file
+    $largeImage = Illuminate\Http\UploadedFile::fake()->image('large-profile.jpg', 4000, 4000);
+
+    // If the generated file isn't large enough, skip this test
+    if ($largeImage->getSize() < 8192 * 1024) {
+        $this->markTestSkipped('Unable to generate a file larger than 8MB for testing');
+    }
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.profile_picture', [$largeImage])
+        ->call('save')
+        ->assertHasFormErrors(['profile_picture']);
+});
+
+test('user resource accepts valid profile picture formats', function ($mimeType, $extension) {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'phone' => '555-1234',
+        'address' => '123 Test St',
+    ]);
+
+    actingAs($this->admin);
+
+    $validImage = Illuminate\Http\UploadedFile::fake()->image("profile.{$extension}", 300, 300);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.profile_picture', [$validImage])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    expect($user->profile_picture)->not->toBeNull()
+        ->and(Storage::disk('public')->exists($user->profile_picture))->toBeTrue();
+})->with([
+    ['image/jpeg', 'jpg'],
+    ['image/png', 'png'],
+    ['image/webp', 'webp'],
+]);

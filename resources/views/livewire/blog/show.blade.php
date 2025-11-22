@@ -14,7 +14,7 @@
             <!-- Featured Image -->
             @if($post->featured_image)
                 <div class="relative aspect-video overflow-hidden rounded-t-xl bg-linear-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
-                    <img src="{{ Storage::url($post->featured_image) }}"
+                    <img src="{{ Storage::disk('public')->url($post->featured_image) }}"
                          alt="{{ $post->title }}"
                          class="h-full w-full object-cover"
                          onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">

@@ -18,7 +18,7 @@
                                 @php
                                     $currentPhoto = $pet->photos[$selectedPhotoIndex] ?? $pet->photos->first();
                                 @endphp
-                                <img src="{{ Storage::url($currentPhoto->file_path) }}"
+                                <img src="{{ Storage::disk('public')->url($currentPhoto->file_path) }}"
                                      alt="{{ $pet->name }}"
                                      class="h-full w-full object-cover"
                                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -63,7 +63,7 @@
                                 @foreach($pet->photos as $index => $photo)
                                     <button wire:click="selectPhoto({{ $index }})"
                                             class="relative aspect-square overflow-hidden rounded-lg border-2 transition-all {{ $selectedPhotoIndex === $index ? 'border-ocean-600 ring-2 ring-ocean-600 ring-offset-2 dark:border-ocean-400 dark:ring-ocean-400 dark:ring-offset-zinc-800' : 'border-ocean-200 hover:border-ocean-400 dark:border-ocean-700 dark:hover:border-ocean-600' }}">
-                                        <img src="{{ Storage::url($photo->file_path) }}"
+                                        <img src="{{ Storage::disk('public')->url($photo->file_path) }}"
                                              alt="{{ $pet->name }}"
                                              class="h-full w-full object-cover"
                                              onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">

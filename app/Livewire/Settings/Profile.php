@@ -64,7 +64,7 @@ class Profile extends Component
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'timezone' => ['required', 'string', 'timezone'],
-            'profilePicture' => ['nullable', 'image', 'max:2048'],
+            'profilePicture' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
         ]);
 
         $user->fill([

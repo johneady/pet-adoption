@@ -45,6 +45,15 @@ class Breed extends Model
         'description',
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Breed $breed) {
+            if ($breed->pets()->exists()) {
+                throw new \Exception('Cannot delete breed that has existing pets.');
+            }
+        });
+    }
+
     public function species(): BelongsTo
     {
         return $this->belongsTo(Species::class);

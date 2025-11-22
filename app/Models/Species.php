@@ -42,6 +42,15 @@ class Species extends Model
         'description',
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Species $species) {
+            if ($species->pets()->exists()) {
+                throw new \Exception('Cannot delete species that has existing pets.');
+            }
+        });
+    }
+
     public function breeds(): HasMany
     {
         return $this->hasMany(Breed::class);

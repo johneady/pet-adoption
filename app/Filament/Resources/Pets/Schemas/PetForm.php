@@ -13,6 +13,9 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PetForm
 {
@@ -122,7 +125,36 @@ class PetForm
                                 FileUpload::make('file_path')
                                     ->label('Photo')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('pets')
+                                    ->maxSize(8192)
+                                    ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'])
+                                    ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $get): string {
+                                        // Get the old file path if updating
+                                        $oldFilePath = $get('file_path');
+
+                                        // Delete old file if it exists
+                                        if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+                                            Storage::disk('public')->delete($oldFilePath);
+                                        }
+
+                                        // Generate unique filename
+                                        $filename = 'pets/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                        // Compress and resize image to max 800x600
+                                        $image = Image::read($file->getRealPath());
+                                        $image->cover(800, 600);
+
+                                        // Store compressed image
+                                        Storage::disk('public')->put($filename, (string) $image->encode());
+
+                                        return $filename;
+                                    })
+                                    ->deleteUploadedFileUsing(function (?string $file): void {
+                                        if ($file && Storage::disk('public')->exists($file)) {
+                                            Storage::disk('public')->delete($file);
+                                        }
+                                    })
                                     ->required(),
                                 Toggle::make('is_primary')
                                     ->label('Primary Photo')

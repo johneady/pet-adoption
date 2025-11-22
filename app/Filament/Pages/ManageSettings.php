@@ -20,6 +20,9 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use UnitEnum;
 
 /**
@@ -81,19 +84,19 @@ class ManageSettings extends Page
                                         ])
                                         ->columns(1),
                                     Section::make('Branding')
-                                        ->description('Upload your logo and favicon')
+                                        ->description('Upload your logo')
                                         ->schema([
                                             FileUpload::make('site_logo')
                                                 ->label('Site Logo')
                                                 ->image()
-                                                ->directory('branding'),
-                                            FileUpload::make('site_favicon')
-                                                ->label('Favicon')
-                                                ->image()
+                                                ->disk('public')
                                                 ->directory('branding')
-                                                ->acceptedFileTypes(['image/x-icon', 'image/png']),
+                                                ->imageResizeMode('force')
+                                                ->imageResizeTargetWidth('150')
+                                                ->imageResizeTargetHeight('150')
+                                                ->imageCropAspectRatio('1:1'),
                                         ])
-                                        ->columns(2),
+                                        ->columns(1),
                                     Section::make('Localization')
                                         ->description('Configure timezone settings')
                                         ->schema([
@@ -128,11 +131,6 @@ class ManageSettings extends Page
                                                 ->label('Keywords')
                                                 ->maxLength(255)
                                                 ->helperText('Comma-separated keywords'),
-                                            FileUpload::make('seo_image')
-                                                ->label('Social Sharing Image')
-                                                ->image()
-                                                ->directory('seo')
-                                                ->helperText('Recommended: 1200x630px'),
                                         ])
                                         ->columns(1),
                                 ]),
@@ -237,9 +235,28 @@ class ManageSettings extends Page
             ->statePath('data');
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['site_logo']) && $data['site_logo']) {
+            $logoPath = $data['site_logo'];
+            $disk = Storage::disk('public');
+            $fullPath = $disk->path($logoPath);
+
+            if ($disk->exists($logoPath)) {
+                $manager = new ImageManager(new Driver);
+                $image = $manager->read($fullPath);
+
+                $image->resize(150, 150);
+                $image->save($fullPath);
+            }
+        }
+
+        return $data;
+    }
+
     public function save(): void
     {
-        $data = $this->form->getState();
+        $data = $this->mutateFormDataBeforeSave($this->form->getState());
 
         foreach ($data as $key => $value) {
             $setting = Setting::where('key', $key)->first();

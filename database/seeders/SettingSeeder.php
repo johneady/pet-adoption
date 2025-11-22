@@ -43,13 +43,6 @@ class SettingSeeder extends Seeder
                 'description' => 'Path to the site logo',
             ],
             [
-                'key' => 'site_favicon',
-                'value' => null,
-                'type' => 'string',
-                'group' => 'general',
-                'description' => 'Path to the site favicon',
-            ],
-            [
                 'key' => 'default_timezone',
                 'value' => 'America/Toronto',
                 'type' => 'string',
@@ -78,13 +71,6 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'group' => 'seo',
                 'description' => 'Default SEO keywords',
-            ],
-            [
-                'key' => 'seo_image',
-                'value' => null,
-                'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Default social media sharing image',
             ],
 
             // Contact Settings

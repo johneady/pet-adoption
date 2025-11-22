@@ -30,7 +30,8 @@ class UserForm
                             ->circleCropper()
                             ->disk('public')
                             ->directory('profile-pictures')
-                            ->maxSize(2048)
+                            ->maxSize(8192)
+                            ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp'])
                             ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $set, callable $get, $livewire): string {
                                 // Get the old profile picture from the record
                                 $oldProfilePicture = $livewire->getRecord()?->profile_picture;

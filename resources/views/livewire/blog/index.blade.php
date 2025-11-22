@@ -55,7 +55,7 @@
                                     <!-- Featured Image -->
                                     <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-zinc-800">
                                         @if($post->featured_image)
-                                            <img src="{{ Storage::url($post->featured_image) }}"
+                                            <img src="{{ Storage::disk('public')->url($post->featured_image) }}"
                                                  alt="{{ $post->title }}"
                                                  class="h-full w-full object-cover transition-transform group-hover:scale-105"
                                                  onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">

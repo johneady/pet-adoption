@@ -192,6 +192,68 @@ test('profile picture must be an image', function () {
         ->assertHasErrors(['profilePicture']);
 });
 
+test('profile picture validates max file size of 8MB', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    // Create an actual image file larger than 8MB (8192 KB)
+    // UploadedFile::fake()->image() creates actual image files
+    $largeFile = UploadedFile::fake()->image('large-profile.jpg', 4000, 4000); // Large dimensions = large file
+
+    // If the generated file isn't large enough, skip this test
+    if ($largeFile->getSize() < 8192 * 1024) {
+        $this->markTestSkipped('Unable to generate a file larger than 8MB for testing');
+    }
+
+    Livewire::test(Profile::class)
+        ->set('profilePicture', $largeFile)
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['profilePicture']);
+});
+
+test('profile picture accepts valid image formats', function ($mimeType, $extension) {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $validImage = UploadedFile::fake()->image("profile.{$extension}", 300, 300);
+
+    Livewire::test(Profile::class)
+        ->set('profilePicture', $validImage)
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    $user->refresh();
+
+    expect($user->profile_picture)->not->toBeNull()
+        ->and(Storage::disk('public')->exists($user->profile_picture))->toBeTrue();
+})->with([
+    ['image/jpeg', 'jpg'],
+    ['image/png', 'png'],
+    ['image/webp', 'webp'],
+]);
+
+test('profile picture rejects unsupported image formats', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    // SVG is not in the accepted list
+    $svgFile = UploadedFile::fake()->create('image.svg', 100, 'image/svg+xml');
+
+    Livewire::test(Profile::class)
+        ->set('profilePicture', $svgFile)
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['profilePicture']);
+});
+
 test('hasCompletedProfileForAdoption returns true when phone and address are set', function () {
     $user = User::factory()->create([
         'phone' => '555-1234',

@@ -110,7 +110,7 @@
                                                     $primaryPhoto = $pet->photos->firstWhere('is_primary', true) ?? $pet->photos->first();
                                                 @endphp
                                                 @if($primaryPhoto)
-                                                    <img src="{{ Storage::url($primaryPhoto->file_path) }}"
+                                                    <img src="{{ Storage::disk('public')->url($primaryPhoto->file_path) }}"
                                                          alt="{{ $pet->name }}"
                                                          class="h-full w-full object-cover transition-transform group-hover:scale-105"
                                                          onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
