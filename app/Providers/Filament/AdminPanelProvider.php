@@ -54,11 +54,7 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Profile')
                     ->url(fn (): string => url('/settings'))
                     ->icon('heroicon-o-user-circle'),
-                'logout' => fn (Action $action) => $action->hidden(),
-                Action::make('viewWebsite')
-                    ->label('View Website')
-                    ->url(fn (): string => url('/'))
-                    ->icon('heroicon-o-globe-alt'),
+                    'logout' => fn (Action $action) => $action->hidden(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

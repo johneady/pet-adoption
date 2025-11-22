@@ -13,6 +13,12 @@
     ];
 
     $hasSocialLinks = !empty(array_filter($socialLinks));
+
+    $contactInfo = [
+        'email' => \App\Models\Setting::get('contact_email'),
+        'phone' => \App\Models\Setting::get('contact_phone'),
+        'address' => \App\Models\Setting::get('contact_address'),
+    ];
 @endphp
 <footer
     class="mt-auto border-t-2 border-ocean-200 bg-gradient-to-r from-ocean-50 to-teal-50 dark:border-ocean-800 dark:from-ocean-950 dark:to-teal-950">
@@ -26,6 +32,38 @@
                 <flux:text size="sm" class="text-ocean-700 dark:text-ocean-300">
                     {{ App\Models\Setting::get('site_tagline') }}
                 </flux:text>
+
+                <!-- Contact Information -->
+                <div class="mt-6 flex flex-col gap-1">
+                    @if ($contactInfo['email'])
+                        <div class="flex items-start gap-2">
+                            <flux:icon name="envelope" class="mt-0.5 h-4 w-4 shrink-0 text-ocean-600 dark:text-ocean-400" />
+                            <a href="mailto:{{ $contactInfo['email'] }}"
+                                class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
+                                {{ $contactInfo['email'] }}
+                            </a>
+                        </div>
+                    @endif
+
+                    @if ($contactInfo['phone'])
+                        <div class="flex items-start gap-2">
+                            <flux:icon name="phone" class="mt-0.5 h-4 w-4 shrink-0 text-ocean-600 dark:text-ocean-400" />
+                            <a href="tel:{{ $contactInfo['phone'] }}"
+                                class="text-sm text-ocean-700 transition-colors hover:text-ocean-900 dark:text-ocean-300 dark:hover:text-ocean-100">
+                                {{ $contactInfo['phone'] }}
+                            </a>
+                        </div>
+                    @endif
+
+                    @if ($contactInfo['address'])
+                        <div class="flex items-start gap-2">
+                            <flux:icon name="map-pin" class="mt-0.5 h-4 w-4 shrink-0 text-ocean-600 dark:text-ocean-400" />
+                            <flux:text size="sm" class="text-ocean-700 dark:text-ocean-300">
+                                {{ $contactInfo['address'] }}
+                            </flux:text>
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <!-- Quick Links -->
