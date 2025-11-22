@@ -24,7 +24,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->withoutVite();
-        $this->withoutMiddleware();
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
         // Share an empty error bag with all views for Flux components
         View::share('errors', new ViewErrorBag);
