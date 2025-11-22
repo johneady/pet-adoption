@@ -127,6 +127,7 @@ class PetForm
                                     ->image()
                                     ->disk('public')
                                     ->directory('pets')
+                                    ->visibility('public')
                                     ->maxSize(8192)
                                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'])
                                     ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $get): string {
@@ -145,8 +146,8 @@ class PetForm
                                         $image = Image::read($file->getRealPath());
                                         $image->cover(800, 600);
 
-                                        // Store compressed image
-                                        Storage::disk('public')->put($filename, (string) $image->encode());
+                                        // Store compressed image with explicit public visibility
+                                        Storage::disk('public')->put($filename, (string) $image->encode(), 'public');
 
                                         return $filename;
                                     })
