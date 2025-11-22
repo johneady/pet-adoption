@@ -127,7 +127,6 @@ class PetForm
                                     ->image()
                                     ->disk('public')
                                     ->directory('pets')
-                                    ->visibility('public')
                                     ->maxSize(8192)
                                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'])
                                     ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $get): string {
