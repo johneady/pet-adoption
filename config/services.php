@@ -37,7 +37,7 @@ return [
 
     'paypal' => [
         'mode' => env('PAYPAL_MODE', 'sandbox'),
-        'email' => env('PAYPAL_EMAIL'),
+        'email' => env('PAYPAL_EMAIL', 'test@example.com'),
     ],
 
 ];
