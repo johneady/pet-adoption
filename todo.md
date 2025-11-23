@@ -2,7 +2,7 @@
 
 ## Relelase 1 ✨
 
-* fix the n+1 error on the /admin/draws page
+* if the  50/50 draw is disabled on the settings table, hide the draws menu and the ticket requests item under fundraising
 
 * full email testing
 
