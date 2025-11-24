@@ -1,8 +1,8 @@
-@servers(['web' => 'root@23.94.253.248 -p 22'])
+@servers(['demo.powerphpscripts.com' => 'john@23.94.253.248 -p 22'])
 
 @task('deploy')
-    cd /home/john/web/demo.powerphpscripts.com/public_html
-    echo "Inside /home/john/web/demo.powerphpscripts.com/public_html directory."
+    cd /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption
+    echo "Inside /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption directory."
 
     rm -rf vendor/
     echo "Removed vendor/ directory."
