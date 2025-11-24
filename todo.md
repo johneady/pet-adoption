@@ -2,10 +2,6 @@
 
 ## Relelase 1 ✨
 
-* if the  50/50 draw is disabled on the settings table, hide the draws menu and the ticket requests item under fundraising
-
-* default the configuration, content, and fundraising sections in the admin menu to default to collapsed
-
 * full email testing
 
 ## Release 2 ⚡
