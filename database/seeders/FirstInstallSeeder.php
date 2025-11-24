@@ -16,8 +16,8 @@ class FirstInstallSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@petadoption.test'],
             [
-                'name' => 'Admin User',
-                'email' => 'admin@petadoption.test',
+                'name' => 'Tony Testing',
+                'email' => 'tony@testing.com',
                 'password' => 'password',
                 'email_verified_at' => now(),
                 'is_admin' => true,
