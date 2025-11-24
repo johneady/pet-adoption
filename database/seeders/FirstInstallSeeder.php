@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class FirstUserSeeder extends Seeder
+class FirstInstallSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,7 +18,7 @@ class FirstUserSeeder extends Seeder
             [
                 'name' => 'Admin User',
                 'email' => 'admin@petadoption.test',
-                'password' => Hash::make('password'),
+                'password' => 'password',
                 'email_verified_at' => now(),
                 'is_admin' => true,
                 'receive_new_user_alerts' => true,
@@ -27,5 +27,24 @@ class FirstUserSeeder extends Seeder
                 'receive_ticket_purchase_alerts' => true,
             ]
         );
+
+        $this->call([
+            SpeciesSeeder::class,
+            MembershipPlanSeeder::class,
+            FormQuestionSeeder::class,
+            //PetSeeder::class,
+            //AdoptionApplicationSeeder::class,
+            //ApplicationStatusHistorySeeder::class,
+            //InterviewSeeder::class,
+            SettingSeeder::class,
+            TagSeeder::class,
+            //BlogPostSeeder::class,
+            MenuSeeder::class,
+            PageSeeder::class,
+            //MembershipSeeder::class,
+            DrawSeeder::class,
+        ]);
+
+
     }
 }
