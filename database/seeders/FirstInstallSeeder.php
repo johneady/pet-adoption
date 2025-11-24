@@ -18,7 +18,7 @@ class FirstInstallSeeder extends Seeder
             [
                 'name' => 'Tony Testing',
                 'email' => 'tony@testing.com',
-                'password' => 'password',
+                'password' => 'testing',
                 'email_verified_at' => now(),
                 'is_admin' => true,
                 'receive_new_user_alerts' => true,
