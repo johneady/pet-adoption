@@ -188,18 +188,18 @@ class ManageSettings extends Page
                                         ])
                                         ->columns(1),
                                 ]),
-                            Tabs\Tab::make('Application')
-                                ->icon(Heroicon::OutlinedDocumentText)
+                            Tabs\Tab::make('Fundraising')
+                                ->icon(Heroicon::CurrencyDollar)
                                 ->schema([
                                     Section::make('Feature Toggles')
-                                        ->description('Enable or disable application features')
+                                        ->description('Enable or disable fundraising features')
                                         ->schema([
                                             Toggle::make('enable_draws')
                                                 ->label('Enable 50/50 Draws')
                                                 ->helperText('Enable or disable 50/50 draw functionality'),
                                             Toggle::make('enable_memberships')
                                                 ->label('Enable Memberships')
-                                                ->helperText('Enable or disable membership functionality'),
+                                                ->helperText('Enable or disable membership donation functionality'),
                                         ])
                                         ->columns(2),
                                 ]),
