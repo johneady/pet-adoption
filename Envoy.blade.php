@@ -18,7 +18,7 @@
     php artisan key:generate
     
     php artisan migrate:fresh --force
-    php artisan db:seed --class=FirstInstallSeeder
+    php artisan db:seed --class=FirstInstallSeeder --force
 
     php artisan optimize
 
@@ -27,8 +27,9 @@
     npm run build
 
     rm -rf node_modules/
+    
     echo "Your application has been installed. Please update your .env file with the correct settings."
-    echo "Then run 'php artisan migrate:fresh' to set up the database and 'php artisan db:seed --class=FirstInstallSeeder' to create the admin user."
+
 @endtask
 
 @task('update')
