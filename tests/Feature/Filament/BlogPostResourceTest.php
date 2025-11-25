@@ -10,6 +10,8 @@ use App\Models\Tag;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
@@ -244,3 +246,109 @@ test('draft blog posts can be changed to published', function () {
     expect($blogPost->status)->toBe('published');
     expect($blogPost->published_at)->not->toBeNull();
 });
+
+test('blog post featured image can be uploaded and is resized to 800x600', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    // Create a test image larger than 800x600
+    $file = UploadedFile::fake()->image('featured.jpg', 1920, 1080);
+
+    Livewire::test(CreateBlogPost::class)
+        ->set('data.title', 'Post with Image')
+        ->set('data.slug', 'post-with-image')
+        ->set('data.content', 'Content here')
+        ->set('data.status', 'draft')
+        ->set('data.featured_image', $file)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $blogPost = BlogPost::where('slug', 'post-with-image')->first();
+    expect($blogPost->featured_image)->not->toBeNull();
+
+    // Verify file exists
+    Storage::disk('public')->assertExists($blogPost->featured_image);
+
+    // Verify the image dimensions are 800x600
+    $fullPath = Storage::disk('public')->path($blogPost->featured_image);
+    $imageSize = getimagesize($fullPath);
+
+    expect($imageSize[0])->toBe(800)
+        ->and($imageSize[1])->toBe(600);
+});
+
+test('blog post featured image is stored in public disk blog directory', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $file = UploadedFile::fake()->image('featured.jpg', 1000, 1000);
+
+    Livewire::test(CreateBlogPost::class)
+        ->set('data.title', 'Post with Image')
+        ->set('data.slug', 'post-with-image')
+        ->set('data.content', 'Content here')
+        ->set('data.status', 'draft')
+        ->set('data.featured_image', $file)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $blogPost = BlogPost::where('slug', 'post-with-image')->first();
+
+    // Verify it's stored in public disk
+    expect(Storage::disk('public')->exists($blogPost->featured_image))->toBeTrue()
+        // Verify it's in the blog directory
+        ->and(str_starts_with($blogPost->featured_image, 'blog/'))->toBeTrue();
+});
+
+test('blog post featured image deletes old image when uploading new one', function () {
+    Storage::fake('public');
+
+    // Create blog post with existing featured image
+    $oldImagePath = 'blog/old-image.jpg';
+    Storage::disk('public')->put($oldImagePath, 'old image content');
+
+    $blogPost = BlogPost::factory()->create([
+        'featured_image' => $oldImagePath,
+    ]);
+
+    actingAs($this->admin);
+
+    // Upload a new image
+    $newImage = UploadedFile::fake()->image('new-featured.jpg', 1000, 1000);
+
+    Livewire::test(EditBlogPost::class, ['record' => $blogPost->id])
+        ->set('data.featured_image', [$newImage])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $blogPost->refresh();
+
+    // Verify old image was deleted
+    expect(Storage::disk('public')->exists($oldImagePath))->toBeFalse()
+        ->and($blogPost->featured_image)->not->toBe($oldImagePath)
+        ->and(Storage::disk('public')->exists($blogPost->featured_image))->toBeTrue();
+});
+
+test('blog post featured image accepts valid formats', function ($extension) {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $validImage = UploadedFile::fake()->image("featured.{$extension}", 1000, 1000);
+
+    Livewire::test(CreateBlogPost::class)
+        ->set('data.title', 'Post with Image')
+        ->set('data.slug', 'post-with-image-'.$extension)
+        ->set('data.content', 'Content here')
+        ->set('data.status', 'draft')
+        ->set('data.featured_image', $validImage)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $blogPost = BlogPost::where('slug', 'post-with-image-'.$extension)->first();
+
+    expect($blogPost->featured_image)->not->toBeNull()
+        ->and(Storage::disk('public')->exists($blogPost->featured_image))->toBeTrue();
+})->with(['jpg', 'png', 'webp', 'gif']);

@@ -75,3 +75,26 @@ test('settings can be saved successfully', function () {
         ->and(Setting::where('key', 'site_tagline')->first()->fresh()->value)->toBe('A test tagline')
         ->and(Setting::where('key', 'contact_email')->first()->fresh()->value)->toBe('test@example.com');
 });
+
+test('site logo is stored in public disk branding directory', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $file = UploadedFile::fake()->image('logo.png', 500, 500);
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm([
+            'site_logo' => $file,
+        ])
+        ->call('save')
+        ->assertNotified();
+
+    $setting = Setting::where('key', 'site_logo')->first();
+    $uploadedPath = $setting->value;
+
+    // Verify it's stored in public disk
+    expect(Storage::disk('public')->exists($uploadedPath))->toBeTrue()
+        // Verify it's in the branding directory
+        ->and(str_starts_with($uploadedPath, 'branding/'))->toBeTrue();
+});

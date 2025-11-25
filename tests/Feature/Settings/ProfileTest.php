@@ -216,6 +216,28 @@ test('profile picture accepts valid image formats', function ($mimeType, $extens
     ['image/webp', 'webp'],
 ]);
 
+test('profile picture is stored in public disk profile-pictures directory', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create(['profile_picture' => null]);
+
+    $this->actingAs($user);
+
+    $file = UploadedFile::fake()->image('profile.jpg', 500, 500);
+
+    Livewire::test(Profile::class)
+        ->set('profilePicture', $file)
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    $user->refresh();
+
+    // Verify it's stored in public disk
+    expect(Storage::disk('public')->exists($user->profile_picture))->toBeTrue()
+        // Verify it's in the profile-pictures directory
+        ->and(str_starts_with($user->profile_picture, 'profile-pictures/'))->toBeTrue();
+});
+
 test('profile picture rejects unsupported image formats', function () {
     Storage::fake('public');
 
