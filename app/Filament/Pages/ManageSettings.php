@@ -21,8 +21,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use UnitEnum;
 
 /**
@@ -94,7 +93,19 @@ class ManageSettings extends Page
                                                 ->imageResizeMode('force')
                                                 ->imageResizeTargetWidth('150')
                                                 ->imageResizeTargetHeight('150')
-                                                ->imageCropAspectRatio('1:1'),
+                                                ->imageCropAspectRatio('1:1')
+                                                ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                                    // Generate unique filename
+                                                    $filename = 'branding/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                                    // Resize and crop image to 150x150
+                                                    $resizedImage = self::resizeAndCropImage($file->getRealPath(), 150, 150);
+
+                                                    // Store compressed image
+                                                    Storage::disk('public')->put($filename, $resizedImage);
+
+                                                    return $filename;
+                                                }),
                                         ])
                                         ->columns(1),
                                     Section::make('Localization')
@@ -235,28 +246,9 @@ class ManageSettings extends Page
             ->statePath('data');
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        if (isset($data['site_logo']) && $data['site_logo']) {
-            $logoPath = $data['site_logo'];
-            $disk = Storage::disk('public');
-            $fullPath = $disk->path($logoPath);
-
-            if ($disk->exists($logoPath)) {
-                $manager = new ImageManager(new Driver);
-                $image = $manager->read($fullPath);
-
-                $image->resize(150, 150);
-                $image->save($fullPath);
-            }
-        }
-
-        return $data;
-    }
-
     public function save(): void
     {
-        $data = $this->mutateFormDataBeforeSave($this->form->getState());
+        $data = $this->form->getState();
 
         foreach ($data as $key => $value) {
             $setting = Setting::where('key', $key)->first();
@@ -279,5 +271,77 @@ class ManageSettings extends Page
             ->title('Settings Saved')
             ->body('Your settings have been saved successfully.')
             ->send();
+    }
+
+    /**
+     * Resize and crop image to cover the specified dimensions using native GD.
+     */
+    protected static function resizeAndCropImage(string $sourcePath, int $targetWidth, int $targetHeight): string
+    {
+        // Get image info
+        $imageInfo = getimagesize($sourcePath);
+        $sourceWidth = $imageInfo[0];
+        $sourceHeight = $imageInfo[1];
+        $mimeType = $imageInfo['mime'];
+
+        // Create source image from file
+        $sourceImage = match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagecreatefromjpeg($sourcePath),
+            'image/png' => imagecreatefrompng($sourcePath),
+            'image/webp' => imagecreatefromwebp($sourcePath),
+            default => throw new \Exception('Unsupported image type'),
+        };
+
+        // Calculate dimensions for cover (crop to fill)
+        $sourceAspect = $sourceWidth / $sourceHeight;
+        $targetAspect = $targetWidth / $targetHeight;
+
+        if ($sourceAspect > $targetAspect) {
+            // Source is wider, crop width
+            $newHeight = $sourceHeight;
+            $newWidth = (int) ($sourceHeight * $targetAspect);
+            $cropX = (int) (($sourceWidth - $newWidth) / 2);
+            $cropY = 0;
+        } else {
+            // Source is taller, crop height
+            $newWidth = $sourceWidth;
+            $newHeight = (int) ($sourceWidth / $targetAspect);
+            $cropX = 0;
+            $cropY = (int) (($sourceHeight - $newHeight) / 2);
+        }
+
+        // Create destination image
+        $destinationImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        // Preserve transparency for PNG and WebP
+        if ($mimeType === 'image/png' || $mimeType === 'image/webp') {
+            imagealphablending($destinationImage, false);
+            imagesavealpha($destinationImage, true);
+        }
+
+        // Resample (crop and resize)
+        imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            0, 0,
+            $cropX, $cropY,
+            $targetWidth, $targetHeight,
+            $newWidth, $newHeight
+        );
+
+        // Output to string
+        ob_start();
+        match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagejpeg($destinationImage, null, 90),
+            'image/png' => imagepng($destinationImage, null, 9),
+            'image/webp' => imagewebp($destinationImage, null, 90),
+        };
+        $imageData = ob_get_clean();
+
+        // Clean up
+        imagedestroy($sourceImage);
+        imagedestroy($destinationImage);
+
+        return $imageData;
     }
 }

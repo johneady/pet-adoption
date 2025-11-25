@@ -11,7 +11,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UserForm
@@ -32,7 +31,10 @@ class UserForm
                             ->directory('profile-pictures')
                             ->maxSize(8192)
                             ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp'])
-                            ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, callable $set, callable $get, $livewire): string {
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('150')
+                            ->imageResizeTargetHeight('150')
+                            ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, $livewire): string {
                                 // Get the old profile picture from the record
                                 $oldProfilePicture = $livewire->getRecord()?->profile_picture;
 
@@ -44,12 +46,11 @@ class UserForm
                                 // Generate unique filename
                                 $filename = 'profile-pictures/'.uniqid().'.'.$file->getClientOriginalExtension();
 
-                                // Compress and resize image to 150x150
-                                $image = Image::read($file->getRealPath());
-                                $image->cover(150, 150);
+                                // Resize and crop image to 150x150
+                                $resizedImage = self::resizeAndCropImage($file->getRealPath(), 150, 150);
 
                                 // Store compressed image
-                                Storage::disk('public')->put($filename, (string) $image->encode());
+                                Storage::disk('public')->put($filename, $resizedImage);
 
                                 return $filename;
                             })
@@ -206,5 +207,77 @@ class UserForm
                     ->columns(2)
                     ->visible(fn ($record): bool => $record?->is_admin ?? false),
             ]);
+    }
+
+    /**
+     * Resize and crop image to cover the specified dimensions using native GD.
+     */
+    protected static function resizeAndCropImage(string $sourcePath, int $targetWidth, int $targetHeight): string
+    {
+        // Get image info
+        $imageInfo = getimagesize($sourcePath);
+        $sourceWidth = $imageInfo[0];
+        $sourceHeight = $imageInfo[1];
+        $mimeType = $imageInfo['mime'];
+
+        // Create source image from file
+        $sourceImage = match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagecreatefromjpeg($sourcePath),
+            'image/png' => imagecreatefrompng($sourcePath),
+            'image/webp' => imagecreatefromwebp($sourcePath),
+            default => throw new \Exception('Unsupported image type'),
+        };
+
+        // Calculate dimensions for cover (crop to fill)
+        $sourceAspect = $sourceWidth / $sourceHeight;
+        $targetAspect = $targetWidth / $targetHeight;
+
+        if ($sourceAspect > $targetAspect) {
+            // Source is wider, crop width
+            $newHeight = $sourceHeight;
+            $newWidth = (int) ($sourceHeight * $targetAspect);
+            $cropX = (int) (($sourceWidth - $newWidth) / 2);
+            $cropY = 0;
+        } else {
+            // Source is taller, crop height
+            $newWidth = $sourceWidth;
+            $newHeight = (int) ($sourceWidth / $targetAspect);
+            $cropX = 0;
+            $cropY = (int) (($sourceHeight - $newHeight) / 2);
+        }
+
+        // Create destination image
+        $destinationImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        // Preserve transparency for PNG and WebP
+        if ($mimeType === 'image/png' || $mimeType === 'image/webp') {
+            imagealphablending($destinationImage, false);
+            imagesavealpha($destinationImage, true);
+        }
+
+        // Resample (crop and resize)
+        imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            0, 0,
+            $cropX, $cropY,
+            $targetWidth, $targetHeight,
+            $newWidth, $newHeight
+        );
+
+        // Output to string
+        ob_start();
+        match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagejpeg($destinationImage, null, 90),
+            'image/png' => imagepng($destinationImage, null, 9),
+            'image/webp' => imagewebp($destinationImage, null, 90),
+        };
+        $imageData = ob_get_clean();
+
+        // Clean up
+        imagedestroy($sourceImage);
+        imagedestroy($destinationImage);
+
+        return $imageData;
     }
 }
