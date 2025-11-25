@@ -14,16 +14,10 @@
 
     composer install --optimize-autoloader --no-dev
 
-    php artisan migrate:fresh --force
-    php artisan db:seed --class=FirstInstallSeeder --force
-
-    php artisan config:clear
-    php artisan route:clear
-    php artisan view:clear
-
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
+    cp .env.example .env
+    php artisan key:generate
+    
+    php artisan optimize
 
     npm install
 
@@ -31,6 +25,7 @@
 
     rm -rf node_modules/
     echo "Removed node_modules/ directory."
+    echo "Your application has been installed. Please update your .env file with the correct settings."
 @endtask
 
 @task('update')
@@ -44,17 +39,10 @@
 
     composer install --optimize-autoloader --no-dev
 
-    php artisan migrate:fresh --force
-    php artisan db:seed --class=FirstInstallSeeder --force
+    php artisan migrate --force
 
-    php artisan config:clear
-    php artisan route:clear
-    php artisan view:clear
-
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-
+    php artisan optimize 
+    
     npm install
 
     npm run build
