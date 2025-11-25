@@ -27,6 +27,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('test-404', function () {
+    abort(401);
+});
+
+
 Route::get('/pets', PetsIndex::class)->name('pets.index');
 Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
 
