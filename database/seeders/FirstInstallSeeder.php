@@ -42,7 +42,7 @@ class FirstInstallSeeder extends Seeder
             MenuSeeder::class,
             PageSeeder::class,
             //MembershipSeeder::class,
-            DrawSeeder::class,
+            //DrawSeeder::class,
         ]);
 
 
