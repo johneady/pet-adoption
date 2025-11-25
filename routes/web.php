@@ -15,7 +15,6 @@ use App\Livewire\Membership\Plans;
 use App\Livewire\Membership\Success;
 use App\Livewire\Pets\Index as PetsIndex;
 use App\Livewire\Pets\Show as PetsShow;
-use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Notifications;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -30,7 +29,6 @@ Route::get('/', function () {
 Route::get('test-404', function () {
     abort(401);
 });
-
 
 Route::get('/pets', PetsIndex::class)->name('pets.index');
 Route::get('/pets/{slug}', PetsShow::class)->name('pets.show');
@@ -66,7 +64,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
-    Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
     Route::get('settings/notifications', Notifications::class)->name('notifications.edit');
 
     Route::get('settings/two-factor', TwoFactor::class)
