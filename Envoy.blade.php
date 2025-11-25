@@ -26,6 +26,7 @@
     rm -rf node_modules/
     echo "Removed node_modules/ directory."
     echo "Your application has been installed. Please update your .env file with the correct settings."
+    echo "Then run 'php artisan migrate:fresh' to set up the database and 'php artisan db:seed --class=FirstInstallSeeder' to create the admin user."
 @endtask
 
 @task('update')
