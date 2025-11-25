@@ -2,9 +2,7 @@
 
 ## Relelase 1 ✨
 
-* fix the questions create and edit pages
-
-* full email testing
+* full testing
 
 ## Release 2 ⚡
 

@@ -304,4 +304,62 @@ describe('Adoption Application with Dynamic Questions', function () {
             ->toBe($originalLabel)
             ->not->toBe('Updated Question Label');
     });
+
+    it('does not show inactive questions in the form', function () {
+        // Create an inactive question
+        $inactiveQuestion = FormQuestion::factory()->adoption()->inactive()->create([
+            'label' => 'This is an inactive question',
+            'type' => QuestionType::String,
+            'sort_order' => 0,
+        ]);
+
+        Livewire::actingAs($this->user)
+            ->test(CreateApplication::class, ['petId' => $this->pet->id])
+            ->assertDontSee('This is an inactive question')
+            ->assertSee('What is your living situation?'); // Active question should still be visible
+    });
+
+    it('cannot submit answers for inactive questions', function () {
+        // Create an inactive question
+        $inactiveQuestion = FormQuestion::factory()->adoption()->inactive()->create([
+            'label' => 'Inactive question',
+            'type' => QuestionType::String,
+            'is_required' => true,
+            'sort_order' => 0,
+        ]);
+
+        // Prepare answers for active questions only
+        $answers = [];
+        foreach ($this->questions as $question) {
+            if ($question->type === QuestionType::Switch) {
+                $answers[$question->id] = true;
+            } elseif ($question->type === QuestionType::Dropdown) {
+                $answers[$question->id] = 'House';
+            } else {
+                $answers[$question->id] = 'Test answer';
+            }
+        }
+
+        // Try to submit without answering the inactive required question
+        Livewire::actingAs($this->user)
+            ->test(CreateApplication::class, ['petId' => $this->pet->id])
+            ->set('answers', $answers)
+            ->call('submit')
+            ->assertHasNoErrors() // Should succeed because inactive question is not validated
+            ->assertRedirect(route('dashboard'));
+
+        // Verify application was created successfully
+        $application = AdoptionApplication::where('user_id', $this->user->id)
+            ->where('pet_id', $this->pet->id)
+            ->first();
+
+        expect($application)->not->toBeNull();
+
+        // Verify no answer was stored for the inactive question
+        $inactiveQuestionAnswer = $application->answers()
+            ->whereJsonContains('question_snapshot->id', $inactiveQuestion->id)
+            ->first();
+
+        expect($inactiveQuestionAnswer)->toBeNull();
+    });
 });

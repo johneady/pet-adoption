@@ -138,12 +138,12 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('dashboard')" icon="layout-grid" wire:navigate>{{ __('Dashboard') }}
-                        </flux:menu.item>
                         @if (auth()->user()->is_admin)
                             <flux:menu.item href="/admin" icon="cog">{{ __('Admin') }}
                             </flux:menu.item>
                         @endif
+                        <flux:menu.item :href="route('dashboard')" icon="layout-grid" wire:navigate>{{ __('Dashboard') }}
+                        </flux:menu.item>
                         <flux:menu.item :href="route('profile.edit')" icon="user" wire:navigate>{{ __('Profile') }}
                         </flux:menu.item>
                     </flux:menu.radio.group>
