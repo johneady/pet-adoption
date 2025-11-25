@@ -47,35 +47,31 @@ test('blog post resource can create a new blog post', function () {
     actingAs($this->admin);
 
     Livewire::test(CreateBlogPost::class)
-        ->fillForm([
-            'title' => 'New Blog Post',
-            'slug' => 'new-blog-post',
-            'excerpt' => 'This is an excerpt',
-            'content' => 'This is the content of the blog post.',
-            'status' => 'draft',
-        ])
+        ->set('data.title', 'New Blog Post')
+        ->set('data.slug', 'new-blog-post')
+        ->set('data.excerpt', 'This is an excerpt')
+        ->set('data.content', 'This is the content of the blog post.')
+        ->set('data.status', 'draft')
         ->call('create')
         ->assertHasNoFormErrors();
 
     expect(BlogPost::where('title', 'New Blog Post')->exists())->toBeTrue();
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('blog post creation automatically sets user_id to current user', function () {
     actingAs($this->admin);
 
     Livewire::test(CreateBlogPost::class)
-        ->fillForm([
-            'title' => 'Test Post',
-            'slug' => 'test-post',
-            'content' => 'Test content',
-            'status' => 'draft',
-        ])
+        ->set('data.title', 'Test Post')
+        ->set('data.slug', 'test-post')
+        ->set('data.content', 'Test content')
+        ->set('data.status', 'draft')
         ->call('create')
         ->assertHasNoFormErrors();
 
     $blogPost = BlogPost::where('slug', 'test-post')->first();
     expect($blogPost->user_id)->toBe($this->admin->id);
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('blog post resource can create a blog post with tags', function () {
     $tag1 = Tag::factory()->create(['name' => 'Laravel']);
@@ -84,20 +80,18 @@ test('blog post resource can create a blog post with tags', function () {
     actingAs($this->admin);
 
     Livewire::test(CreateBlogPost::class)
-        ->fillForm([
-            'title' => 'Blog Post with Tags',
-            'slug' => 'blog-post-with-tags',
-            'content' => 'Content here',
-            'status' => 'draft',
-            'tags' => [$tag1->id, $tag2->id],
-        ])
+        ->set('data.title', 'Blog Post with Tags')
+        ->set('data.slug', 'blog-post-with-tags')
+        ->set('data.content', 'Content here')
+        ->set('data.status', 'draft')
+        ->set('data.tags', [$tag1->id, $tag2->id])
         ->call('create')
         ->assertHasNoFormErrors();
 
     $blogPost = BlogPost::where('slug', 'blog-post-with-tags')->first();
     expect($blogPost->tags()->count())->toBe(2);
     expect($blogPost->tags->pluck('name')->toArray())->toContain('Laravel', 'PHP');
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('blog post resource validates required fields on create', function () {
     actingAs($this->admin);
@@ -136,14 +130,12 @@ test('blog post resource can edit an existing blog post', function () {
     actingAs($this->admin);
 
     Livewire::test(EditBlogPost::class, ['record' => $blogPost->id])
-        ->fillForm([
-            'title' => 'Updated Title',
-        ])
+        ->set('data.title', 'Updated Title')
         ->call('save')
         ->assertHasNoFormErrors();
 
     expect($blogPost->fresh()->title)->toBe('Updated Title');
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('blog post resource can filter by status', function () {
     $draftPost = BlogPost::factory()->draft()->create();
@@ -200,9 +192,7 @@ test('blog post resource can update tags on edit', function () {
     actingAs($this->admin);
 
     Livewire::test(EditBlogPost::class, ['record' => $blogPost->id])
-        ->fillForm([
-            'tags' => [$tag2->id, $tag3->id],
-        ])
+        ->set('data.tags', [$tag2->id, $tag3->id])
         ->call('save')
         ->assertHasNoFormErrors();
 
@@ -210,7 +200,7 @@ test('blog post resource can update tags on edit', function () {
     expect($blogPost->tags()->count())->toBe(2);
     expect($blogPost->tags->pluck('name')->toArray())->toContain('PHP', 'Testing');
     expect($blogPost->tags->pluck('name')->toArray())->not->toContain('Laravel');
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('blog post resource shows correct count of records', function () {
     BlogPost::factory()->count(10)->create();
@@ -230,14 +220,12 @@ test('published blog posts can be changed to archived', function () {
         ->assertSchemaStateSet([
             'status' => 'published',
         ])
-        ->fillForm([
-            'status' => 'archived',
-        ])
+        ->set('data.status', 'archived')
         ->call('save')
         ->assertHasNoFormErrors();
 
     expect($blogPost->fresh()->status)->toBe('archived');
-})->skip('Form filling needs investigation - resource works manually');
+});
 
 test('draft blog posts can be changed to published', function () {
     $blogPost = BlogPost::factory()->draft()->create();
@@ -248,13 +236,11 @@ test('draft blog posts can be changed to published', function () {
         ->assertSchemaStateSet([
             'status' => 'draft',
         ])
-        ->fillForm([
-            'status' => 'published',
-        ])
+        ->set('data.status', 'published')
         ->call('save')
         ->assertHasNoFormErrors();
 
     $blogPost->refresh();
     expect($blogPost->status)->toBe('published');
     expect($blogPost->published_at)->not->toBeNull();
-})->skip('Form filling needs investigation - resource works manually');
+});

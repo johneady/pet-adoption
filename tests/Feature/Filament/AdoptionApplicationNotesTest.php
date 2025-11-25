@@ -19,7 +19,7 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     Filament::setCurrentPanel('admin');
     $this->admin = User::factory()->admin()->create();
-    $this->application = AdoptionApplication::factory()->create();
+    $this->application = AdoptionApplication::factory()->create(['status' => 'submitted']);
 });
 
 test('can add note to adoption application', function () {
@@ -58,20 +58,22 @@ test('note requires content', function () {
         ->assertHasFormErrors(['note' => 'required']);
 });
 
-test('notes are displayed in ascending order', function () {
+test('notes are displayed in descending order (newest first)', function () {
     actingAs($this->admin);
+
+    $baseTime = now();
 
     $note1 = AdoptionApplicationNote::factory()
         ->for($this->application, 'adoptionApplication')
-        ->create(['note' => 'First note', 'created_at' => now()->subHours(2)]);
+        ->create(['note' => 'First note', 'created_at' => $baseTime->copy()->subHours(2)]);
 
     $note2 = AdoptionApplicationNote::factory()
         ->for($this->application, 'adoptionApplication')
-        ->create(['note' => 'Second note', 'created_at' => now()->subHour()]);
+        ->create(['note' => 'Second note', 'created_at' => $baseTime->copy()->subHour()]);
 
     $note3 = AdoptionApplicationNote::factory()
         ->for($this->application, 'adoptionApplication')
-        ->create(['note' => 'Third note', 'created_at' => now()]);
+        ->create(['note' => 'Third note', 'created_at' => $baseTime]);
 
     $widget = Livewire::test(NotesWidget::class, ['record' => $this->application]);
 

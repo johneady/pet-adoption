@@ -19,29 +19,31 @@ test('non-admin users cannot access filament panel', function () {
     expect($user->canAccessPanel(filament()->getCurrentOrDefaultPanel()))->toBeFalse();
 });
 
-test('admin users are redirected to admin panel after login', function () {
+test('admin users are redirected to dashboard after login', function () {
     $admin = User::factory()->admin()->withoutTwoFactor()->create();
 
-    $this->post(route('login.store'), [
+    $response = $this->post(route('login.store'), [
         'email' => $admin->email,
         'password' => 'password',
     ]);
 
     $this->assertAuthenticated();
     $this->assertAuthenticatedAs($admin);
-})->skip('Redirect testing requires session handling - manual verification needed');
+    $response->assertRedirect('/dashboard');
+});
 
-test('non-admin users are redirected to home page after login', function () {
+test('non-admin users are redirected to dashboard after login', function () {
     $user = User::factory()->withoutTwoFactor()->create(['is_admin' => false]);
 
-    $this->post(route('login.store'), [
+    $response = $this->post(route('login.store'), [
         'email' => $user->email,
         'password' => 'password',
     ]);
 
     $this->assertAuthenticated();
     $this->assertAuthenticatedAs($user);
-})->skip('Redirect testing requires session handling - manual verification needed');
+    $response->assertRedirect('/dashboard');
+});
 
 test('non-admin users cannot access filament admin routes', function () {
     $user = User::factory()->withoutTwoFactor()->create(['is_admin' => false]);

@@ -60,6 +60,7 @@ class MembershipPlansTable
                 // BulkActionGroup::make([
                 //     DeleteBulkAction::make(),
                 // ]),
-            ]);
+            ])
+            ->reorderable('display_order');
     }
 }

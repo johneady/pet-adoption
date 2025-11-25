@@ -16,4 +16,13 @@ class EditBlogPost extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if ($data['status'] === 'published' && ! ($data['published_at'] ?? null)) {
+            $data['published_at'] = now();
+        }
+
+        return $data;
+    }
 }

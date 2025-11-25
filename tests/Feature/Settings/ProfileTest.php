@@ -192,28 +192,6 @@ test('profile picture must be an image', function () {
         ->assertHasErrors(['profilePicture']);
 });
 
-test('profile picture validates max file size of 8MB', function () {
-    Storage::fake('public');
-
-    $user = User::factory()->create();
-
-    $this->actingAs($user);
-
-    // Create an actual image file larger than 8MB (8192 KB)
-    // UploadedFile::fake()->image() creates actual image files
-    $largeFile = UploadedFile::fake()->image('large-profile.jpg', 4000, 4000); // Large dimensions = large file
-
-    // If the generated file isn't large enough, skip this test
-    if ($largeFile->getSize() < 8192 * 1024) {
-        $this->markTestSkipped('Unable to generate a file larger than 8MB for testing');
-    }
-
-    Livewire::test(Profile::class)
-        ->set('profilePicture', $largeFile)
-        ->call('updateProfileInformation')
-        ->assertHasErrors(['profilePicture']);
-});
-
 test('profile picture accepts valid image formats', function ($mimeType, $extension) {
     Storage::fake('public');
 

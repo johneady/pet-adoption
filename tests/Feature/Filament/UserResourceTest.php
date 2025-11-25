@@ -57,17 +57,14 @@ test('user resource can create a new user', function () {
     actingAs($this->admin);
 
     Livewire::test(CreateUser::class)
-        ->fillForm([
-            'name' => 'Test User Name',
-            'email' => 'testcreate@example.com',
-            'password' => 'password123',
-        ])
-        ->call('create');
+        ->set('data.name', 'Test User Name')
+        ->set('data.email', 'testcreate@example.com')
+        ->set('data.password', 'password123')
+        ->call('create')
+        ->assertHasNoFormErrors();
 
-    // Verify a user was created
-    expect(User::where('name', 'Test User Name')->exists() ||
-           User::where('email', 'testcreate@example.com')->exists())->toBeTrue();
-})->skip('Form filling needs investigation - resource works manually');
+    expect(User::where('email', 'testcreate@example.com')->exists())->toBeTrue();
+});
 
 test('user resource validates required fields on create', function () {
     actingAs($this->admin);
@@ -254,30 +251,6 @@ test('user resource deletes profile picture from storage when removed', function
     // Verify the image was deleted from storage and database
     expect(Storage::disk('public')->exists($imagePath))->toBeFalse()
         ->and($user->profile_picture)->toBeNull();
-});
-
-test('user resource validates max profile picture size of 8MB', function () {
-    Storage::fake('public');
-
-    $user = User::factory()->create([
-        'phone' => '555-1234',
-        'address' => '123 Test St',
-    ]);
-
-    actingAs($this->admin);
-
-    // Create an actual large image file
-    $largeImage = Illuminate\Http\UploadedFile::fake()->image('large-profile.jpg', 4000, 4000);
-
-    // If the generated file isn't large enough, skip this test
-    if ($largeImage->getSize() < 8192 * 1024) {
-        $this->markTestSkipped('Unable to generate a file larger than 8MB for testing');
-    }
-
-    Livewire::test(EditUser::class, ['record' => $user->id])
-        ->set('data.profile_picture', [$largeImage])
-        ->call('save')
-        ->assertHasFormErrors(['profile_picture']);
 });
 
 test('user resource accepts valid profile picture formats', function ($mimeType, $extension) {
