@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -211,5 +212,25 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function hasCompletedProfileForAdoption(): bool
     {
         return ! empty($this->phone) && ! empty($this->address);
+    }
+
+    protected static function booted(): void
+    {
+        static::updating(function ($user) {
+            // Delete old profile picture when updating
+            if ($user->isDirty('profile_picture')) {
+                $oldPicture = $user->getOriginal('profile_picture');
+                if ($oldPicture && Storage::disk('public')->exists($oldPicture)) {
+                    Storage::disk('public')->delete($oldPicture);
+                }
+            }
+        });
+
+        static::deleting(function ($user) {
+            // Delete profile picture when deleting user
+            if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+        });
     }
 }

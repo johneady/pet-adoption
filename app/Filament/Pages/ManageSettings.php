@@ -83,7 +83,7 @@ class ManageSettings extends Page
                                         ])
                                         ->columns(1),
                                     Section::make('Branding')
-                                        ->description('Upload your logo')
+                                        ->description('Upload your logo and hero images')
                                         ->schema([
                                             FileUpload::make('site_logo')
                                                 ->label('Site Logo')
@@ -105,6 +105,89 @@ class ManageSettings extends Page
                                                     Storage::disk('public')->put($filename, $resizedImage);
 
                                                     return $filename;
+                                                })
+                                                ->deleteUploadedFileUsing(function (?string $file): void {
+                                                    if ($file && Storage::disk('public')->exists($file)) {
+                                                        Storage::disk('public')->delete($file);
+                                                    }
+                                                }),
+                                            FileUpload::make('header_image')
+                                                ->label('Header Image')
+                                                ->helperText('Background image for the hero section (will be compressed to 800x600)')
+                                                ->image()
+                                                ->disk('public')
+                                                ->directory('branding')
+                                                ->imageResizeMode('force')
+                                                ->imageResizeTargetWidth('800')
+                                                ->imageResizeTargetHeight('600')
+                                                ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                                    // Generate unique filename
+                                                    $filename = 'branding/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                                    // Resize and crop image to 800x600
+                                                    $resizedImage = self::resizeAndCropImage($file->getRealPath(), 800, 600);
+
+                                                    // Store compressed image
+                                                    Storage::disk('public')->put($filename, $resizedImage);
+
+                                                    return $filename;
+                                                })
+                                                ->deleteUploadedFileUsing(function (?string $file): void {
+                                                    if ($file && Storage::disk('public')->exists($file)) {
+                                                        Storage::disk('public')->delete($file);
+                                                    }
+                                                }),
+                                            FileUpload::make('middle_image')
+                                                ->label('Middle Section Image')
+                                                ->helperText('Background image for the middle section (will be compressed to 800x600)')
+                                                ->image()
+                                                ->disk('public')
+                                                ->directory('branding')
+                                                ->imageResizeMode('force')
+                                                ->imageResizeTargetWidth('800')
+                                                ->imageResizeTargetHeight('600')
+                                                ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                                    // Generate unique filename
+                                                    $filename = 'branding/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                                    // Resize and crop image to 800x600
+                                                    $resizedImage = self::resizeAndCropImage($file->getRealPath(), 800, 600);
+
+                                                    // Store compressed image
+                                                    Storage::disk('public')->put($filename, $resizedImage);
+
+                                                    return $filename;
+                                                })
+                                                ->deleteUploadedFileUsing(function (?string $file): void {
+                                                    if ($file && Storage::disk('public')->exists($file)) {
+                                                        Storage::disk('public')->delete($file);
+                                                    }
+                                                }),
+                                            FileUpload::make('footer_image')
+                                                ->label('Footer Image')
+                                                ->helperText('Background image for the footer section (will be compressed to 800x600)')
+                                                ->image()
+                                                ->disk('public')
+                                                ->directory('branding')
+                                                ->imageResizeMode('force')
+                                                ->imageResizeTargetWidth('800')
+                                                ->imageResizeTargetHeight('600')
+                                                ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                                    // Generate unique filename
+                                                    $filename = 'branding/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                                    // Resize and crop image to 800x600
+                                                    $resizedImage = self::resizeAndCropImage($file->getRealPath(), 800, 600);
+
+                                                    // Store compressed image
+                                                    Storage::disk('public')->put($filename, $resizedImage);
+
+                                                    return $filename;
+                                                })
+                                                ->deleteUploadedFileUsing(function (?string $file): void {
+                                                    if ($file && Storage::disk('public')->exists($file)) {
+                                                        Storage::disk('public')->delete($file);
+                                                    }
                                                 }),
                                         ])
                                         ->columns(1),

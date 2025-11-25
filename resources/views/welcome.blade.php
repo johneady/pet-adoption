@@ -1,15 +1,22 @@
 <x-layouts.app :title="__('Find Your Perfect Companion')">
+    @php
+        $headerImage = App\Models\Setting::get('header_image');
+        $middleImage = App\Models\Setting::get('middle_image');
+        $footerImage = App\Models\Setting::get('footer_image');
+    @endphp
+
     <div class="px-4 py-8 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
             {{-- Hero Section --}}
             <div
-                class="relative overflow-hidden bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-teal-950">
+                class="relative overflow-hidden bg-gradient-to-br from-ocean-50 to-teal-50 dark:from-ocean-950 dark:to-teal-950 @if($headerImage) bg-cover bg-center @endif"
+                @if($headerImage) style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{{ Storage::disk('public')->url($headerImage) }}');" @endif>
                 <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
                     <div class="mx-auto max-w-2xl text-center">
-                        <h1 class="text-4xl font-bold tracking-tight text-ocean-900 dark:text-ocean-50 sm:text-6xl">
+                        <h1 class="text-4xl font-bold tracking-tight sm:text-6xl {{ $headerImage ? 'text-white' : 'text-ocean-900 dark:text-ocean-50' }}">
                             Find Your Perfect Companion
                         </h1>
-                        <p class="mt-6 text-lg leading-8 text-ocean-700 dark:text-ocean-200">
+                        <p class="mt-6 text-lg leading-8 {{ $headerImage ? 'text-gray-100' : 'text-ocean-700 dark:text-ocean-200' }}">
                             Every pet deserves a loving home. Browse our available pets and start your journey to
                             finding a
                             new
@@ -176,21 +183,28 @@
                             </div>
                         </div>
                         <div class="relative">
-                            <div
-                                class="aspect-square rounded-2xl bg-gradient-to-br from-ocean-100 to-teal-100 dark:from-ocean-900/30 dark:to-teal-900/30 flex items-center justify-center">
-                                <svg class="w-48 h-48 text-ocean-400 dark:text-ocean-600" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                            </div>
+                            @if($middleImage)
+                                <div
+                                    class="aspect-square rounded-2xl bg-cover bg-center"
+                                    style="background-image: url('{{ Storage::disk('public')->url($middleImage) }}');"></div>
+                            @else
+                                <div
+                                    class="aspect-square rounded-2xl bg-gradient-to-br from-ocean-100 to-teal-100 dark:from-ocean-900/30 dark:to-teal-900/30 flex items-center justify-center">
+                                    <svg class="w-48 h-48 text-ocean-400 dark:text-ocean-600" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- CTA Section --}}
-            <div class="bg-gradient-to-r from-ocean-600 to-teal-600 dark:from-ocean-800 dark:to-teal-800">
+            <div class="bg-gradient-to-r from-ocean-600 to-teal-600 dark:from-ocean-800 dark:to-teal-800 relative @if($footerImage) bg-cover bg-center @endif"
+                @if($footerImage) style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ Storage::disk('public')->url($footerImage) }}');" @endif>
                 <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
                     <div class="mx-auto max-w-2xl text-center">
                         <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">

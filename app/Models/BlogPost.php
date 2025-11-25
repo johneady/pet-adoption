@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -73,5 +74,25 @@ class BlogPost extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::updating(function ($blogPost) {
+            // Delete old featured image when updating
+            if ($blogPost->isDirty('featured_image')) {
+                $oldImage = $blogPost->getOriginal('featured_image');
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+            }
+        });
+
+        static::deleting(function ($blogPost) {
+            // Delete featured image when deleting post
+            if ($blogPost->featured_image && Storage::disk('public')->exists($blogPost->featured_image)) {
+                Storage::disk('public')->delete($blogPost->featured_image);
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ use App\Services\ThemeService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -135,12 +136,38 @@ class Setting extends Model
 
     protected static function booted(): void
     {
+        static::updating(function ($setting) {
+            // Delete old image file when updating image settings
+            $imageKeys = ['site_logo', 'header_image', 'middle_image', 'footer_image'];
+
+            if (in_array($setting->key, $imageKeys) && $setting->isDirty('value')) {
+                $oldValue = $setting->getOriginal('value');
+                $newValue = $setting->value;
+
+                // Only delete if the old value is different from the new value and exists
+                if ($oldValue && $oldValue !== $newValue && Storage::disk('public')->exists($oldValue)) {
+                    Storage::disk('public')->delete($oldValue);
+                }
+            }
+        });
+
         static::saved(function ($setting) {
             Cache::forget("setting.{$setting->key}");
 
             // Clear theme cache if theme settings were changed
             if (in_array($setting->key, ['theme_preset', 'theme_primary_color', 'theme_secondary_color'])) {
                 app(ThemeService::class)->clearCache();
+            }
+        });
+
+        static::deleting(function ($setting) {
+            // Delete image file when deleting image settings
+            $imageKeys = ['site_logo', 'header_image', 'middle_image', 'footer_image'];
+
+            if (in_array($setting->key, $imageKeys) && $setting->value) {
+                if (Storage::disk('public')->exists($setting->value)) {
+                    Storage::disk('public')->delete($setting->value);
+                }
             }
         });
 

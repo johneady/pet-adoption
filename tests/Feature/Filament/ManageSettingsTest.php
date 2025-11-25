@@ -98,3 +98,119 @@ test('site logo is stored in public disk branding directory', function () {
         // Verify it's in the branding directory
         ->and(str_starts_with($uploadedPath, 'branding/'))->toBeTrue();
 });
+
+test('header image can be uploaded and is resized to 800x600', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $file = UploadedFile::fake()->image('header.jpg', 1920, 1080);
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm([
+            'header_image' => $file,
+        ])
+        ->call('save')
+        ->assertNotified();
+
+    $setting = Setting::where('key', 'header_image')->first();
+    expect($setting)->not->toBeNull();
+
+    $uploadedPath = $setting->value;
+
+    Storage::disk('public')->assertExists($uploadedPath);
+    expect(str_starts_with($uploadedPath, 'branding/'))->toBeTrue();
+
+    // Verify the image dimensions are 800x600
+    $fullPath = Storage::disk('public')->path($uploadedPath);
+    $imageSize = getimagesize($fullPath);
+
+    expect($imageSize[0])->toBe(800)
+        ->and($imageSize[1])->toBe(600);
+});
+
+test('middle image can be uploaded and is resized to 800x600', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $file = UploadedFile::fake()->image('middle.jpg', 1920, 1080);
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm([
+            'middle_image' => $file,
+        ])
+        ->call('save')
+        ->assertNotified();
+
+    $setting = Setting::where('key', 'middle_image')->first();
+    expect($setting)->not->toBeNull();
+
+    $uploadedPath = $setting->value;
+
+    Storage::disk('public')->assertExists($uploadedPath);
+    expect(str_starts_with($uploadedPath, 'branding/'))->toBeTrue();
+
+    // Verify the image dimensions are 800x600
+    $fullPath = Storage::disk('public')->path($uploadedPath);
+    $imageSize = getimagesize($fullPath);
+
+    expect($imageSize[0])->toBe(800)
+        ->and($imageSize[1])->toBe(600);
+});
+
+test('footer image can be uploaded and is resized to 800x600', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    $file = UploadedFile::fake()->image('footer.jpg', 1920, 1080);
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm([
+            'footer_image' => $file,
+        ])
+        ->call('save')
+        ->assertNotified();
+
+    $setting = Setting::where('key', 'footer_image')->first();
+    expect($setting)->not->toBeNull();
+
+    $uploadedPath = $setting->value;
+
+    Storage::disk('public')->assertExists($uploadedPath);
+    expect(str_starts_with($uploadedPath, 'branding/'))->toBeTrue();
+
+    // Verify the image dimensions are 800x600
+    $fullPath = Storage::disk('public')->path($uploadedPath);
+    $imageSize = getimagesize($fullPath);
+
+    expect($imageSize[0])->toBe(800)
+        ->and($imageSize[1])->toBe(600);
+});
+
+test('branding image file is deleted when setting is deleted', function () {
+    Storage::fake('public');
+
+    actingAs($this->admin);
+
+    // Upload an image
+    $file = UploadedFile::fake()->image('header.jpg', 1920, 1080);
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm([
+            'header_image' => $file,
+        ])
+        ->call('save');
+
+    $setting = Setting::where('key', 'header_image')->first();
+    $uploadedPath = $setting->value;
+
+    Storage::disk('public')->assertExists($uploadedPath);
+
+    // Delete the setting
+    $setting->delete();
+
+    // Verify file was deleted
+    Storage::disk('public')->assertMissing($uploadedPath);
+});

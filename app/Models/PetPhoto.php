@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -52,5 +53,25 @@ class PetPhoto extends Model
     public function pet(): BelongsTo
     {
         return $this->belongsTo(Pet::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::updating(function ($petPhoto) {
+            // Delete old image file when updating photo
+            if ($petPhoto->isDirty('file_path')) {
+                $oldPath = $petPhoto->getOriginal('file_path');
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+        });
+
+        static::deleting(function ($petPhoto) {
+            // Delete image file when deleting photo
+            if ($petPhoto->file_path && Storage::disk('public')->exists($petPhoto->file_path)) {
+                Storage::disk('public')->delete($petPhoto->file_path);
+            }
+        });
     }
 }

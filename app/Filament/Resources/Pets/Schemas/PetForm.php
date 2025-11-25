@@ -13,6 +13,8 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PetForm
 {
@@ -130,6 +132,18 @@ class PetForm
                                     ->imageResizeTargetWidth('800')
                                     ->imageResizeTargetHeight('600')
                                     ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'])
+                                    ->saveUploadedFileUsing(function (TemporaryUploadedFile $file): string {
+                                        // Generate unique filename
+                                        $filename = 'pets/'.uniqid().'.'.$file->getClientOriginalExtension();
+
+                                        // Resize and crop image to 800x600
+                                        $resizedImage = self::resizeAndCropImage($file->getRealPath(), 800, 600);
+
+                                        // Store compressed image
+                                        Storage::disk('public')->put($filename, $resizedImage);
+
+                                        return $filename;
+                                    })
                                     ->required(),
                                 Toggle::make('is_primary')
                                     ->label('Primary Photo')
@@ -144,5 +158,79 @@ class PetForm
                             ->collapsible(),
                     ]),
             ]);
+    }
+
+    /**
+     * Resize and crop image to cover the specified dimensions using native GD.
+     */
+    protected static function resizeAndCropImage(string $sourcePath, int $targetWidth, int $targetHeight): string
+    {
+        // Get image info
+        $imageInfo = getimagesize($sourcePath);
+        $sourceWidth = $imageInfo[0];
+        $sourceHeight = $imageInfo[1];
+        $mimeType = $imageInfo['mime'];
+
+        // Create source image from file
+        $sourceImage = match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagecreatefromjpeg($sourcePath),
+            'image/png' => imagecreatefrompng($sourcePath),
+            'image/webp' => imagecreatefromwebp($sourcePath),
+            'image/gif' => imagecreatefromgif($sourcePath),
+            default => throw new \Exception('Unsupported image type'),
+        };
+
+        // Calculate dimensions for cover (crop to fill)
+        $sourceAspect = $sourceWidth / $sourceHeight;
+        $targetAspect = $targetWidth / $targetHeight;
+
+        if ($sourceAspect > $targetAspect) {
+            // Source is wider, crop width
+            $newHeight = $sourceHeight;
+            $newWidth = (int) ($sourceHeight * $targetAspect);
+            $cropX = (int) (($sourceWidth - $newWidth) / 2);
+            $cropY = 0;
+        } else {
+            // Source is taller, crop height
+            $newWidth = $sourceWidth;
+            $newHeight = (int) ($sourceWidth / $targetAspect);
+            $cropX = 0;
+            $cropY = (int) (($sourceHeight - $newHeight) / 2);
+        }
+
+        // Create destination image
+        $destinationImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        // Preserve transparency for PNG and WebP
+        if ($mimeType === 'image/png' || $mimeType === 'image/webp') {
+            imagealphablending($destinationImage, false);
+            imagesavealpha($destinationImage, true);
+        }
+
+        // Resample (crop and resize)
+        imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            0, 0,
+            $cropX, $cropY,
+            $targetWidth, $targetHeight,
+            $newWidth, $newHeight
+        );
+
+        // Output to string
+        ob_start();
+        match ($mimeType) {
+            'image/jpeg', 'image/jpg' => imagejpeg($destinationImage, null, 90),
+            'image/png' => imagepng($destinationImage, null, 9),
+            'image/webp' => imagewebp($destinationImage, null, 90),
+            'image/gif' => imagegif($destinationImage),
+        };
+        $imageData = ob_get_clean();
+
+        // Clean up
+        imagedestroy($sourceImage);
+        imagedestroy($destinationImage);
+
+        return $imageData;
     }
 }

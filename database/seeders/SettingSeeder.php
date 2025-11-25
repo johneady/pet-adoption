@@ -43,6 +43,27 @@ class SettingSeeder extends Seeder
                 'description' => 'Path to the site logo',
             ],
             [
+                'key' => 'header_image',
+                'value' => null,
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Path to the header background image',
+            ],
+            [
+                'key' => 'middle_image',
+                'value' => null,
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Path to the middle section background image',
+            ],
+            [
+                'key' => 'footer_image',
+                'value' => null,
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Path to the footer background image',
+            ],
+            [
                 'key' => 'default_timezone',
                 'value' => 'America/Toronto',
                 'type' => 'string',
