@@ -73,17 +73,20 @@ class EditPet extends EditRecord
                         TextInput::make('name')
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state).'-'.random_int(1000, 9999))),
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state).'-'.random_int(1000, 9999)))
+                            ->disabled($currentStatus === 'adopted'),
                         TextInput::make('slug')
                             ->required()
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->disabled($currentStatus === 'adopted'),
                         Select::make('species_id')
                             ->relationship('species', 'name')
                             ->required()
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->afterStateUpdated(fn (callable $set) => $set('breed_id', null)),
+                            ->afterStateUpdated(fn (callable $set) => $set('breed_id', null))
+                            ->disabled($currentStatus === 'adopted'),
                         Select::make('breed_id')
                             ->relationship(
                                 'breed',
@@ -92,12 +95,13 @@ class EditPet extends EditRecord
                             )
                             ->searchable()
                             ->preload()
-                            ->disabled(fn (callable $get) => ! $get('species_id')),
+                            ->disabled(fn (callable $get) => ! $get('species_id') || $currentStatus === 'adopted'),
                         TextInput::make('age')
                             ->numeric()
                             ->suffix('years')
                             ->minValue(0)
-                            ->maxValue(30),
+                            ->maxValue(30)
+                            ->disabled($currentStatus === 'adopted'),
                         Select::make('gender')
                             ->options([
                                 'male' => 'Male',
@@ -105,25 +109,31 @@ class EditPet extends EditRecord
                                 'unknown' => 'Unknown',
                             ])
                             ->required()
-                            ->default('unknown'),
+                            ->default('unknown')
+                            ->disabled($currentStatus === 'adopted'),
                         Select::make('size')
                             ->options([
                                 'small' => 'Small',
                                 'medium' => 'Medium',
                                 'large' => 'Large',
                                 'extra_large' => 'Extra Large',
-                            ]),
-                        TextInput::make('color'),
+                            ])
+                            ->disabled($currentStatus === 'adopted'),
+                        TextInput::make('color')
+                            ->disabled($currentStatus === 'adopted'),
                         Toggle::make('vaccination_status')
                             ->label('Vaccinated')
-                            ->default(false),
+                            ->default(false)
+                            ->disabled($currentStatus === 'adopted'),
                         Toggle::make('special_needs')
                             ->label('Special Needs')
-                            ->default(false),
+                            ->default(false)
+                            ->disabled($currentStatus === 'adopted'),
                         DatePicker::make('intake_date')
                             ->required()
                             ->default(now())
-                            ->maxDate(now()),
+                            ->maxDate(now())
+                            ->disabled($currentStatus === 'adopted'),
                         ToggleButtons::make('status')
                             ->options($allowedStatuses)
                             ->icons(array_intersect_key([
@@ -148,9 +158,11 @@ class EditPet extends EditRecord
                     ->schema([
                         Textarea::make('description')
                             ->rows(5)
+                            ->disabled($currentStatus === 'adopted')
                             ->columnSpanFull(),
                         Textarea::make('medical_notes')
                             ->rows(5)
+                            ->disabled($currentStatus === 'adopted')
                             ->columnSpanFull(),
                     ]),
 
@@ -158,6 +170,7 @@ class EditPet extends EditRecord
                     ->schema([
                         Repeater::make('photos')
                             ->relationship()
+                            ->disabled($currentStatus === 'adopted')
                             ->schema([
                                 FileUpload::make('file_path')
                                     ->label('Photo')

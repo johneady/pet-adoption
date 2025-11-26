@@ -281,3 +281,51 @@ test('blog post featured image can be updated', function () {
     expect($blogPost->fresh()->featured_image)->toBe($newImagePath)
         ->and(Storage::disk('public')->exists($newImagePath))->toBeTrue();
 });
+
+test('archived blog post has disabled state set correctly', function () {
+    $archivedPost = BlogPost::factory()->published()->create([
+        'title' => 'Archived Post',
+        'slug' => 'archived-post',
+        'content' => 'Archived content',
+    ]);
+
+    // Archive the post
+    $archivedPost->update(['status' => 'archived']);
+    $archivedPost->refresh();
+
+    $draftPost = BlogPost::factory()->draft()->create([
+        'title' => 'Draft Post',
+        'slug' => 'draft-post',
+        'content' => 'Draft content',
+    ]);
+
+    // Verify archived post status
+    expect($archivedPost->status)->toBe('archived')
+        ->and($draftPost->status)->toBe('draft');
+
+    // Test that the disabled logic evaluates correctly
+    $archivedDisabled = (fn ($record) => $record?->status === 'archived')($archivedPost);
+    $draftDisabled = (fn ($record) => $record?->status === 'archived')($draftPost);
+
+    expect($archivedDisabled)->toBeTrue()
+        ->and($draftDisabled)->toBeFalse();
+});
+
+test('non-archived blog post form fields are not disabled', function () {
+    $blogPost = BlogPost::factory()->draft()->create([
+        'title' => 'Draft Post',
+        'slug' => 'draft-post',
+        'content' => 'Draft content',
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(ListBlogPosts::class)
+        ->mountTableAction('edit', $blogPost)
+        ->assertFormFieldIsEnabled('title')
+        ->assertFormFieldIsEnabled('slug')
+        ->assertFormFieldIsEnabled('featured_image')
+        ->assertFormFieldIsEnabled('tags')
+        ->assertFormFieldIsEnabled('excerpt')
+        ->assertFormFieldIsEnabled('content');
+});

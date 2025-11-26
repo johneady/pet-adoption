@@ -28,11 +28,13 @@ class BlogPostForm
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state)))
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull(),
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull(),
                         FileUpload::make('featured_image')
                             ->label('Featured Image')
@@ -69,6 +71,7 @@ class BlogPostForm
                                     Storage::disk('public')->delete($file);
                                 }
                             })
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull(),
                     ]),
 
@@ -95,6 +98,7 @@ class BlogPostForm
                             ->createOptionUsing(function (array $data): int {
                                 return \App\Models\Tag::create($data)->getKey();
                             })
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull(),
                         ToggleButtons::make('status')
                             ->options(function ($record) {
@@ -154,9 +158,11 @@ class BlogPostForm
                         Textarea::make('excerpt')
                             ->rows(1)
                             ->maxLength(500)
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull(),
                         RichEditor::make('content')
                             ->required()
+                            ->disabled(fn ($record) => $record?->status === 'archived')
                             ->columnSpanFull()
                             ->toolbarButtons([
                                 ['bold', 'italic', 'strike', 'link'],
