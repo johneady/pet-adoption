@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Breeds;
 
-use App\Filament\Resources\Breeds\Pages\CreateBreed;
-use App\Filament\Resources\Breeds\Pages\EditBreed;
 use App\Filament\Resources\Breeds\Pages\ListBreeds;
 use App\Filament\Resources\Breeds\Schemas\BreedForm;
 use App\Filament\Resources\Breeds\Tables\BreedsTable;
@@ -44,8 +42,6 @@ class BreedResource extends Resource
     {
         return [
             'index' => ListBreeds::route('/'),
-            'create' => CreateBreed::route('/create'),
-            'edit' => EditBreed::route('/{record}/edit'),
         ];
     }
 }

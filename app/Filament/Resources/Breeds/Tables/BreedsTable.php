@@ -19,8 +19,9 @@ class BreedsTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
+                TextColumn::make('description')
+                    ->searchable()
+                    ->limit(50),
                 TextColumn::make('created_at')
                     ->timezone(auth()->user()->timezone)
                     ->dateTime()

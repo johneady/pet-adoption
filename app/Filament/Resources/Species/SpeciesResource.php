@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Species;
 
-use App\Filament\Resources\Species\Pages\CreateSpecies;
-use App\Filament\Resources\Species\Pages\EditSpecies;
 use App\Filament\Resources\Species\Pages\ListSpecies;
 use App\Filament\Resources\Species\Schemas\SpeciesForm;
 use App\Filament\Resources\Species\Tables\SpeciesTable;
@@ -44,8 +42,6 @@ class SpeciesResource extends Resource
     {
         return [
             'index' => ListSpecies::route('/'),
-            'create' => CreateSpecies::route('/create'),
-            'edit' => EditSpecies::route('/{record}/edit'),
         ];
     }
 }
