@@ -2,7 +2,7 @@
 
 ## Relelase 1 ✨
 
-* full testing
+* how do I ensure the queues are running in Hesticp
 
 ## Release 2 ⚡
 

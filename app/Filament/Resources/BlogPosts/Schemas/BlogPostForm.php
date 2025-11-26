@@ -45,8 +45,8 @@ class BlogPostForm
                             ->imageResizeTargetWidth('800')
                             ->imageResizeTargetHeight('600')
                             ->saveUploadedFileUsing(function (TemporaryUploadedFile $file, $livewire): string {
-                                // Get the old featured image from the record
-                                $oldFeaturedImage = $livewire->getRecord()?->featured_image;
+                                // Get the old featured image from the record (if editing)
+                                $oldFeaturedImage = method_exists($livewire, 'getRecord') ? $livewire->getRecord()?->featured_image : null;
 
                                 // Delete old featured image if it exists
                                 if ($oldFeaturedImage && Storage::disk('public')->exists($oldFeaturedImage)) {

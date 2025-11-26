@@ -68,7 +68,14 @@ class BlogPostsTable
                     ->multiple(),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        if ($data['status'] === 'published' && ! ($data['published_at'] ?? null)) {
+                            $data['published_at'] = now();
+                        }
+
+                        return $data;
+                    }),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([

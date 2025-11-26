@@ -13,7 +13,16 @@ class ListBlogPosts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['user_id'] = auth()->id();
+
+                    if ($data['status'] === 'published' && ! ($data['published_at'] ?? null)) {
+                        $data['published_at'] = now();
+                    }
+
+                    return $data;
+                }),
         ];
     }
 }
