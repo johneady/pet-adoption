@@ -33,6 +33,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property string|null $two_factor_confirmed_at
  * @property bool $is_admin
+ * @property bool $banned
  * @property bool $receive_new_user_alerts
  * @property bool $receive_new_adoption_alerts
  * @property bool $receive_draw_result_alerts
@@ -87,6 +88,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'profile_picture',
         'timezone',
         'is_admin',
+        'banned',
         'receive_new_user_alerts',
         'receive_new_adoption_alerts',
         'receive_draw_result_alerts',
@@ -117,6 +119,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'banned' => 'boolean',
             'receive_new_user_alerts' => 'boolean',
             'receive_new_adoption_alerts' => 'boolean',
             'receive_draw_result_alerts' => 'boolean',

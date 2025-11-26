@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
             'is_admin' => false,
+            'banned' => false,
             'receive_new_user_alerts' => true,
             'receive_new_adoption_alerts' => true,
             'receive_draw_result_alerts' => true,
@@ -117,6 +118,16 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address(),
+        ]);
+    }
+
+    /**
+     * Indicate that the user is banned.
+     */
+    public function banned(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'banned' => true,
         ]);
     }
 }

@@ -163,6 +163,19 @@ class UserForm
                             ->disabled(fn ($livewire): bool => $livewire->getRecord()?->id === auth()->id())
                             ->dehydrated(fn ($livewire): bool => $livewire->getRecord()?->id !== auth()->id())
                             ->default(false),
+                        Toggle::make('banned')
+                            ->label('Account Locked')
+                            ->helperText(function ($livewire): string {
+                                // Warn users they cannot ban themselves
+                                if ($livewire->getRecord()?->id === auth()->id()) {
+                                    return 'You cannot lock your own account.';
+                                }
+
+                                return 'Locked accounts cannot log in to the application.';
+                            })
+                            ->disabled(fn ($livewire): bool => $livewire->getRecord()?->id === auth()->id())
+                            ->dehydrated(fn ($livewire): bool => $livewire->getRecord()?->id !== auth()->id())
+                            ->default(false),
                     ])
                     ->columns(2),
 

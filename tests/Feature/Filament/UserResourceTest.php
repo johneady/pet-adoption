@@ -306,3 +306,60 @@ test('profile picture is stored in public disk profile-pictures directory', func
         // Verify it's in the profile-pictures directory
         ->and(str_starts_with($user->profile_picture, 'profile-pictures/'))->toBeTrue();
 });
+
+test('admin can ban a user', function () {
+    $user = User::factory()->create(['banned' => false]);
+
+    actingAs($this->admin);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.banned', true)
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    expect($user->banned)->toBeTrue();
+});
+
+test('admin can unban a user', function () {
+    $user = User::factory()->banned()->create();
+
+    actingAs($this->admin);
+
+    Livewire::test(EditUser::class, ['record' => $user->id])
+        ->set('data.banned', false)
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified();
+
+    $user->refresh();
+
+    expect($user->banned)->toBeFalse();
+});
+
+test('admin cannot ban themselves', function () {
+    actingAs($this->admin);
+
+    Livewire::test(EditUser::class, ['record' => $this->admin->id])
+        ->set('data.banned', true)
+        ->call('save')
+        ->assertNotified();
+
+    $this->admin->refresh();
+
+    // Should still be false because they cannot ban themselves
+    expect($this->admin->banned)->toBeFalse();
+});
+
+test('user resource table shows banned status', function () {
+    $bannedUser = User::factory()->banned()->create();
+    $normalUser = User::factory()->create(['banned' => false]);
+
+    actingAs($this->admin);
+
+    Livewire::test(ListUsers::class)
+        ->assertCanSeeTableRecords([$bannedUser, $normalUser])
+        ->assertCountTableRecords(3); // 2 created + 1 admin
+});
