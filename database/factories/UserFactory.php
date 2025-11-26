@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= 'password',
             'remember_token' => Str::random(10),
-            'phone' => fake()->phoneNumber(),
+            'phone' => fake()->numerify('###-####'),
             'address' => fake()->address(),
             'profile_picture' => null,
             'timezone' => 'America/Toronto',
@@ -116,7 +116,7 @@ class UserFactory extends Factory
     public function withCompleteProfile(): static
     {
         return $this->state(fn (array $attributes) => [
-            'phone' => fake()->phoneNumber(),
+            'phone' => fake()->numerify('###-####'),
             'address' => fake()->address(),
         ]);
     }

@@ -18,7 +18,7 @@ class BlogPostsTable
             ->columns([
                 ImageColumn::make('featured_image')
                     ->label('Image')
-                    ->circular()
+                    ->square()
                     ->toggleable(),
                 TextColumn::make('title')
                     ->searchable()
@@ -44,7 +44,7 @@ class BlogPostsTable
                     ->timezone(auth()->user()->timezone)
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('updated_at')
                     ->label('Updated')
                     ->timezone(auth()->user()->timezone)
@@ -58,7 +58,9 @@ class BlogPostsTable
                         'draft' => 'Draft',
                         'published' => 'Published',
                         'archived' => 'Archived',
-                    ]),
+                    ])
+                    ->multiple()
+                    ->default(['draft', 'published']),
                 SelectFilter::make('tags')
                     ->relationship('tags', 'name')
                     ->searchable()

@@ -77,6 +77,7 @@ class MenusTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('display_order', 'asc');
+            ->defaultSort('display_order', 'asc')
+            ->reorderable('display_order');
     }
 }

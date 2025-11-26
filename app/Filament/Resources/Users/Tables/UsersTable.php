@@ -36,15 +36,6 @@ class UsersTable
                     ->falseColor('gray')
                     ->sortable()
                     ->alignment('center'),
-                IconColumn::make('banned')
-                    ->label('Locked')
-                    ->boolean()
-                    ->trueIcon(Heroicon::OutlinedNoSymbol)
-                    ->falseIcon(Heroicon::OutlinedCheckCircle)
-                    ->trueColor('danger')
-                    ->falseColor('success')
-                    ->sortable()
-                    ->alignment('center'),
                 TextColumn::make('email_verified_at')
                     ->timezone(auth()->user()->timezone)
                     ->dateTime()
