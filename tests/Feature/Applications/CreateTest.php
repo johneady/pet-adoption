@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 use App\Enums\QuestionType;
 use App\Livewire\Applications\Create;
+use App\Mail\AdoptionApplicationReceived;
+use App\Mail\NewAdoptionApplication;
 use App\Models\AdoptionApplication;
 use App\Models\ApplicationAnswer;
 use App\Models\FormQuestion;
 use App\Models\Pet;
 use App\Models\Species;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
@@ -42,7 +45,14 @@ test('authenticated users can visit application form', function () {
 });
 
 test('can submit application with valid data', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
+    $admin = User::factory()->create([
+        'is_admin' => true,
+        'receive_new_adoption_alerts' => true,
+    ]);
+
     $species = Species::factory()->create();
     $pet = Pet::factory()->create([
         'species_id' => $species->id,
@@ -89,9 +99,20 @@ test('can submit application with valid data', function () {
     // Verify answers were created
     $application = AdoptionApplication::where('user_id', $user->id)->first();
     expect(ApplicationAnswer::where('answerable_id', $application->id)->count())->toBe(2);
+
+    // Verify emails were queued
+    Mail::assertQueued(AdoptionApplicationReceived::class, function ($mail) use ($user) {
+        return $mail->hasTo($user->email);
+    });
+
+    Mail::assertQueued(NewAdoptionApplication::class, function ($mail) use ($admin) {
+        return $mail->hasTo($admin->email);
+    });
 });
 
 test('pet_id is required', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $pet = Pet::factory()->create(['status' => 'available']);
 
@@ -115,6 +136,8 @@ test('pet_id is required', function () {
 });
 
 test('required question must be answered', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create(['species_id' => $species->id, 'status' => 'available']);
@@ -138,6 +161,8 @@ test('required question must be answered', function () {
 });
 
 test('pet_id must exist in database', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $pet = Pet::factory()->create(['status' => 'available']);
 
@@ -161,6 +186,8 @@ test('pet_id must exist in database', function () {
 });
 
 test('string field cannot exceed 255 characters', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create(['species_id' => $species->id, 'status' => 'available']);
@@ -184,6 +211,8 @@ test('string field cannot exceed 255 characters', function () {
 });
 
 test('textarea field cannot exceed 2000 characters', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create(['species_id' => $species->id, 'status' => 'available']);
@@ -207,6 +236,8 @@ test('textarea field cannot exceed 2000 characters', function () {
 });
 
 test('optional fields can be empty', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create([
@@ -284,6 +315,8 @@ test('pet is automatically loaded from route parameter', function () {
 });
 
 test('success message is shown after submission', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create([
@@ -340,6 +373,8 @@ test('prefilled pet is shown as protected and not editable', function () {
 });
 
 test('pet status is updated to pending when application is submitted', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create([
@@ -371,6 +406,8 @@ test('pet status is updated to pending when application is submitted', function 
 });
 
 test('submission fails when pet is no longer available', function () {
+    Mail::fake();
+
     $user = User::factory()->withCompleteProfile()->create();
     $species = Species::factory()->create();
     $pet = Pet::factory()->create([

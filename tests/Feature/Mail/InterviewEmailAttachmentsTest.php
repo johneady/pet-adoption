@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Mail\InterviewRescheduled;
 use App\Mail\InterviewRescheduledAdmin;
 use App\Mail\InterviewScheduled;
+use App\Mail\InterviewScheduledAdmin;
 use App\Models\AdoptionApplication;
 use App\Models\Interview;
 use App\Models\Pet;
@@ -32,6 +33,31 @@ test('interview scheduled email includes ics attachment', function () {
     ]);
 
     $mailable = new InterviewScheduled($interview, $admin);
+    $attachments = $mailable->attachments();
+
+    expect($attachments)->toHaveCount(1)
+        ->and($attachments[0]->as)->toBe('interview.ics')
+        ->and($attachments[0]->mime)->toBe('text/calendar');
+});
+
+test('interview scheduled admin email includes ics attachment', function () {
+    $admin = User::factory()->admin()->create();
+    $applicant = User::factory()->create();
+    $species = Species::factory()->create();
+    $pet = Pet::factory()->create(['species_id' => $species->id]);
+
+    $application = AdoptionApplication::factory()->create([
+        'user_id' => $applicant->id,
+        'pet_id' => $pet->id,
+    ]);
+
+    $interview = Interview::factory()->create([
+        'adoption_application_id' => $application->id,
+        'scheduled_at' => now()->addDays(3),
+        'location' => 'Main Office',
+    ]);
+
+    $mailable = new InterviewScheduledAdmin($interview, $admin);
     $attachments = $mailable->attachments();
 
     expect($attachments)->toHaveCount(1)

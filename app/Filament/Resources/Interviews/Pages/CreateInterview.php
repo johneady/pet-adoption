@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Interviews\Pages;
 
 use App\Filament\Resources\Interviews\InterviewResource;
 use App\Mail\InterviewScheduled;
+use App\Mail\InterviewScheduledAdmin;
 use App\Models\AdoptionApplication;
 use App\Models\ApplicationStatusHistory;
 use App\Models\Interview;
@@ -64,7 +65,7 @@ class CreateInterview extends CreateRecord
             $admin = auth()->user();
 
             Mail::to($applicant)->send(new InterviewScheduled($interview, $admin));
-            Mail::to($admin)->send(new InterviewScheduled($interview, $admin));
+            Mail::to($admin)->send(new InterviewScheduledAdmin($interview, $admin));
         }
     }
 

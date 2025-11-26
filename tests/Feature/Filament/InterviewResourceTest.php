@@ -6,6 +6,7 @@ use App\Filament\Resources\Interviews\Pages\ListInterviews;
 use App\Mail\InterviewRescheduled;
 use App\Mail\InterviewRescheduledAdmin;
 use App\Mail\InterviewScheduled;
+use App\Mail\InterviewScheduledAdmin;
 use App\Models\AdoptionApplication;
 use App\Models\Interview;
 use App\Models\User;
@@ -416,12 +417,15 @@ test('creating an interview sends email to applicant and admin', function () {
         return $mail->hasTo($applicant->email);
     });
 
-    Mail::assertQueued(InterviewScheduled::class, function ($mail) {
+    Mail::assertQueued(InterviewScheduledAdmin::class, function ($mail) {
         return $mail->hasTo($this->admin->email);
     });
 
-    // Verify exactly 2 emails were queued (one to applicant, one to admin)
-    Mail::assertQueued(InterviewScheduled::class, 2);
+    // Verify exactly 1 InterviewScheduled email was queued (to applicant)
+    Mail::assertQueued(InterviewScheduled::class, 1);
+
+    // Verify exactly 1 InterviewScheduledAdmin email was queued (to admin)
+    Mail::assertQueued(InterviewScheduledAdmin::class, 1);
 });
 
 test('updating interview scheduled_at sends reschedule email to applicant and admin', function () {

@@ -56,8 +56,8 @@
                             class="overflow-hidden rounded-xl border-2 border-ocean-200 bg-white dark:border-ocean-800 dark:bg-gray-900">
                             <div class="grid gap-6 p-6 md:grid-cols-[200px_1fr]">
                                 <div class="overflow-hidden rounded-lg">
-                                    @if ($application->pet->primaryPhoto->first())
-                                        <img src="{{ Storage::url($application->pet->primaryPhoto->first()->file_path) }}"
+                                    @if ($application->pet->primaryPhoto)
+                                        <img src="{{ Storage::url($application->pet->primaryPhoto->file_path) }}"
                                             alt="{{ $application->pet->name }}" class="h-full w-full object-cover"
                                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                         <div

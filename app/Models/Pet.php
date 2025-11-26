@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -103,9 +104,9 @@ class Pet extends Model
         return $this->hasMany(PetPhoto::class);
     }
 
-    public function primaryPhoto(): HasMany
+    public function primaryPhoto(): HasOne
     {
-        return $this->hasMany(PetPhoto::class)->where('is_primary', true)->limit(1);
+        return $this->hasOne(PetPhoto::class)->where('is_primary', true);
     }
 
     public function adoptionApplications(): HasMany
