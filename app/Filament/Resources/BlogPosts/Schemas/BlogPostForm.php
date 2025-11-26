@@ -97,24 +97,24 @@ class BlogPostForm
                             })
                             ->columnSpanFull(),
                         ToggleButtons::make('status')
-                            ->options(function (callable $get) {
-                                $currentStatus = $get('status');
+                            ->options(function ($record) {
+                                $originalStatus = $record?->status;
 
-                                if ($currentStatus === 'draft') {
+                                if ($originalStatus === 'draft' || $originalStatus === null) {
                                     return [
                                         'draft' => 'Draft',
                                         'published' => 'Published',
                                     ];
                                 }
 
-                                if ($currentStatus === 'published') {
+                                if ($originalStatus === 'published') {
                                     return [
                                         'published' => 'Published',
                                         'archived' => 'Archived',
                                     ];
                                 }
 
-                                if ($currentStatus === 'archived') {
+                                if ($originalStatus === 'archived') {
                                     return [
                                         'archived' => 'Archived',
                                     ];

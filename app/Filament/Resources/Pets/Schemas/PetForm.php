@@ -11,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
@@ -25,20 +26,28 @@ class PetForm
                 Section::make('Basic Information')
                     ->columns(2)
                     ->schema([
+                        TextInput::make('_original_status')
+                            ->hiddenLabel()
+                            ->hidden()
+                            ->default(fn ($record) => $record?->status)
+                            ->dehydrated(false),
                         TextInput::make('name')
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set, $get) => $set('slug', \Illuminate\Support\Str::slug($state).'-'.random_int(1000, 9999))),
+                            ->afterStateUpdated(fn ($state, callable $set, $get) => $set('slug', \Illuminate\Support\Str::slug($state).'-'.random_int(1000, 9999)))
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         TextInput::make('slug')
                             ->required()
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Select::make('species_id')
                             ->relationship('species', 'name')
                             ->required()
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->afterStateUpdated(fn (callable $set) => $set('breed_id', null)),
+                            ->afterStateUpdated(fn (callable $set) => $set('breed_id', null))
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Select::make('breed_id')
                             ->relationship(
                                 'breed',
@@ -47,12 +56,13 @@ class PetForm
                             )
                             ->searchable()
                             ->preload()
-                            ->disabled(fn (callable $get) => ! $get('species_id')),
+                            ->disabled(fn (Get $get) => ! $get('species_id') || $get('_original_status') === 'adopted'),
                         TextInput::make('age')
                             ->numeric()
                             ->suffix('years')
                             ->minValue(0)
-                            ->maxValue(30),
+                            ->maxValue(30)
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Select::make('gender')
                             ->options([
                                 'male' => 'Male',
@@ -60,27 +70,33 @@ class PetForm
                                 'unknown' => 'Unknown',
                             ])
                             ->required()
-                            ->default('unknown'),
+                            ->default('unknown')
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Select::make('size')
                             ->options([
                                 'small' => 'Small',
                                 'medium' => 'Medium',
                                 'large' => 'Large',
                                 'extra_large' => 'Extra Large',
-                            ]),
-                        TextInput::make('color'),
+                            ])
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
+                        TextInput::make('color')
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Toggle::make('vaccination_status')
                             ->label('Vaccinated')
-                            ->default(false),
+                            ->default(false)
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         Toggle::make('special_needs')
                             ->label('Special Needs')
-                            ->default(false),
+                            ->default(false)
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         DatePicker::make('intake_date')
                             ->required()
                             ->native(false)
                             ->timezone(auth()->user()->timezone)
                             ->default(now())
-                            ->maxDate(now()),
+                            ->maxDate(now())
+                            ->disabled(fn (Get $get) => $get('_original_status') === 'adopted'),
                         ToggleButtons::make('status')
                             ->options([
                                 'available' => 'Available',
@@ -110,16 +126,19 @@ class PetForm
                     ->schema([
                         Textarea::make('description')
                             ->rows(5)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (Get $get) => $get('../_original_status') === 'adopted'),
                         Textarea::make('medical_notes')
                             ->rows(5)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (Get $get) => $get('../_original_status') === 'adopted'),
                     ]),
 
                 Section::make('Photos')
                     ->schema([
                         Repeater::make('photos')
                             ->relationship()
+                            ->disabled(fn (Get $get) => $get('../_original_status') === 'adopted')
                             ->schema([
                                 FileUpload::make('file_path')
                                     ->label('Photo')
