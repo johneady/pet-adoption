@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class FirstInstallSeeder extends Seeder
 {
@@ -32,19 +31,18 @@ class FirstInstallSeeder extends Seeder
             SpeciesSeeder::class,
             MembershipPlanSeeder::class,
             FormQuestionSeeder::class,
-            //PetSeeder::class,
-            //AdoptionApplicationSeeder::class,
-            //ApplicationStatusHistorySeeder::class,
-            //InterviewSeeder::class,
+            // PetSeeder::class,
+            // AdoptionApplicationSeeder::class,
+            // ApplicationStatusHistorySeeder::class,
+            // InterviewSeeder::class,
             SettingSeeder::class,
             TagSeeder::class,
-            //BlogPostSeeder::class,
+            // BlogPostSeeder::class,
             MenuSeeder::class,
             PageSeeder::class,
-            //MembershipSeeder::class,
-            //DrawSeeder::class,
+            // MembershipSeeder::class,
+            // DrawSeeder::class,
         ]);
-
 
     }
 }
