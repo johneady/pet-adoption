@@ -72,23 +72,6 @@ class BlogPostForm
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Content')
-                    ->schema([
-                        Textarea::make('excerpt')
-                            ->rows(3)
-                            ->maxLength(500)
-                            ->columnSpanFull(),
-                        RichEditor::make('content')
-                            ->required()
-                            ->columnSpanFull()
-                            ->toolbarButtons([
-                                ['bold', 'italic', 'strike', 'link'],
-                                ['h2', 'h3'],
-                                ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
-                                ['undo', 'redo'],
-                            ]),
-                    ]),
-
                 Section::make('Publishing')
                     ->columns(2)
                     ->schema([
@@ -163,6 +146,24 @@ class BlogPostForm
                                 }
                             })
                             ->columnSpanFull(),
+                    ]),
+
+                Section::make('Content')
+                    ->columnSpanFull()
+                    ->schema([
+                        Textarea::make('excerpt')
+                            ->rows(1)
+                            ->maxLength(500)
+                            ->columnSpanFull(),
+                        RichEditor::make('content')
+                            ->required()
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'strike', 'link'],
+                                ['h2', 'h3'],
+                                ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                                ['undo', 'redo'],
+                            ]),
                     ]),
             ]);
     }
