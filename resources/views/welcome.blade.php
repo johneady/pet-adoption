@@ -23,7 +23,7 @@
                             family member today.
                         </p>
                         <div class="mt-10 flex items-center justify-center gap-6">
-                            <flux:button variant="primary" href="{{ route('home') }}" class="text-lg px-8 py-3">
+                            <flux:button variant="primary" href="{{ route('pets.index') }}" class="text-lg px-8 py-3">
                                 Browse Available Pets
                             </flux:button>
                             @guest
@@ -206,7 +206,7 @@
                             family.
                         </p>
                         <div class="mt-10 flex items-center justify-center gap-6">
-                            <flux:button href="{{ route('home') }}"
+                            <flux:button href="{{ route('pets.index') }}"
                                 class="bg-white text-ocean-700 hover:bg-gray-100 dark:bg-gray-100 dark:text-ocean-800 dark:hover:bg-white text-lg px-8 py-3">
                                 Start Browsing
                             </flux:button>

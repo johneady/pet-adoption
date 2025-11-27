@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Pet;
+use Database\Factories\Concerns\CopiesSeederImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PetPhotoFactory extends Factory
 {
+    use CopiesSeederImages;
+
     /**
      * Define the model's default state.
      *
@@ -19,7 +22,7 @@ class PetPhotoFactory extends Factory
     {
         return [
             'pet_id' => Pet::factory(),
-            'file_path' => 'pets/'.fake()->uuid().'.jpg',
+            'file_path' => $this->copyRandomSeederImage('pet_samples', 'pets'),
             'is_primary' => false,
             'display_order' => fake()->numberBetween(0, 10),
         ];

@@ -12,7 +12,7 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-//TODO fix this
+// TODO fix this
 
 // test('dashboard displays user applications', function () {
 //     $user = User::factory()->create();

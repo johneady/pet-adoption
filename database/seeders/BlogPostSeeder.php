@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\BlogPost;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BlogPostSeeder extends Seeder
@@ -15,19 +16,23 @@ class BlogPostSeeder extends Seeder
     {
         $tags = Tag::all();
 
-        BlogPost::factory(10)->published()->create()->each(function (BlogPost $post) use ($tags) {
+        $usersWithPictures = User::factory()->count(10)->withProfilePicture()->create();
+        $usersWithoutPictures = User::factory()->count(10)->create();
+        $users = $usersWithPictures->merge($usersWithoutPictures);
+
+        BlogPost::factory(10)->published()->create(['user_id' => fn () => $users->random()->id])->each(function (BlogPost $post) use ($tags) {
             $post->tags()->attach(
                 $tags->random(rand(1, 3))->pluck('id')->toArray()
             );
         });
 
-        BlogPost::factory(5)->draft()->create()->each(function (BlogPost $post) use ($tags) {
+        BlogPost::factory(5)->draft()->create(['user_id' => fn () => $users->random()->id])->each(function (BlogPost $post) use ($tags) {
             $post->tags()->attach(
                 $tags->random(rand(1, 3))->pluck('id')->toArray()
             );
         });
 
-        BlogPost::factory(5)->archived()->create()->each(function (BlogPost $post) use ($tags) {
+        BlogPost::factory(5)->archived()->create(['user_id' => fn () => $users->random()->id])->each(function (BlogPost $post) use ($tags) {
             $post->tags()->attach(
                 $tags->random(rand(1, 3))->pluck('id')->toArray()
             );

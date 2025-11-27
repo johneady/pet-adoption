@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Database\Factories\Concerns\CopiesSeederImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -10,6 +11,8 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    use CopiesSeederImages;
+
     /**
      * The current password being used by the factory.
      */
@@ -128,6 +131,16 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'banned' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has a profile picture.
+     */
+    public function withProfilePicture(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'profile_picture' => $this->copyRandomSeederImage('profile_samples', 'profile-pictures'),
         ]);
     }
 }

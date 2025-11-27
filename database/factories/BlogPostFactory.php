@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Database\Factories\Concerns\CopiesSeederImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
  */
 class BlogPostFactory extends Factory
 {
+    use CopiesSeederImages;
+
     /**
      * Define the model's default state.
      *
@@ -26,7 +29,7 @@ class BlogPostFactory extends Factory
             'slug' => Str::slug($title),
             'excerpt' => fake()->optional()->paragraph(),
             'content' => fake()->paragraphs(rand(5, 10), true),
-            'featured_image' => null,
+            'featured_image' => $this->copyRandomSeederImage('blog_samples', 'blog'),
             'status' => 'draft',
             'published_at' => null,
         ];
