@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\ApplicationsChart;
+use App\Filament\Widgets\KeyAlertsWidget;
 use App\Filament\Widgets\LatestApplicationsWidget;
 use App\Filament\Widgets\PetsStatsWidget;
 use App\Filament\Widgets\RecentUsersWidget;
@@ -62,7 +63,8 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->widgets([
-                PetsStatsWidget::class,
+                KeyAlertsWidget::class,
+                // PetsStatsWidget::class,
                 ApplicationsChart::class,
                 RecentUsersWidget::class,
                 LatestApplicationsWidget::class,
