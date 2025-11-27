@@ -1,9 +1,14 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-7xl">
                 <!-- Header -->
-                <div class="mb-8 rounded-2xl bg-gradient-to-br from-ocean-50 to-teal-50 p-8 dark:from-ocean-950 dark:to-teal-950">
-                    <flux:heading size="xl" class="mb-2 text-ocean-900 dark:text-ocean-100">Find Your Perfect Companion</flux:heading>
-                    <flux:text class="text-ocean-700 dark:text-ocean-300">Browse our available pets and find your new best friend</flux:text>
+                <div class="relative mb-8 overflow-hidden rounded-2xl bg-cover bg-center p-8" style="background-image: url('{{ asset('images/default_companion.jpg') }}');">
+                    <div class="absolute inset-0 bg-zinc-900/45"></div>
+                    <div class="relative mx-auto max-w-4xl text-center">
+                        <flux:heading size="xl" class="mb-2 text-white">Find Your Perfect Companion</flux:heading>
+                        <flux:text class="text-lg text-white/90">
+                            Browse our available pets and find your new best friend
+                        </flux:text>
+                    </div>
                 </div>
 
                 <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
