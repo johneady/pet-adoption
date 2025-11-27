@@ -48,11 +48,11 @@
                 <div class="mx-auto max-w-7xl px-6 lg:px-8">
                     <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">
                         <div>
-                            <div class="text-4xl font-bold text-ocean-600 dark:text-ocean-400">50+</div>
+                            <div class="text-4xl font-bold text-ocean-600 dark:text-ocean-400">100+</div>
                             <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">Pets Adopted</div>
                         </div>
                         <div>
-                            <div class="text-4xl font-bold text-teal-600 dark:text-teal-400">50+</div>
+                            <div class="text-4xl font-bold text-teal-600 dark:text-teal-400">20+</div>
                             <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">Available Now</div>
                         </div>
                         <div>
@@ -144,9 +144,7 @@
                                         class="w-6 h-6 text-green-600 dark:text-green-400 shrink-0 mt-1" />
                                     <div>
                                         <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Health Checked</h3>
-                                        <p class="text-gray-600 dark:text-gray-400">All pets are vaccinated,
-                                            spayed/neutered,
-                                            and health certified.</p>
+                                        <p class="text-gray-600 dark:text-gray-400">All pets are monitored for health concerns.</p>
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
@@ -155,9 +153,9 @@
                                     <div>
                                         <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Ongoing Support
                                         </h3>
-                                        <p class="text-gray-600 dark:text-gray-400">We provide lifetime support and
+                                        <p class="text-gray-600 dark:text-gray-400">We provide support and
                                             guidance
-                                            for all adopters.</p>
+                                            for all adopters throuout the adoption process.</p>
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
