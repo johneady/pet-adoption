@@ -43,12 +43,6 @@ class FormQuestionForm
                             ->placeholder('Add an option')
                             ->visible(fn ($get) => $get('type') === QuestionType::Dropdown->value),
 
-                        TextInput::make('sort_order')
-                            ->label('Sort Order')
-                            ->numeric()
-                            ->default(0)
-                            ->required(),
-
                         Toggle::make('is_required')
                             ->label('Required')
                             ->default(true),
@@ -57,7 +51,8 @@ class FormQuestionForm
                             ->label('Active')
                             ->default(true),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->columnSpan('full'),
             ]);
     }
 }

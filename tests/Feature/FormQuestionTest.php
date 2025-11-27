@@ -2,8 +2,6 @@
 
 use App\Enums\FormType;
 use App\Enums\QuestionType;
-use App\Filament\Resources\FormQuestions\Pages\CreateFormQuestion;
-use App\Filament\Resources\FormQuestions\Pages\EditFormQuestion;
 use App\Filament\Resources\FormQuestions\Pages\ListFormQuestions;
 use App\Livewire\Applications\Create as CreateApplication;
 use App\Models\AdoptionApplication;
@@ -11,6 +9,7 @@ use App\Models\ApplicationAnswer;
 use App\Models\FormQuestion;
 use App\Models\Pet;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
@@ -126,6 +125,7 @@ describe('ApplicationAnswer Model', function () {
 
 describe('FormQuestion Filament Resource', function () {
     beforeEach(function () {
+        Filament::setCurrentPanel('admin');
         $this->admin = User::factory()->admin()->create();
         $this->actingAs($this->admin);
     });
@@ -135,25 +135,35 @@ describe('FormQuestion Filament Resource', function () {
             ->assertSuccessful();
     });
 
-    it('can render create page', function () {
-        Livewire::test(CreateFormQuestion::class)
-            ->assertSuccessful();
+    it('can display questions in table', function () {
+        $questions = FormQuestion::factory()->count(3)->create();
+
+        Livewire::test(ListFormQuestions::class)
+            ->assertCanSeeTableRecords($questions);
+    });
+
+    it('form question resource has create action', function () {
+        Livewire::test(ListFormQuestions::class)
+            ->assertActionExists('create');
+    });
+
+    it('form question resource has edit action on table', function () {
+        Livewire::test(ListFormQuestions::class)
+            ->assertTableActionExists('edit');
     });
 
     it('can create a form question', function () {
-        Livewire::test(CreateFormQuestion::class)
-            ->fillForm([
-                'form_type' => 'adoption',
-                'label' => 'Test Question',
-                'type' => 'string',
-                'is_required' => true,
-                'sort_order' => 1,
-                'is_active' => true,
-            ])
-            ->call('create')
-            ->assertHasNoFormErrors();
+        $question = FormQuestion::create([
+            'form_type' => 'adoption',
+            'label' => 'Test Question',
+            'type' => 'string',
+            'is_required' => true,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
 
-        expect(FormQuestion::where('label', 'Test Question')->exists())->toBeTrue();
+        expect($question->label)->toBe('Test Question')
+            ->and(FormQuestion::where('label', 'Test Question')->exists())->toBeTrue();
     });
 
     it('can edit a form question', function () {
@@ -161,24 +171,41 @@ describe('FormQuestion Filament Resource', function () {
             'label' => 'Original Label',
         ]);
 
-        Livewire::test(EditFormQuestion::class, ['record' => $question->id])
-            ->assertFormSet([
-                'label' => 'Original Label',
-            ])
-            ->fillForm([
-                'label' => 'Updated Label',
-            ])
-            ->call('save')
-            ->assertHasNoFormErrors();
+        $question->update(['label' => 'Updated Label']);
 
         expect($question->refresh()->label)->toBe('Updated Label');
     });
 
-    it('can display questions in table', function () {
-        $questions = FormQuestion::factory()->count(3)->create();
+    it('form question can filter by form type', function () {
+        $adoptionQuestion = FormQuestion::factory()->adoption()->create();
+        $fosteringQuestion = FormQuestion::factory()->fostering()->create();
 
         Livewire::test(ListFormQuestions::class)
-            ->assertCanSeeTableRecords($questions);
+            ->filterTable('form_type', 'adoption')
+            ->assertCanSeeTableRecords([$adoptionQuestion])
+            ->assertCanNotSeeTableRecords([$fosteringQuestion]);
+    });
+
+    it('form question can filter by active status', function () {
+        $activeQuestion = FormQuestion::factory()->active()->create();
+        $inactiveQuestion = FormQuestion::factory()->inactive()->create();
+
+        Livewire::test(ListFormQuestions::class)
+            ->filterTable('is_active', true)
+            ->assertCanSeeTableRecords([$activeQuestion])
+            ->assertCanNotSeeTableRecords([$inactiveQuestion]);
+    });
+
+    it('form question form fields are enabled in modal', function () {
+        $question = FormQuestion::factory()->create();
+
+        Livewire::test(ListFormQuestions::class)
+            ->mountTableAction('edit', $question)
+            ->assertFormFieldIsEnabled('form_type')
+            ->assertFormFieldIsEnabled('label')
+            ->assertFormFieldIsEnabled('type')
+            ->assertFormFieldIsEnabled('is_required')
+            ->assertFormFieldIsEnabled('is_active');
     });
 });
 

@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\FormQuestions;
 
-use App\Filament\Resources\FormQuestions\Pages\CreateFormQuestion;
-use App\Filament\Resources\FormQuestions\Pages\EditFormQuestion;
 use App\Filament\Resources\FormQuestions\Pages\ListFormQuestions;
 use App\Filament\Resources\FormQuestions\Schemas\FormQuestionForm;
 use App\Filament\Resources\FormQuestions\Tables\FormQuestionsTable;
@@ -48,8 +46,6 @@ class FormQuestionResource extends Resource
     {
         return [
             'index' => ListFormQuestions::route('/'),
-            'create' => CreateFormQuestion::route('/create'),
-            'edit' => EditFormQuestion::route('/{record}/edit'),
         ];
     }
 }
