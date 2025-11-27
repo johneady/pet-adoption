@@ -16,6 +16,7 @@ class Dashboard extends Component
             ->with(['pet.species', 'pet.breed', 'pet.primaryPhoto', 'interview', 'statusHistory'])
             ->where('user_id', Auth::id())
             ->latest()
+            ->limit(1)
             ->get();
     }
 
