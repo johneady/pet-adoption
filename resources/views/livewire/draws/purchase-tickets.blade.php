@@ -19,7 +19,7 @@
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
                     <flux:text class="text-sm text-zinc-500">Ends</flux:text>
-                    <flux:text class="font-semibold">{{ $draw->ends_at->timezone(auth()->user()?->timezone ?? 'America/Toronto')->format('M j, Y g:i A') }}</flux:text>
+                    <flux:text class="font-semibold">{{ $draw->ends_at->timezone(auth()->user()?->timezone ?? 'America/Toronto')->format('M j, Y') }}</flux:text>
                 </div>
                 <div>
                     <flux:text class="text-sm text-zinc-500">Current Prize</flux:text>
