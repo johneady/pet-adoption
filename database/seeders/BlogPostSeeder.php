@@ -16,9 +16,7 @@ class BlogPostSeeder extends Seeder
     {
         $tags = Tag::all();
 
-        $usersWithPictures = User::factory()->count(10)->withProfilePicture()->create();
-        $usersWithoutPictures = User::factory()->count(10)->create();
-        $users = $usersWithPictures->merge($usersWithoutPictures);
+        $users = User::factory()->count(20)->withProfilePicture()->create();
 
         BlogPost::factory(10)->published()->create(['user_id' => fn () => $users->random()->id])->each(function (BlogPost $post) use ($tags) {
             $post->tags()->attach(

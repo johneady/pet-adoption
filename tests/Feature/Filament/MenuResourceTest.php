@@ -196,3 +196,44 @@ test('menu can update individual fields', function () {
     expect($menu->fresh()->is_visible)->toBeFalse()
         ->and($menu->fresh()->name)->toBe('Original');
 });
+
+test('menu resource displays menus hierarchically', function () {
+    $parent1 = Menu::factory()->create([
+        'name' => 'Parent Menu',
+        'parent_id' => null,
+        'display_order' => 1,
+    ]);
+    $child = Menu::factory()->create([
+        'name' => 'Child Menu',
+        'parent_id' => $parent1->id,
+        'display_order' => 2,
+    ]);
+    $parent2 = Menu::factory()->create([
+        'name' => 'Second Parent',
+        'parent_id' => null,
+        'display_order' => 3,
+    ]);
+
+    actingAs($this->admin);
+
+    Livewire::test(ListMenus::class)
+        ->assertCanSeeTableRecords([$parent1, $child, $parent2], inOrder: true);
+});
+
+test('child menus appear immediately after their parent', function () {
+    $parent1 = Menu::factory()->create(['parent_id' => null, 'display_order' => 1]);
+    $child1 = Menu::factory()->create(['parent_id' => $parent1->id, 'display_order' => 10]);
+    $parent2 = Menu::factory()->create(['parent_id' => null, 'display_order' => 5]);
+
+    actingAs($this->admin);
+
+    $component = Livewire::test(ListMenus::class);
+    $records = $component->instance()->getTableRecords();
+
+    $positions = $records->pluck('id')->toArray();
+
+    expect(array_search($child1->id, $positions))
+        ->toBeGreaterThan(array_search($parent1->id, $positions))
+        ->and(array_search($parent2->id, $positions))
+        ->toBeGreaterThan(array_search($child1->id, $positions));
+});

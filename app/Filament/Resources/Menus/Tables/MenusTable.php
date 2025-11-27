@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Menus\Tables;
 
+use App\Models\Menu;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -9,6 +10,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MenusTable
 {
@@ -19,7 +21,15 @@ class MenusTable
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->formatStateUsing(function ($state, Menu $record) {
+                        if ($record->parent_id) {
+                            return '└─ '.$state;
+                        }
+
+                        return $state;
+                    })
+                    ->description(fn (Menu $record): ?string => $record->parent_id ? 'Submenu' : null),
                 TextColumn::make('slug')
                     ->searchable()
                     ->sortable()
@@ -27,11 +37,7 @@ class MenusTable
                 TextColumn::make('parent.name')
                     ->label('Parent Menu')
                     ->placeholder('Top Level')
-                    ->toggleable(),
-                TextColumn::make('display_order')
-                    ->label('Order')
-                    ->sortable()
-                    ->alignCenter(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_visible')
                     ->label('Visible')
                     ->boolean()
@@ -77,6 +83,14 @@ class MenusTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->modifyQueryUsing(function (Builder $query) {
+                return $query
+                    ->withoutGlobalScope('order')
+                    ->orderByRaw('COALESCE(parent_id, id)')
+                    ->orderByRaw('CASE WHEN parent_id IS NULL THEN 0 ELSE 1 END')
+                    ->orderBy('display_order', 'asc');
+            })
+            ->recordClasses(fn (Menu $record) => $record->parent_id ? 'bg-gray-50/50' : null)
             ->defaultSort('display_order', 'asc')
             ->reorderable('display_order');
     }

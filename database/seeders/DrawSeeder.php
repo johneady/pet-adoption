@@ -17,7 +17,7 @@ class DrawSeeder extends Seeder
         $users = User::where('is_admin', false)->get();
 
         if ($users->isEmpty()) {
-            $users = User::factory(5)->create();
+            $users = User::factory(5)->withProfilePicture()->create();
         }
 
         // Create a current active draw

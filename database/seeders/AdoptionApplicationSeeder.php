@@ -14,9 +14,7 @@ class AdoptionApplicationSeeder extends Seeder
      */
     public function run(): void
     {
-        $usersWithPictures = User::factory()->count(10)->withProfilePicture()->create();
-        $usersWithoutPictures = User::factory()->count(10)->create();
-        $users = $usersWithPictures->merge($usersWithoutPictures);
+        $users = User::factory()->count(20)->withProfilePicture()->create();
 
         $pendingPets = Pet::where('status', 'available')->take(5)->get();
         foreach ($pendingPets as $pet) {
