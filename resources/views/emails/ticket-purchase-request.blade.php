@@ -11,7 +11,7 @@ A user has submitted a request to purchase draw tickets.
 - **Pricing Tier:** ${{ number_format($pricingTier['price'], 2) }}
 - **Requested At:** {{ $request->created_at->timezone(App\Models\Setting::get('default_timezone'))->format('M j, Y g:i A') }}
 
-<x-mail::button :url="config('app.url') . '/admin/ticket-purchase-requests/' . $draw->id . '/edit'">
+<x-mail::button :url="config('app.url') . '/admin/ticket-purchase-requests'">
 View Draw in Admin Panel
 </x-mail::button>
 
