@@ -40,29 +40,35 @@ class PurchaseTickets extends Component
             'selectedPricingTier.required' => 'Please select a ticket package.',
         ]);
 
-        $pricingTier = json_decode($this->selectedPricingTier, true);
+        try {
+            $pricingTier = json_decode($this->selectedPricingTier, true);
 
-        // Create the purchase request
-        $request = TicketPurchaseRequest::create([
-            'draw_id' => $this->draw->id,
-            'user_id' => Auth::id(),
-            'quantity' => $pricingTier['quantity'],
-            'pricing_tier' => $pricingTier,
-            'status' => 'pending',
-        ]);
+            // Create the purchase request
+            $request = TicketPurchaseRequest::create([
+                'draw_id' => $this->draw->id,
+                'user_id' => Auth::id(),
+                'quantity' => $pricingTier['quantity'],
+                'pricing_tier' => $pricingTier,
+                'status' => 'pending',
+            ]);
 
-        // Send email to admins with the notification preference enabled
-        $admins = User::where('is_admin', true)
-            ->where('receive_ticket_purchase_alerts', true)
-            ->get();
+            // Send email to admins with the notification preference enabled
+            $admins = User::where('is_admin', true)
+                ->where('receive_ticket_purchase_alerts', true)
+                ->get();
 
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->queue(new TicketPurchaseRequestMail($request));
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->queue(new TicketPurchaseRequestMail($request));
+            }
+
+            session()->flash('message', 'Your ticket purchase request has been submitted! An administrator will process your request shortly.');
+
+            $this->redirect(route('draws.index'), navigate: true);
+        } catch (\Exception $e) {
+            session()->flash('error', 'There was an error submitting your ticket purchase request. Please try again.');
+
+            $this->redirect(route('draws.index'), navigate: true);
         }
-
-        session()->flash('message', 'Your ticket purchase request has been submitted! An administrator will process your request shortly.');
-
-        $this->redirect(route('draws.index'), navigate: true);
     }
 
     public function render()

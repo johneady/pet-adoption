@@ -154,3 +154,40 @@ it('displays login prompt on draws index page for guests', function () {
     $response->assertSee('Log in to purchase tickets');
     $response->assertSee('Log In');
 });
+
+it('displays success message after submitting purchase request', function () {
+    Mail::fake();
+
+    $draw = Draw::factory()->active()->create();
+    $pricingTier = ['quantity' => 1, 'price' => 1.00];
+
+    Livewire::actingAs($this->user)
+        ->test(PurchaseTickets::class, ['draw' => $draw])
+        ->set('selectedPricingTier', json_encode($pricingTier))
+        ->call('submit')
+        ->assertSessionHas('message', 'Your ticket purchase request has been submitted! An administrator will process your request shortly.');
+
+    $response = $this->actingAs($this->user)->get(route('draws.index'));
+
+    $response->assertSuccessful();
+    $response->assertSee('Your ticket purchase request has been submitted! An administrator will process your request shortly.');
+});
+
+it('displays error message when purchase request fails', function () {
+    Mail::shouldReceive('to')
+        ->andThrow(new \Exception('Mail server error'));
+
+    $draw = Draw::factory()->active()->create();
+    $pricingTier = ['quantity' => 1, 'price' => 1.00];
+
+    Livewire::actingAs($this->user)
+        ->test(PurchaseTickets::class, ['draw' => $draw])
+        ->set('selectedPricingTier', json_encode($pricingTier))
+        ->call('submit')
+        ->assertSessionHas('error', 'There was an error submitting your ticket purchase request. Please try again.');
+
+    $response = $this->actingAs($this->user)->get(route('draws.index'));
+
+    $response->assertSuccessful();
+    $response->assertSee('There was an error submitting your ticket purchase request. Please try again.');
+});

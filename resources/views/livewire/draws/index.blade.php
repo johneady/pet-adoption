@@ -11,18 +11,31 @@
             </div>
         </div>
 
-        <!-- Compliance Notice -->
-        <div class="mb-8 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950">
-            <div class="flex gap-3">
-                <flux:icon.information-circle class="size-6 flex-shrink-0 text-blue-500" />
-                <div>
-                    <flux:heading size="sm" class="text-blue-900 dark:text-blue-100">Payment Information</flux:heading>
-                    <flux:text class="text-sm text-blue-700 dark:text-blue-300">
-                        To comply with applicable laws, online payments are currently not available for ticket purchases. Please contact us directly to purchase tickets. Once your purchase is registered by an administrator, your tickets will be displayed on your profile.
-                    </flux:text>
-                </div>
+        <!-- Success Message -->
+        @if (session('message'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @mouseenter="clearTimeout($root._x_timeout)"
+                @mouseleave="$root._x_timeout = setTimeout(() => show = false, 2000)"
+                class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+                <flux:text class="text-green-800 dark:text-green-200">
+                    {{ session('message') }}
+                </flux:text>
             </div>
-        </div>
+        @endif
+
+        <!-- Error Message -->
+        @if (session('error'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @mouseenter="clearTimeout($root._x_timeout)"
+                @mouseleave="$root._x_timeout = setTimeout(() => show = false, 2000)"
+                class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+                <flux:text class="text-red-800 dark:text-red-200">
+                    {{ session('error') }}
+                </flux:text>
+            </div>
+        @endif
 
         <!-- Active Draw -->
         @if ($this->activeDraw)
