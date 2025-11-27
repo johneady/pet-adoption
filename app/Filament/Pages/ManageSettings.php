@@ -296,6 +296,17 @@ class ManageSettings extends Page
                                                 ->helperText('Enable or disable membership donation functionality'),
                                         ])
                                         ->columns(2),
+                                    Section::make('Draw Settings')
+                                        ->description('Configure settings for 50/50 draws')
+                                        ->schema([
+                                            Textarea::make('draw_payment_info_text')
+                                                ->label('Payment Information Message')
+                                                ->rows(3)
+                                                ->maxLength(500)
+                                                ->helperText('Message displayed to users when purchasing draw tickets')
+                                                ->required(),
+                                        ])
+                                        ->columns(1),
                                 ]),
                             Tabs\Tab::make('Theme')
                                 ->icon(Heroicon::OutlinedPaintBrush)

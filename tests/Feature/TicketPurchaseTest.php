@@ -191,3 +191,16 @@ it('displays error message when purchase request fails', function () {
     $response->assertSuccessful();
     $response->assertSee('There was an error submitting your ticket purchase request. Please try again.');
 });
+
+it('displays custom payment information text from settings', function () {
+    $customText = 'Please contact us via email at payments@example.com to arrange payment for your tickets.';
+
+    \App\Models\Setting::where('key', 'draw_payment_info_text')->update(['value' => $customText]);
+
+    $draw = Draw::factory()->active()->create();
+
+    $response = $this->actingAs($this->user)->get(route('draws.purchase', ['draw' => $draw->id]));
+
+    $response->assertSuccessful();
+    $response->assertSee($customText);
+});

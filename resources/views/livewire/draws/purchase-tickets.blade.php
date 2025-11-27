@@ -56,7 +56,7 @@
                         <div>
                             <flux:heading size="sm" class="text-blue-900 dark:text-blue-100">Payment Information</flux:heading>
                             <flux:text class="text-sm text-blue-700 dark:text-blue-300">
-                                Online payments are not available. After submitting this request, an administrator will contact you to arrange payment and then register your tickets.
+                                {{ App\Models\Setting::get('draw_payment_info_text', 'Online payments are not available. After submitting this request, an administrator will contact you to arrange payment and then register your tickets.') }}
                             </flux:text>
                         </div>
                     </div>

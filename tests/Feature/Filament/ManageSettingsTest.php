@@ -214,3 +214,16 @@ test('branding image file is deleted when setting is deleted', function () {
     // Verify file was deleted
     Storage::disk('public')->assertMissing($uploadedPath);
 });
+
+test('draw payment info text setting can be saved successfully', function () {
+    actingAs($this->admin);
+
+    $customText = 'Please contact us via email at payments@example.com to arrange payment for your tickets.';
+
+    Livewire::test(ManageSettings::class)
+        ->set('data.draw_payment_info_text', $customText)
+        ->call('save')
+        ->assertNotified();
+
+    expect(Setting::where('key', 'draw_payment_info_text')->first()->fresh()->value)->toBe($customText);
+});
