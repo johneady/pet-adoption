@@ -24,6 +24,22 @@ class MembershipPlan extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'price',
+        'description',
+        'features',
+        'badge_color',
+        'display_order',
+        'is_active',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
