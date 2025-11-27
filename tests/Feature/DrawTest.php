@@ -2,6 +2,7 @@
 
 use App\Models\Draw;
 use App\Models\DrawTicket;
+use App\Models\TicketPurchaseRequest;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -279,6 +280,102 @@ describe('Draws Page', function () {
 
         $response->assertStatus(200);
         $response->assertSee('#42');
+    });
+
+    it('displays pending ticket purchase request notification', function () {
+        $user = User::factory()->create(['timezone' => 'America/Toronto']);
+        $draw = Draw::factory()->active()->create();
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'quantity' => 5,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('draws.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('The admin is still processing your ticket request for');
+        $response->assertSee('5 tickets');
+    });
+
+    it('displays multiple pending purchase requests', function () {
+        $user = User::factory()->create();
+        $draw = Draw::factory()->active()->create();
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'quantity' => 3,
+            'status' => 'pending',
+        ]);
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'quantity' => 10,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('draws.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('3 tickets');
+        $response->assertSee('10 tickets');
+    });
+
+    it('does not display fulfilled ticket purchase requests', function () {
+        $user = User::factory()->create();
+        $draw = Draw::factory()->active()->create();
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'quantity' => 5,
+            'status' => 'fulfilled',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('draws.index'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('The admin is still processing your ticket request');
+    });
+
+    it('does not display other users pending requests', function () {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $draw = Draw::factory()->active()->create();
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user2->id,
+            'quantity' => 5,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($user1)->get(route('draws.index'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('The admin is still processing your ticket request');
+    });
+
+    it('displays singular ticket in pending request notification', function () {
+        $user = User::factory()->create();
+        $draw = Draw::factory()->active()->create();
+
+        TicketPurchaseRequest::factory()->create([
+            'draw_id' => $draw->id,
+            'user_id' => $user->id,
+            'quantity' => 1,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('draws.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('1 ticket');
+        $response->assertDontSee('1 tickets');
     });
 });
 

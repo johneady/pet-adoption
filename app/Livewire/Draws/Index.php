@@ -3,6 +3,7 @@
 namespace App\Livewire\Draws;
 
 use App\Models\Draw;
+use App\Models\TicketPurchaseRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
@@ -60,6 +61,23 @@ class Index extends Component
         return auth()->user()->drawTickets()
             ->where('draw_id', $this->activeDraw->id)
             ->orderBy('ticket_number')
+            ->get();
+    }
+
+    /**
+     * Get the authenticated user's pending ticket purchase requests for the active draw.
+     */
+    public function getPendingPurchaseRequestsProperty(): Collection
+    {
+        if (! auth()->check() || ! $this->activeDraw) {
+            return collect();
+        }
+
+        return TicketPurchaseRequest::query()
+            ->where('user_id', auth()->id())
+            ->where('draw_id', $this->activeDraw->id)
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 

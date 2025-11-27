@@ -37,6 +37,23 @@
             </div>
         @endif
 
+        <!-- Pending Purchase Requests -->
+        @auth
+            @if ($this->pendingPurchaseRequests->count() > 0)
+                <div class="mb-6 space-y-3">
+                    @foreach ($this->pendingPurchaseRequests as $request)
+                        <flux:callout color="info" icon="information-circle">
+                            <flux:text>
+                                The admin is still processing your ticket request for <strong>{{ $request->quantity }} ticket{{ $request->quantity > 1 ? 's' : '' }}</strong>
+                                (submitted on {{ $request->created_at->timezone(auth()->user()->timezone ?? 'America/Toronto')->format('M j, Y \a\t g:i A') }}).
+                                You'll be notified by email once your tickets ready.
+                            </flux:text>
+                        </flux:callout>
+                    @endforeach
+                </div>
+            @endif
+        @endauth
+
         <!-- Active Draw -->
         @if ($this->activeDraw)
             <div class="mb-8">
