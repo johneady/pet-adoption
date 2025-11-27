@@ -12,13 +12,15 @@
     cd pet-adoption
     echo "Inside /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption directory."
 
-    composer install --optimize-autoloader --no-dev
+    composer install --optimize-autoloader
 
     cp .env.example .env
     php artisan key:generate
+
+    php artisan storage:link
     
     php artisan migrate:fresh --force
-    php artisan db:seed --class=FirstInstallSeeder --force
+    php artisan db:seed --force
 
     php artisan optimize
 

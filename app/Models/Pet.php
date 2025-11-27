@@ -106,7 +106,7 @@ class Pet extends Model
 
     public function primaryPhoto(): HasOne
     {
-        return $this->hasOne(PetPhoto::class)->where('is_primary', true);
+        return $this->hasOne(PetPhoto::class)->where('is_primary', true)->limit(1);
     }
 
     public function adoptionApplications(): HasMany
