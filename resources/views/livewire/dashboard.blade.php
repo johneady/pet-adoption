@@ -61,6 +61,7 @@
                     @php
                         $status = $applicationStatuses[$application->status] ?? null;
                         $isFirst = $index === 0;
+                        $isFirst = false; // Temporarily disable auto-open feature
                     @endphp
 
                     <div x-data="{ open: {{ $isFirst ? 'true' : 'false' }} }"
