@@ -38,12 +38,17 @@
                 </div>
             </div>
         @else
-            @if (\App\Models\Setting::get('memberships_enabled'))
-                <div class="mb-8 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            @if (\App\Models\Setting::get('enable_memberships'))
+                <div class="mb-8 rounded-xl border-2 border-ocean-200 bg-linear-to-br from-ocean-50 via-teal-50 to-ocean-100 p-6 dark:border-ocean-700 dark:from-ocean-950 dark:via-teal-950 dark:to-ocean-900">
                     <div class="flex items-center justify-between">
-                        <div>
-                            <flux:heading size="lg" class="mb-1">Support Our Mission</flux:heading>
-                            <flux:text>Consider becoming a member to help us provide better care for pets.</flux:text>
+                        <div class="flex items-center gap-4">
+                            <div class="rounded-lg bg-linear-to-br from-ocean-500 to-teal-500 p-3">
+                                <flux:icon.heart class="size-8 text-white" />
+                            </div>
+                            <div>
+                                <flux:heading size="lg" class="mb-1 text-ocean-900 dark:text-ocean-100">Support Our Mission</flux:heading>
+                                <flux:text class="text-ocean-700 dark:text-ocean-300">Consider becoming a member to help us provide better care for pets.</flux:text>
+                            </div>
                         </div>
                         <flux:button href="{{ route('membership.plans') }}" variant="primary">
                             View Plans

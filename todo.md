@@ -9,7 +9,3 @@
 ## Release 2 ⚡
 
 * The intake date on the pet form is still using the native datepicker. Fix that
-
-* Sign up for email alerts about new arrivals
-
-* Social media sharing
