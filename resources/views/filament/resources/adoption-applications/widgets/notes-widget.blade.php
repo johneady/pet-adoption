@@ -66,7 +66,7 @@
                                     </div>
 
                                     {{-- Note Text --}}
-                                    <div class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap wrap-break-word leading-relaxed">
+                                    <div class="text-md text-gray-700 dark:text-gray-300 wrap-break-word leading-relaxed">
                                         {{ $note->note }}
                                     </div>
                                 </div>

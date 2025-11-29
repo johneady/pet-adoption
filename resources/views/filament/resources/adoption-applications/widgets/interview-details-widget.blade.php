@@ -8,7 +8,7 @@
         <x-slot name="heading">
             <div class="flex items-center gap-2">
                 <x-filament::icon icon="heroicon-o-calendar" class="h-5 w-5 text-gray-400" />
-                <span>Interview :: {{ $interview->scheduled_at->setTimezone(auth()->user()->timezone)->since() }}</span>
+                <span>Interview :: {{ $interview?->scheduled_at->setTimezone(auth()->user()->timezone)->since() }}</span>
             </div>
         </x-slot>
         @if ($hasInterview && $interview)
