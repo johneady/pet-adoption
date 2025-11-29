@@ -8,7 +8,6 @@ use App\Models\AdoptionApplication;
 use App\Models\ApplicationStatusHistory;
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Pages\Dashboard;
 use Filament\Pages\Page;
@@ -87,8 +86,6 @@ class FinalDecision extends Page implements HasTable
             ])
             ->filters([])
             ->recordActions([
-                ViewAction::make()
-                    ->url(fn (AdoptionApplication $record): string => AdoptionApplicationResource::getUrl('edit', ['record' => $record])),
                 Action::make('approve')
                     ->label('Approve')
                     ->icon(Heroicon::OutlinedCheckCircle)

@@ -46,7 +46,19 @@
 
                                 <!-- Status Badge -->
                                 <div class="absolute left-4 top-4">
-                                    <flux:badge variant="success" size="lg" class="border-teal-600 bg-teal-500 backdrop-blur-sm">Available for Adoption</flux:badge>
+                                    <flux:badge
+                                        :variant="match ($pet->status) {
+                                            'available' => 'success',
+                                            'pending' => 'warning',
+                                            'adopted' => 'info',
+                                            'coming_soon' => 'outline',
+                                            default => 'outline',
+                                        }"
+                                        size="lg"
+                                        class="backdrop-blur-sm"
+                                    >
+                                        {{ ucfirst(str_replace('_', ' ', $pet->status)) }}
+                                    </flux:badge>
                                 </div>
                             @else
                                 <div class="flex h-full w-full items-center justify-center">
