@@ -18,10 +18,8 @@
     php artisan key:generate
 
     php artisan storage:link
-    
-    php artisan migrate:fresh --force
-    php artisan db:seed --force
 
+    php artisan config:clear
     php artisan optimize
 
     npm install
@@ -29,10 +27,21 @@
     npm run build
 
     rm -rf node_modules/
-    
-    echo "Your application has been installed. Please update your .env file with the correct settings."
 
+    echo "Your application has been installed. Please update your .env file with the correct settings, then run the
+    'vendor/bin/envoy run seed' command to finalize the setup."
 @endtask
+
+@task('seed', ['confirm' => true])
+    cd /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption
+    echo "Inside /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption directory."
+
+    php artisan migrate:fresh --force
+    php artisan db:seed --force
+
+    echo "Database has been seeded."
+@endtask
+
 
 @task('update')
     cd /home/john/web/demo.powerphpscripts.com/public_html/pet-adoption
@@ -46,9 +55,9 @@
     composer install --optimize-autoloader --no-dev
 
     php artisan migrate --force
+    php artisan config:clear
+    php artisan optimize
 
-    php artisan optimize 
-    
     npm install
 
     npm run build

@@ -3,8 +3,13 @@
 @endphp
 
 <x-filament-widgets::widget>
-    <x-filament::section heading="Application Responses" description="Answers submitted with this application"
-        :collapsible="true" :collapsed="false">
+    <x-filament::section :collapsible="true" :collapsed="true">
+        <x-slot name="heading">
+            <div class="flex items-center gap-2">
+                <x-filament::icon icon="heroicon-o-clipboard-document-list" class="h-5 w-5 text-gray-400" />
+                <span>Application Responses</span>
+            </div>
+        </x-slot>
         @if ($answers->count() > 0)
             <div class="space-y-6">
                 @foreach ($answers as $answer)

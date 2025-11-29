@@ -65,7 +65,11 @@ class FinalDecision extends Page implements HasTable
                 TextColumn::make('user.name')
                     ->label('Applicant')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn ($record) => implode(' • ', array_filter([
+                        $record->user->email,
+                        $record->user->phone,
+                    ]))),
                 TextColumn::make('pet.name')
                     ->label('Pet')
                     ->searchable()
@@ -73,10 +77,6 @@ class FinalDecision extends Page implements HasTable
                 TextColumn::make('pet.species.name')
                     ->label('Species')
                     ->badge()
-                    ->toggleable(),
-                TextColumn::make('living_situation')
-                    ->toggleable(),
-                TextColumn::make('employment_status')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Submitted')

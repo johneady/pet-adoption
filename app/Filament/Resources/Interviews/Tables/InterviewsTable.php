@@ -31,7 +31,11 @@ class InterviewsTable
                 TextColumn::make('adoptionApplication.user.name')
                     ->label('Applicant')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn ($record) => implode(' • ', array_filter([
+                        $record->adoptionApplication->user->email,
+                        $record->adoptionApplication->user->phone,
+                    ]))),
                 TextColumn::make('adoptionApplication.pet.name')
                     ->label('Pet')
                     ->searchable()

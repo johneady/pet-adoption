@@ -20,7 +20,11 @@ class AdoptionApplicationsTable
                 TextColumn::make('user.name')
                     ->label('Applicant')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn ($record) => implode(' • ', array_filter([
+                        $record->user->email,
+                        $record->user->phone,
+                    ]))),
                 TextColumn::make('pet.name')
                     ->label('Pet')
                     ->searchable()
@@ -28,12 +32,6 @@ class AdoptionApplicationsTable
                 TextColumn::make('pet.species.name')
                     ->label('Species')
                     ->badge()
-                    ->toggleable(),
-                TextColumn::make('living_situation')
-                    ->label('Living Situation')
-                    ->toggleable(),
-                TextColumn::make('employment_status')
-                    ->label('Employment Status')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Submitted')
