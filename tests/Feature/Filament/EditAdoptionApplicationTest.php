@@ -105,4 +105,3 @@ test('archive action updates application status to archived', function () {
 
     expect($application->refresh()->status)->toBe('archived');
 });
-

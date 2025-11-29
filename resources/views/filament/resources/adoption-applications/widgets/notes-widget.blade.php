@@ -4,6 +4,9 @@
             <div class="flex items-center gap-2">
                 <x-filament::icon icon="heroicon-o-chat-bubble-left-right" class="h-5 w-5 text-gray-400" />
                 <span>Private Notes for Staff</span>
+                @if (!$this->getNotes()->isEmpty())
+                    <x-filament::icon icon="heroicon-s-check-circle" class="h-5 w-5 text-success-500" title="Has Notes" />
+                @endif
             </div>
         </x-slot>
         <div class="space-y-4">

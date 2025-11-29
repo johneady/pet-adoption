@@ -6,7 +6,6 @@ use App\Filament\Resources\AdoptionApplications\AdoptionApplicationResource;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -64,7 +63,6 @@ class AdoptionApplicationsTable
                     ->preload(),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 Action::make('history')
                     ->label('History')
