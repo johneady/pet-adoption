@@ -2,8 +2,6 @@
 
 ## Relelase 1 📌
 
-* make view application status history a modal
-
 ---
 
 ## Release 2 ⚡

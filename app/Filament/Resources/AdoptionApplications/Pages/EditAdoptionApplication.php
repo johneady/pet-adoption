@@ -15,6 +15,9 @@ use App\Models\Interview;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Mail;
@@ -106,7 +109,54 @@ class EditAdoptionApplication extends EditRecord
                 ->icon(Heroicon::OutlinedClock)
                 ->color('gray')
                 ->outlined()
-                ->url(fn () => AdoptionApplicationResource::getUrl('history', ['record' => $this->record])),
+                ->modalHeading('Status History')
+                ->modalDescription(fn () => "Applicant: {$this->record->user->name} | Pet: {$this->record->pet->name}")
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close')
+                ->schema([
+                    RepeatableEntry::make('statusHistory')
+                        ->label('')
+                        ->state(fn () => $this->record->statusHistory()->with('changedBy')->orderBy('created_at', 'asc')->get()->toArray())
+                        ->table([
+                            TableColumn::make('From'),
+                            TableColumn::make('To'),
+                            TableColumn::make('Notes'),
+                            TableColumn::make('Changed by'),
+                            TableColumn::make('Date'),
+                        ])
+                        ->schema([
+                            TextEntry::make('from_status')
+                                ->badge()
+                                ->color(fn (?string $state): string => match ($state) {
+                                    'approved' => 'success',
+                                    'rejected' => 'danger',
+                                    'interview_scheduled' => 'warning',
+                                    'under_review' => 'info',
+                                    'pending', 'archived' => 'gray',
+                                    default => 'gray',
+                                })
+                                ->formatStateUsing(fn (?string $state): string => $state ? ucwords(str_replace('_', ' ', $state)) : '—')
+                                ->placeholder('—'),
+                            TextEntry::make('to_status')
+                                ->badge()
+                                ->color(fn (string $state): string => match ($state) {
+                                    'approved' => 'success',
+                                    'rejected' => 'danger',
+                                    'interview_scheduled' => 'warning',
+                                    'under_review' => 'info',
+                                    'pending', 'archived' => 'gray',
+                                    default => 'gray',
+                                })
+                                ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state))),
+                            TextEntry::make('notes')
+                                ->placeholder('No notes'),
+                            TextEntry::make('changedBy.name')
+                                ->placeholder('System'),
+                            TextEntry::make('created_at')
+                                ->timezone(auth()->user()->timezone)
+                                ->dateTime('M d, Y g:i A'),
+                        ]),
+                ]),
         ];
     }
 
