@@ -9,7 +9,7 @@
         <x-slot name="heading">
             <div class="flex items-center gap-2">
                 <x-filament::icon icon="heroicon-o-heart" class="h-5 w-5 text-gray-400" />
-                <span>Pet Being Adopted</span>
+                <span>Pet :: {{ $pet->name }}</span>
             </div>
         </x-slot>
         @if ($pet)

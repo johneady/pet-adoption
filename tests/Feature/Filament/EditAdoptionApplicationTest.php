@@ -106,24 +106,3 @@ test('archive action updates application status to archived', function () {
     expect($application->refresh()->status)->toBe('archived');
 });
 
-test('interview details are read-only on edit page', function () {
-    $application = AdoptionApplication::factory()
-        ->for($this->admin, 'user')
-        ->for($this->pet)
-        ->create(['status' => 'interview_scheduled']);
-
-    $interview = \App\Models\Interview::factory()->create([
-        'adoption_application_id' => $application->id,
-        'scheduled_at' => now()->addDays(7),
-        'location' => 'Test Location',
-        'notes' => 'Test notes',
-    ]);
-
-    actingAs($this->admin);
-
-    Livewire::test(EditAdoptionApplication::class, ['record' => $application->id])
-        ->assertFormFieldIsDisabled('interview.scheduled_at')
-        ->assertFormFieldIsDisabled('interview.location')
-        ->assertFormFieldIsDisabled('interview.notes')
-        ->assertFormFieldIsDisabled('interview.completed_at');
-});

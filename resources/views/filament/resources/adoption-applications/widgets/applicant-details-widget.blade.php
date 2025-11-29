@@ -8,7 +8,7 @@
         <x-slot name="heading">
             <div class="flex items-center gap-2">
                 <x-filament::icon icon="heroicon-o-user" class="h-5 w-5 text-gray-400" />
-                <span>Applicant Contact Information</span>
+                <span>Applicant :: {{ $applicant->name }}</span>
             </div>
         </x-slot>
         @if ($applicant)

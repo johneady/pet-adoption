@@ -3,7 +3,7 @@
         <x-slot name="heading">
             <div class="flex items-center gap-2">
                 <x-filament::icon icon="heroicon-o-chat-bubble-left-right" class="h-5 w-5 text-gray-400" />
-                <span>Private Notes for Admin & Staff</span>
+                <span>Private Notes for Staff</span>
             </div>
         </x-slot>
         <div class="space-y-4">
