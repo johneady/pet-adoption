@@ -111,16 +111,11 @@
                 </div>
 
                 @if ($record->status === 'submitted')
-                    <x-filament::button
-                        tag="a"
-                        href="{{ \App\Filament\Resources\Interviews\InterviewResource::getUrl('create', ['adoption_application_id' => $record->id]) }}"
-                        color="primary"
-                        icon="heroicon-m-calendar"
-                    >
-                        Schedule Interview
-                    </x-filament::button>
+                    {{ ($this->scheduleInterviewAction)(['record' => $record]) }}
                 @endif
             </div>
         @endif
     </x-filament::section>
+
+    <x-filament-actions::modals />
 </x-filament-widgets::widget>
